@@ -1,3 +1,6 @@
 [submodule "Submodules/xcconfig"]
 	path = Submodules/xcconfig
 	url = https://github.com/macmade/xcconfig.git
+[submodule "Submodules/unicorn"]
+	path = Submodules/unicorn
+	url = https://github.com/macmade/unicorn.git
