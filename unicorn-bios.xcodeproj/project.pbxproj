@@ -11,6 +11,7 @@
 		05B2818722E78B7400110404 /* Engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B2818622E78B7400110404 /* Engine.cpp */; };
 		05B2818A22E7AA5300110404 /* Arguments.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B2818922E7AA5300110404 /* Arguments.cpp */; };
 		05B2818F22E7AC1300110404 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B2818D22E7AC1300110404 /* Image.cpp */; };
+		05B2819222E7AE8300110404 /* MBR.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B2819022E7AE8300110404 /* MBR.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -76,6 +77,8 @@
 		05B2818B22E7AAA600110404 /* Casts.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Casts.hpp; sourceTree = "<group>"; };
 		05B2818D22E7AC1300110404 /* Image.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Image.cpp; sourceTree = "<group>"; };
 		05B2818E22E7AC1300110404 /* Image.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Image.hpp; sourceTree = "<group>"; };
+		05B2819022E7AE8300110404 /* MBR.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MBR.cpp; sourceTree = "<group>"; };
+		05B2819122E7AE8300110404 /* MBR.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MBR.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -246,6 +249,8 @@
 			children = (
 				05B2818D22E7AC1300110404 /* Image.cpp */,
 				05B2818E22E7AC1300110404 /* Image.hpp */,
+				05B2819022E7AE8300110404 /* MBR.cpp */,
+				05B2819122E7AE8300110404 /* MBR.hpp */,
 			);
 			path = FAT;
 			sourceTree = "<group>";
@@ -310,6 +315,7 @@
 				05B2813322E77AC700110404 /* main.cpp in Sources */,
 				05B2818F22E7AC1300110404 /* Image.cpp in Sources */,
 				05B2818A22E7AA5300110404 /* Arguments.cpp in Sources */,
+				05B2819222E7AE8300110404 /* MBR.cpp in Sources */,
 				05B2818722E78B7400110404 /* Engine.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
