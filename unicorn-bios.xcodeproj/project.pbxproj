@@ -1,0 +1,348 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		05B2813322E77AC700110404 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B2813222E77AC700110404 /* main.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		05B2812D22E77AC700110404 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		05B2812F22E77AC700110404 /* unicorn-bios */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "unicorn-bios"; sourceTree = BUILT_PRODUCTS_DIR; };
+		05B2813222E77AC700110404 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		05B2815322E78A0300110404 /* Release - ccache.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Release - ccache.xcconfig"; sourceTree = "<group>"; };
+		05B2815422E78A0300110404 /* Common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
+		05B2815522E78A0300110404 /* Debug - ccache.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Debug - ccache.xcconfig"; sourceTree = "<group>"; };
+		05B2815622E78A0300110404 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
+		05B2815722E78A0300110404 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
+		05B2815822E78A0300110404 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		05B2815A22E78A0300110404 /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
+		05B2815B22E78A0300110404 /* Architectures.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Architectures.xcconfig; sourceTree = "<group>"; };
+		05B2815D22E78A0300110404 /* Issues.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Issues.xcconfig; sourceTree = "<group>"; };
+		05B2815F22E78A0300110404 /* Apple-APIs.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Apple-APIs.xcconfig"; sourceTree = "<group>"; };
+		05B2816022E78A0300110404 /* Generic-Issues.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Generic-Issues.xcconfig"; sourceTree = "<group>"; };
+		05B2816122E78A0300110404 /* Security.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Security.xcconfig; sourceTree = "<group>"; };
+		05B2816222E78A0300110404 /* Objective-C.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Objective-C.xcconfig"; sourceTree = "<group>"; };
+		05B2816322E78A0300110404 /* Analysis-Policy.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Analysis-Policy.xcconfig"; sourceTree = "<group>"; };
+		05B2816422E78A0300110404 /* Deployment.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Deployment.xcconfig; sourceTree = "<group>"; };
+		05B2816522E78A0300110404 /* Build-Options.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Build-Options.xcconfig"; sourceTree = "<group>"; };
+		05B2816622E78A0300110404 /* Swift-Compiler.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Swift-Compiler.xcconfig"; sourceTree = "<group>"; };
+		05B2816722E78A0300110404 /* Static-Analyzer.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Static-Analyzer.xcconfig"; sourceTree = "<group>"; };
+		05B2816922E78A0300110404 /* Warnings-Policies.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Warnings-Policies.xcconfig"; sourceTree = "<group>"; };
+		05B2816A22E78A0300110404 /* Code-Generation.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Code-Generation.xcconfig"; sourceTree = "<group>"; };
+		05B2816B22E78A0300110404 /* Language.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Language.xcconfig; sourceTree = "<group>"; };
+		05B2816C22E78A0300110404 /* General.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = General.xcconfig; sourceTree = "<group>"; };
+		05B2816D22E78A0300110404 /* Search-Paths.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Search-Paths.xcconfig"; sourceTree = "<group>"; };
+		05B2816E22E78A0300110404 /* Apple-LLVM.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Apple-LLVM.xcconfig"; sourceTree = "<group>"; };
+		05B2817122E78A0300110404 /* Modules.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Modules.xcconfig; sourceTree = "<group>"; };
+		05B2817222E78A0300110404 /* Objective-C.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Objective-C.xcconfig"; sourceTree = "<group>"; };
+		05B2817322E78A0300110404 /* C++.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "C++.xcconfig"; sourceTree = "<group>"; };
+		05B2817422E78A0300110404 /* Code-Generation.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Code-Generation.xcconfig"; sourceTree = "<group>"; };
+		05B2817522E78A0300110404 /* Address-Sanitizer.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Address-Sanitizer.xcconfig"; sourceTree = "<group>"; };
+		05B2817622E78A0300110404 /* Language.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Language.xcconfig; sourceTree = "<group>"; };
+		05B2817722E78A0300110404 /* Warnings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Warnings.xcconfig; sourceTree = "<group>"; };
+		05B2817822E78A0300110404 /* Undefined-Behavior-Sanitizer.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Undefined-Behavior-Sanitizer.xcconfig"; sourceTree = "<group>"; };
+		05B2817922E78A0300110404 /* Warning-Policies.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Warning-Policies.xcconfig"; sourceTree = "<group>"; };
+		05B2817B22E78A0300110404 /* Objective-C-ARC.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Objective-C-ARC.xcconfig"; sourceTree = "<group>"; };
+		05B2817C22E78A0300110404 /* Objective-C.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Objective-C.xcconfig"; sourceTree = "<group>"; };
+		05B2817D22E78A0300110404 /* C++.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "C++.xcconfig"; sourceTree = "<group>"; };
+		05B2817E22E78A0300110404 /* All-Languages.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "All-Languages.xcconfig"; sourceTree = "<group>"; };
+		05B2817F22E78A0300110404 /* Preprocessing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Preprocessing.xcconfig; sourceTree = "<group>"; };
+		05B2818022E78A0300110404 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		05B2818222E78A0300110404 /* ccache-config.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "ccache-config.sh"; sourceTree = "<group>"; };
+		05B2818322E78A0300110404 /* ccache.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ccache.sh; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		05B2812C22E77AC700110404 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		05B2812622E77AC700110404 = {
+			isa = PBXGroup;
+			children = (
+				05B2815222E78A0300110404 /* xcconfig */,
+				05B2813122E77AC700110404 /* unicorn-bios */,
+				05B2813022E77AC700110404 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		05B2813022E77AC700110404 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				05B2812F22E77AC700110404 /* unicorn-bios */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		05B2813122E77AC700110404 /* unicorn-bios */ = {
+			isa = PBXGroup;
+			children = (
+				05B2813222E77AC700110404 /* main.cpp */,
+			);
+			path = "unicorn-bios";
+			sourceTree = "<group>";
+		};
+		05B2815222E78A0300110404 /* xcconfig */ = {
+			isa = PBXGroup;
+			children = (
+				05B2815322E78A0300110404 /* Release - ccache.xcconfig */,
+				05B2815422E78A0300110404 /* Common.xcconfig */,
+				05B2815522E78A0300110404 /* Debug - ccache.xcconfig */,
+				05B2815622E78A0300110404 /* Debug.xcconfig */,
+				05B2815722E78A0300110404 /* Release.xcconfig */,
+				05B2815822E78A0300110404 /* README.md */,
+				05B2815922E78A0300110404 /* Common */,
+				05B2818022E78A0300110404 /* .gitignore */,
+				05B2818122E78A0300110404 /* Scripts */,
+			);
+			name = xcconfig;
+			path = Submodules/xcconfig;
+			sourceTree = "<group>";
+		};
+		05B2815922E78A0300110404 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				05B2815A22E78A0300110404 /* Signing.xcconfig */,
+				05B2815B22E78A0300110404 /* Architectures.xcconfig */,
+				05B2815C22E78A0300110404 /* Static-Analyzer */,
+				05B2816422E78A0300110404 /* Deployment.xcconfig */,
+				05B2816522E78A0300110404 /* Build-Options.xcconfig */,
+				05B2816622E78A0300110404 /* Swift-Compiler.xcconfig */,
+				05B2816722E78A0300110404 /* Static-Analyzer.xcconfig */,
+				05B2816822E78A0300110404 /* Swift-Compiler */,
+				05B2816D22E78A0300110404 /* Search-Paths.xcconfig */,
+				05B2816E22E78A0300110404 /* Apple-LLVM.xcconfig */,
+				05B2816F22E78A0300110404 /* Apple-LLVM */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		05B2815C22E78A0300110404 /* Static-Analyzer */ = {
+			isa = PBXGroup;
+			children = (
+				05B2815D22E78A0300110404 /* Issues.xcconfig */,
+				05B2815E22E78A0300110404 /* Issues */,
+			);
+			path = "Static-Analyzer";
+			sourceTree = "<group>";
+		};
+		05B2815E22E78A0300110404 /* Issues */ = {
+			isa = PBXGroup;
+			children = (
+				05B2815F22E78A0300110404 /* Apple-APIs.xcconfig */,
+				05B2816022E78A0300110404 /* Generic-Issues.xcconfig */,
+				05B2816122E78A0300110404 /* Security.xcconfig */,
+				05B2816222E78A0300110404 /* Objective-C.xcconfig */,
+				05B2816322E78A0300110404 /* Analysis-Policy.xcconfig */,
+			);
+			path = Issues;
+			sourceTree = "<group>";
+		};
+		05B2816822E78A0300110404 /* Swift-Compiler */ = {
+			isa = PBXGroup;
+			children = (
+				05B2816922E78A0300110404 /* Warnings-Policies.xcconfig */,
+				05B2816A22E78A0300110404 /* Code-Generation.xcconfig */,
+				05B2816B22E78A0300110404 /* Language.xcconfig */,
+				05B2816C22E78A0300110404 /* General.xcconfig */,
+			);
+			path = "Swift-Compiler";
+			sourceTree = "<group>";
+		};
+		05B2816F22E78A0300110404 /* Apple-LLVM */ = {
+			isa = PBXGroup;
+			children = (
+				05B2817022E78A0300110404 /* Language */,
+				05B2817422E78A0300110404 /* Code-Generation.xcconfig */,
+				05B2817522E78A0300110404 /* Address-Sanitizer.xcconfig */,
+				05B2817622E78A0300110404 /* Language.xcconfig */,
+				05B2817722E78A0300110404 /* Warnings.xcconfig */,
+				05B2817822E78A0300110404 /* Undefined-Behavior-Sanitizer.xcconfig */,
+				05B2817922E78A0300110404 /* Warning-Policies.xcconfig */,
+				05B2817A22E78A0300110404 /* Warnings */,
+				05B2817F22E78A0300110404 /* Preprocessing.xcconfig */,
+			);
+			path = "Apple-LLVM";
+			sourceTree = "<group>";
+		};
+		05B2817022E78A0300110404 /* Language */ = {
+			isa = PBXGroup;
+			children = (
+				05B2817122E78A0300110404 /* Modules.xcconfig */,
+				05B2817222E78A0300110404 /* Objective-C.xcconfig */,
+				05B2817322E78A0300110404 /* C++.xcconfig */,
+			);
+			path = Language;
+			sourceTree = "<group>";
+		};
+		05B2817A22E78A0300110404 /* Warnings */ = {
+			isa = PBXGroup;
+			children = (
+				05B2817B22E78A0300110404 /* Objective-C-ARC.xcconfig */,
+				05B2817C22E78A0300110404 /* Objective-C.xcconfig */,
+				05B2817D22E78A0300110404 /* C++.xcconfig */,
+				05B2817E22E78A0300110404 /* All-Languages.xcconfig */,
+			);
+			path = Warnings;
+			sourceTree = "<group>";
+		};
+		05B2818122E78A0300110404 /* Scripts */ = {
+			isa = PBXGroup;
+			children = (
+				05B2818222E78A0300110404 /* ccache-config.sh */,
+				05B2818322E78A0300110404 /* ccache.sh */,
+			);
+			path = Scripts;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		05B2812E22E77AC700110404 /* unicorn-bios */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 05B2813622E77AC700110404 /* Build configuration list for PBXNativeTarget "unicorn-bios" */;
+			buildPhases = (
+				05B2812B22E77AC700110404 /* Sources */,
+				05B2812C22E77AC700110404 /* Frameworks */,
+				05B2812D22E77AC700110404 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "unicorn-bios";
+			productName = "unicorn-bios";
+			productReference = 05B2812F22E77AC700110404 /* unicorn-bios */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		05B2812722E77AC700110404 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1100;
+				ORGANIZATIONNAME = "XS-Labs";
+				TargetAttributes = {
+					05B2812E22E77AC700110404 = {
+						CreatedOnToolsVersion = 11.0;
+					};
+				};
+			};
+			buildConfigurationList = 05B2812A22E77AC700110404 /* Build configuration list for PBXProject "unicorn-bios" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 05B2812622E77AC700110404;
+			productRefGroup = 05B2813022E77AC700110404 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				05B2812E22E77AC700110404 /* unicorn-bios */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		05B2812B22E77AC700110404 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05B2813322E77AC700110404 /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		05B2813422E77AC700110404 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 05B2815622E78A0300110404 /* Debug.xcconfig */;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+			};
+			name = Debug;
+		};
+		05B2813522E77AC700110404 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 05B2815722E78A0300110404 /* Release.xcconfig */;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+			};
+			name = Release;
+		};
+		05B2813722E77AC700110404 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				HEADER_SEARCH_PATHS = "Third-Party/include";
+				LIBRARY_SEARCH_PATHS = "Third-Party/lib";
+				OTHER_LDFLAGS = "-lunicorn";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		05B2813822E77AC700110404 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				HEADER_SEARCH_PATHS = "Third-Party/include";
+				LIBRARY_SEARCH_PATHS = "Third-Party/lib";
+				OTHER_LDFLAGS = "-lunicorn";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		05B2812A22E77AC700110404 /* Build configuration list for PBXProject "unicorn-bios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05B2813422E77AC700110404 /* Debug */,
+				05B2813522E77AC700110404 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		05B2813622E77AC700110404 /* Build configuration list for PBXNativeTarget "unicorn-bios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05B2813722E77AC700110404 /* Debug */,
+				05B2813822E77AC700110404 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 05B2812722E77AC700110404 /* Project object */;
+}
