@@ -10,6 +10,7 @@
 		05B2813322E77AC700110404 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B2813222E77AC700110404 /* main.cpp */; };
 		05B2818722E78B7400110404 /* Engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B2818622E78B7400110404 /* Engine.cpp */; };
 		05B2818A22E7AA5300110404 /* Arguments.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B2818922E7AA5300110404 /* Arguments.cpp */; };
+		05B2818F22E7AC1300110404 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B2818D22E7AC1300110404 /* Image.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -73,6 +74,8 @@
 		05B2818822E7AA5300110404 /* Arguments.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Arguments.hpp; sourceTree = "<group>"; };
 		05B2818922E7AA5300110404 /* Arguments.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Arguments.cpp; sourceTree = "<group>"; };
 		05B2818B22E7AAA600110404 /* Casts.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Casts.hpp; sourceTree = "<group>"; };
+		05B2818D22E7AC1300110404 /* Image.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Image.cpp; sourceTree = "<group>"; };
+		05B2818E22E7AC1300110404 /* Image.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Image.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -228,6 +231,7 @@
 		05B2818422E78B7400110404 /* UB */ = {
 			isa = PBXGroup;
 			children = (
+				05B2818C22E7ABFF00110404 /* FAT */,
 				05B2818922E7AA5300110404 /* Arguments.cpp */,
 				05B2818822E7AA5300110404 /* Arguments.hpp */,
 				05B2818B22E7AAA600110404 /* Casts.hpp */,
@@ -235,6 +239,15 @@
 				05B2818622E78B7400110404 /* Engine.cpp */,
 			);
 			path = UB;
+			sourceTree = "<group>";
+		};
+		05B2818C22E7ABFF00110404 /* FAT */ = {
+			isa = PBXGroup;
+			children = (
+				05B2818D22E7AC1300110404 /* Image.cpp */,
+				05B2818E22E7AC1300110404 /* Image.hpp */,
+			);
+			path = FAT;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -295,6 +308,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				05B2813322E77AC700110404 /* main.cpp in Sources */,
+				05B2818F22E7AC1300110404 /* Image.cpp in Sources */,
 				05B2818A22E7AA5300110404 /* Arguments.cpp in Sources */,
 				05B2818722E78B7400110404 /* Engine.cpp in Sources */,
 			);
