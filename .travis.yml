@@ -1,0 +1,18 @@
+language: objective-c
+osx_image: xcode11
+cache:
+    directories:
+    - $HOME/.ccache
+install:
+- gem install xcpretty
+- brew install ccache
+- PATH=$PATH:/usr/local/opt/ccache/libexec
+script:
+- set -o pipefail && xcodebuild -project "unicorn-bios.xcodeproj" -scheme "unicorn-bios" build analyze
+before_script:
+- ccache -s
+- ccache -z
+after_script:
+- ccache -s
+notifications:
+    slack: xs-labs:FXh1yLXNkpcVxKZhZU6icdhI
