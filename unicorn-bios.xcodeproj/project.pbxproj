@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		05B2813322E77AC700110404 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B2813222E77AC700110404 /* main.cpp */; };
+		05B2818722E78B7400110404 /* Engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B2818622E78B7400110404 /* Engine.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -66,6 +67,8 @@
 		05B2818022E78A0300110404 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		05B2818222E78A0300110404 /* ccache-config.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "ccache-config.sh"; sourceTree = "<group>"; };
 		05B2818322E78A0300110404 /* ccache.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ccache.sh; sourceTree = "<group>"; };
+		05B2818522E78B7400110404 /* Engine.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Engine.hpp; sourceTree = "<group>"; };
+		05B2818622E78B7400110404 /* Engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Engine.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +102,7 @@
 		05B2813122E77AC700110404 /* unicorn-bios */ = {
 			isa = PBXGroup;
 			children = (
+				05B2818422E78B7400110404 /* UB */,
 				05B2813222E77AC700110404 /* main.cpp */,
 			);
 			path = "unicorn-bios";
@@ -217,6 +221,15 @@
 			path = Scripts;
 			sourceTree = "<group>";
 		};
+		05B2818422E78B7400110404 /* UB */ = {
+			isa = PBXGroup;
+			children = (
+				05B2818522E78B7400110404 /* Engine.hpp */,
+				05B2818622E78B7400110404 /* Engine.cpp */,
+			);
+			path = UB;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -275,6 +288,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				05B2813322E77AC700110404 /* main.cpp in Sources */,
+				05B2818722E78B7400110404 /* Engine.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -303,10 +317,13 @@
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
+				GCC_GENERATE_TEST_COVERAGE_FILES = NO;
+				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = NO;
 				HEADER_SEARCH_PATHS = "Third-Party/include";
 				LIBRARY_SEARCH_PATHS = "Third-Party/lib";
 				OTHER_LDFLAGS = "-lunicorn";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "unicorn-bios";
 			};
 			name = Debug;
 		};
@@ -314,10 +331,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Manual;
+				GCC_GENERATE_TEST_COVERAGE_FILES = NO;
+				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = NO;
 				HEADER_SEARCH_PATHS = "Third-Party/include";
 				LIBRARY_SEARCH_PATHS = "Third-Party/lib";
 				OTHER_LDFLAGS = "-lunicorn";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "unicorn-bios";
 			};
 			name = Release;
 		};
