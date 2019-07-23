@@ -12,6 +12,9 @@
 		05B2818A22E7AA5300110404 /* Arguments.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B2818922E7AA5300110404 /* Arguments.cpp */; };
 		05B2818F22E7AC1300110404 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B2818D22E7AC1300110404 /* Image.cpp */; };
 		05B2819222E7AE8300110404 /* MBR.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B2819022E7AE8300110404 /* MBR.cpp */; };
+		05B2819922E7AF1A00110404 /* BinaryDataStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B2819322E7AF1A00110404 /* BinaryDataStream.cpp */; };
+		05B2819A22E7AF1A00110404 /* BinaryFileStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B2819422E7AF1A00110404 /* BinaryFileStream.cpp */; };
+		05B2819B22E7AF1A00110404 /* BinaryStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B2819622E7AF1A00110404 /* BinaryStream.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -79,6 +82,12 @@
 		05B2818E22E7AC1300110404 /* Image.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Image.hpp; sourceTree = "<group>"; };
 		05B2819022E7AE8300110404 /* MBR.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MBR.cpp; sourceTree = "<group>"; };
 		05B2819122E7AE8300110404 /* MBR.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MBR.hpp; sourceTree = "<group>"; };
+		05B2819322E7AF1A00110404 /* BinaryDataStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BinaryDataStream.cpp; sourceTree = "<group>"; };
+		05B2819422E7AF1A00110404 /* BinaryFileStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BinaryFileStream.cpp; sourceTree = "<group>"; };
+		05B2819522E7AF1A00110404 /* BinaryFileStream.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BinaryFileStream.hpp; sourceTree = "<group>"; };
+		05B2819622E7AF1A00110404 /* BinaryStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BinaryStream.cpp; sourceTree = "<group>"; };
+		05B2819722E7AF1A00110404 /* BinaryDataStream.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BinaryDataStream.hpp; sourceTree = "<group>"; };
+		05B2819822E7AF1A00110404 /* BinaryStream.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BinaryStream.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -237,6 +246,12 @@
 				05B2818C22E7ABFF00110404 /* FAT */,
 				05B2818922E7AA5300110404 /* Arguments.cpp */,
 				05B2818822E7AA5300110404 /* Arguments.hpp */,
+				05B2819322E7AF1A00110404 /* BinaryDataStream.cpp */,
+				05B2819722E7AF1A00110404 /* BinaryDataStream.hpp */,
+				05B2819422E7AF1A00110404 /* BinaryFileStream.cpp */,
+				05B2819522E7AF1A00110404 /* BinaryFileStream.hpp */,
+				05B2819622E7AF1A00110404 /* BinaryStream.cpp */,
+				05B2819822E7AF1A00110404 /* BinaryStream.hpp */,
 				05B2818B22E7AAA600110404 /* Casts.hpp */,
 				05B2818522E78B7400110404 /* Engine.hpp */,
 				05B2818622E78B7400110404 /* Engine.cpp */,
@@ -314,6 +329,9 @@
 			files = (
 				05B2813322E77AC700110404 /* main.cpp in Sources */,
 				05B2818F22E7AC1300110404 /* Image.cpp in Sources */,
+				05B2819B22E7AF1A00110404 /* BinaryStream.cpp in Sources */,
+				05B2819922E7AF1A00110404 /* BinaryDataStream.cpp in Sources */,
+				05B2819A22E7AF1A00110404 /* BinaryFileStream.cpp in Sources */,
 				05B2818A22E7AA5300110404 /* Arguments.cpp in Sources */,
 				05B2819222E7AE8300110404 /* MBR.cpp in Sources */,
 				05B2818722E78B7400110404 /* Engine.cpp in Sources */,
