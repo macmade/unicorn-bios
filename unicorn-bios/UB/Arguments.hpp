@@ -22,55 +22,35 @@
  * THE SOFTWARE.
  ******************************************************************************/
 
-#include <cstdlib>
-#include <iostream>
-#include "UB/Arguments.hpp"
-#include "UB/Engine.hpp"
+#ifndef UB_ARGUMENTS_HPP
+#define UB_ARGUMENTS_HPP
 
-static void showHelp( void );
+#include <memory>
+#include <algorithm>
+#include <string>
 
-int main( int argc, const char * argv[] )
+namespace UB
 {
-    UB::Arguments args( argc, argv );
-    
-    if( args.showHelp() )
+    class Arguments
     {
-        showHelp();
-        
-        return EXIT_SUCCESS;
-    }
-    
-    {
-        UB::Engine engine( 1024 * 1024 * 64 );
-        
-        engine.cx( 42 );
-        engine.dx( 42 );
-        
-        std::cout << "CX: " << engine.cx() << std::endl;
-        std::cout << "DX: " << engine.dx() << std::endl;
-        
-        engine.onInterrupt
-        (
-            42,
-            []( uint32_t i, UB::Engine & e ) -> bool
-            {
-                ( void )e;
-                
-                std::cout << "Interrupt " << i << " called" << std::endl;
-                
-                return true;
-            }
-        );
-        
-        engine.write( 0, { 0x66, 0xFF, 0xC1, 0x66, 0xFF, 0xCA, 0xCD, 0x2A } );
-        engine.start( 0 );
-        
-        std::cout << "CX: " << engine.cx() << std::endl;
-        std::cout << "DX: " << engine.dx() << std::endl;
-    }
-    
-    return EXIT_SUCCESS;
+        public:
+            
+            Arguments( int argc, const char * argv[] );
+            Arguments( const Arguments & o );
+            Arguments( Arguments && o );
+            ~Arguments( void );
+            
+            Arguments & operator =( Arguments o );
+            
+            bool showHelp( void ) const;
+            
+            friend void swap( Arguments & o1, Arguments & o2 );
+            
+        private:
+            
+            class IMPL;
+            std::unique_ptr< IMPL > impl;
+    };
 }
 
-static void showHelp( void )
-{}
+#endif /* UB_ARGUMENTS_HPP */

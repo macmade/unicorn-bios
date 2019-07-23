@@ -22,55 +22,76 @@
  * THE SOFTWARE.
  ******************************************************************************/
 
-#include <cstdlib>
-#include <iostream>
 #include "UB/Arguments.hpp"
-#include "UB/Engine.hpp"
+#include "UB/Casts.hpp"
+#include <vector>
 
-static void showHelp( void );
-
-int main( int argc, const char * argv[] )
+namespace UB
 {
-    UB::Arguments args( argc, argv );
-    
-    if( args.showHelp() )
+    class Arguments::IMPL
     {
-        showHelp();
+        public:
+            
+            IMPL( int argc, const char * argv[] );
+            IMPL( const IMPL & o );
+            
+            bool _showHelp;
+    };
+    
+    Arguments::Arguments( int argc, const char * argv[] ):
+        impl( std::make_unique< IMPL >( argc, argv ) )
+    {}
+    
+    Arguments::Arguments( const Arguments & o ):
+        impl( std::make_unique< IMPL >( *( o.impl ) ) )
+    {}
+    
+    Arguments::Arguments( Arguments && o ):
+        impl( std::move( o.impl ) )
+    {}
+    
+    Arguments::~Arguments( void )
+    {}
+    
+    Arguments & Arguments::operator =( Arguments o )
+    {
+        swap( *( this ), o );
         
-        return EXIT_SUCCESS;
+        return *( this );
     }
     
+    bool Arguments::showHelp( void ) const
     {
-        UB::Engine engine( 1024 * 1024 * 64 );
+        return this->impl->_showHelp;
+    }
+    
+    void swap( Arguments & o1, Arguments & o2 )
+    {
+        using std::swap;
         
-        engine.cx( 42 );
-        engine.dx( 42 );
+        swap( o1.impl, o2.impl );
+    }
+    
+    Arguments::IMPL::IMPL( int argc, const char * argv[] ):
+        _showHelp( false )
+    {
+        if( argc < 1 )
+        {
+            return;
+        }
         
-        std::cout << "CX: " << engine.cx() << std::endl;
-        std::cout << "DX: " << engine.dx() << std::endl;
-        
-        engine.onInterrupt
-        (
-            42,
-            []( uint32_t i, UB::Engine & e ) -> bool
+        for( int i = 1; i < argc; i++ )
+        {
+            std::string arg( argv[ i ] );
+            
+            if( arg == "--help" || arg == "-h" )
             {
-                ( void )e;
-                
-                std::cout << "Interrupt " << i << " called" << std::endl;
-                
-                return true;
+                this->_showHelp = true;
             }
-        );
-        
-        engine.write( 0, { 0x66, 0xFF, 0xC1, 0x66, 0xFF, 0xCA, 0xCD, 0x2A } );
-        engine.start( 0 );
-        
-        std::cout << "CX: " << engine.cx() << std::endl;
-        std::cout << "DX: " << engine.dx() << std::endl;
+        }
     }
     
-    return EXIT_SUCCESS;
+    Arguments::IMPL::IMPL( const IMPL & o ):
+        _showHelp( o._showHelp )
+    {}
 }
-
-static void showHelp( void )
-{}
