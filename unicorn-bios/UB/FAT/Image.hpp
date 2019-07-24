@@ -28,6 +28,7 @@
 #include <memory>
 #include <algorithm>
 #include <string>
+#include "UB/FAT/MBR.hpp"
 
 namespace UB
 {
@@ -39,12 +40,13 @@ namespace UB
                 
                 Image( const std::string & path );
                 Image( const Image & o );
-                Image( Image && o );
+                Image( Image && o ) noexcept;
                 ~Image( void );
                 
                 Image & operator =( Image o );
                 
                 std::string path( void ) const;
+                MBR         mbr( void )  const;
                 
                 friend void swap( Image & o1, Image & o2 );
                 

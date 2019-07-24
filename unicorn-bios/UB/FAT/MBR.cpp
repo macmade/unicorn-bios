@@ -23,6 +23,8 @@
  ******************************************************************************/
 
 #include "UB/FAT/MBR.hpp"
+#include "UB/BinaryStream.hpp"
+#include <array>
 
 namespace UB
 {
@@ -33,18 +35,46 @@ namespace UB
             public:
                 
                 IMPL( void );
+                IMPL( BinaryStream & stream );
                 IMPL( const IMPL & o );
+                
+                std::array< uint8_t, 3 >   _jmp;
+                std::array< uint8_t, 8 >   _oemID;
+                uint16_t                   _bytesPerSector;
+                uint8_t                    _sectorsPerCluster;
+                uint16_t                   _reservedSectors;
+                uint8_t                    _numberOfFATs;
+                uint16_t                   _maxRootDirEntries;
+                uint16_t                   _totalSectors;
+                uint8_t                    _mediaDescriptor;
+                uint16_t                   _sectorsPerFAT;
+                uint16_t                   _sectorsPerTrack;
+                uint16_t                   _headsPerCylinder;
+                uint32_t                   _hiddenSectors;
+                uint32_t                   _lbaSectors;
+                uint8_t                    _driveNumber;
+                uint8_t                    _reserved;
+                uint8_t                    _extendedBootSignature;
+                uint32_t                   _volumeSerialNumber;
+                std::array< uint8_t, 11 >  _volumeLabel;
+                std::array< uint8_t, 8 >   _fileSystem;
+                std::array< uint8_t, 448 > _bootCode;
+                uint16_t                   _bootSignature;
         };
         
         MBR::MBR( void ):
             impl( std::make_unique< IMPL >() )
         {}
         
+        MBR::MBR( BinaryStream & stream ):
+            impl( std::make_unique< IMPL >( stream ) )
+        {}
+        
         MBR::MBR( const MBR & o ):
             impl( std::make_unique< IMPL >( *( o.impl ) ) )
         {}
         
-        MBR::MBR( MBR && o ):
+        MBR::MBR( MBR && o ) noexcept:
             impl( std::move( o.impl ) )
         {}
         
@@ -65,12 +95,117 @@ namespace UB
             swap( o1.impl, o2.impl );
         }
         
-        MBR::IMPL::IMPL( void )
-        {}
-        
-        MBR::IMPL::IMPL( const IMPL & o )
+        std::ostream & operator <<( std::ostream & os, const MBR & o )
         {
-            ( void )o;
+            std::string oemID(       reinterpret_cast< char * >( o.impl->_oemID.data() ),       o.impl->_oemID.size() );
+            std::string volumeLabel( reinterpret_cast< char * >( o.impl->_volumeLabel.data() ), o.impl->_volumeLabel.size() );
+            std::string fileSystem(  reinterpret_cast< char * >( o.impl->_fileSystem.data() ),  o.impl->_fileSystem.size() );
+            
+            os << "{"                                                               << std::endl
+               << "    OEM ID:                  " << oemID                          << std::endl
+               << "    Bytes per sector:        " << o.impl->_bytesPerSector        << std::endl
+               << "    Sectors per cluster:     " << o.impl->_sectorsPerCluster     << std::endl
+               << "    Reserved sectors:        " << o.impl->_reservedSectors       << std::endl
+               << "    Number of FATs:          " << o.impl->_numberOfFATs          << std::endl
+               << "    Max root dir entries:    " << o.impl->_maxRootDirEntries     << std::endl
+               << "    Total sectors:           " << o.impl->_totalSectors          << std::endl
+               << "    Media descriptor:        " << o.impl->_mediaDescriptor       << std::endl
+               << "    Sectors per FAT:         " << o.impl->_sectorsPerFAT         << std::endl
+               << "    Sectors per track:       " << o.impl->_sectorsPerTrack       << std::endl
+               << "    Heads per cylinder:      " << o.impl->_headsPerCylinder      << std::endl
+               << "    Hidden sectors:          " << o.impl->_hiddenSectors         << std::endl
+               << "    LBA sectors:             " << o.impl->_lbaSectors            << std::endl
+               << "    Drive number:            " << o.impl->_driveNumber           << std::endl
+               << "    Reserved:                " << o.impl->_reserved              << std::endl
+               << "    Extended boot signature: " << o.impl->_extendedBootSignature << std::endl
+               << "    Volume serial number:    " << o.impl->_volumeSerialNumber    << std::endl
+               << "    Volume label:            " << volumeLabel                    << std::endl
+               << "    Filesystem:              " << fileSystem                     << std::endl
+               << "    Boot signature:          " << o.impl->_bootSignature         << std::endl
+               << "}";
+            
+            return os;
         }
+        
+        MBR::IMPL::IMPL( void ):
+            _bytesPerSector(        0 ),
+            _sectorsPerCluster(     0 ),
+            _reservedSectors(       0 ),
+            _numberOfFATs(          0 ),
+            _maxRootDirEntries(     0 ),
+            _totalSectors(          0 ),
+            _mediaDescriptor(       0 ),
+            _sectorsPerFAT(         0 ),
+            _sectorsPerTrack(       0 ),
+            _headsPerCylinder(      0 ),
+            _hiddenSectors(         0 ),
+            _lbaSectors(            0 ),
+            _driveNumber(           0 ),
+            _reserved(              0 ),
+            _extendedBootSignature( 0 ),
+            _volumeSerialNumber(    0 ),
+            _bootSignature(         0 )
+        {
+            memset( this->_jmp.data(),         0, this->_jmp.size() );
+            memset( this->_oemID.data(),       0, this->_oemID.size() );
+            memset( this->_volumeLabel.data(), 0, this->_volumeLabel.size() );
+            memset( this->_fileSystem.data(),  0, this->_fileSystem.size() );
+            memset( this->_bootCode.data(),    0, this->_bootCode.size() );
+        }
+        
+        MBR::IMPL::IMPL( BinaryStream & stream ):
+            IMPL()
+        {
+            stream.Read( this->_jmp.data(),   this->_jmp.size() );
+            stream.Read( this->_oemID.data(), this->_oemID.size() );
+            
+            this->_bytesPerSector        = stream.ReadLittleEndianUInt16();
+            this->_sectorsPerCluster     = stream.ReadUInt8();
+            this->_reservedSectors       = stream.ReadLittleEndianUInt16();
+            this->_numberOfFATs          = stream.ReadUInt8();
+            this->_maxRootDirEntries     = stream.ReadLittleEndianUInt16();
+            this->_totalSectors          = stream.ReadLittleEndianUInt16();
+            this->_mediaDescriptor       = stream.ReadUInt8();
+            this->_sectorsPerFAT         = stream.ReadLittleEndianUInt16();
+            this->_sectorsPerTrack       = stream.ReadLittleEndianUInt16();
+            this->_headsPerCylinder      = stream.ReadLittleEndianUInt16();
+            this->_hiddenSectors         = stream.ReadLittleEndianUInt32();
+            this->_lbaSectors            = stream.ReadLittleEndianUInt32();
+            this->_driveNumber           = stream.ReadUInt8();
+            this->_reserved              = stream.ReadUInt8();
+            this->_extendedBootSignature = stream.ReadUInt8();
+            this->_volumeSerialNumber    = stream.ReadLittleEndianUInt32();
+            
+            stream.Read( this->_volumeLabel.data(), this->_volumeLabel.size() );
+            stream.Read( this->_fileSystem.data(),  this->_fileSystem.size() );
+            stream.Read( this->_bootCode.data(),    this->_bootCode.size() );
+            
+            this->_bootSignature = stream.ReadLittleEndianUInt16();
+        }
+        
+        MBR::IMPL::IMPL( const IMPL & o ):
+            _jmp(                   o._jmp ),
+            _oemID(                 o._oemID ),
+            _bytesPerSector(        o._bytesPerSector ),
+            _sectorsPerCluster(     o._sectorsPerCluster ),
+            _reservedSectors(       o._reservedSectors ),
+            _numberOfFATs(          o._numberOfFATs ),
+            _maxRootDirEntries(     o._maxRootDirEntries ),
+            _totalSectors(          o._totalSectors ),
+            _mediaDescriptor(       o._mediaDescriptor ),
+            _sectorsPerFAT(         o._sectorsPerFAT ),
+            _sectorsPerTrack(       o._sectorsPerTrack ),
+            _headsPerCylinder(      o._headsPerCylinder ),
+            _hiddenSectors(         o._hiddenSectors ),
+            _lbaSectors(            o._lbaSectors ),
+            _driveNumber(           o._driveNumber ),
+            _reserved(              o._reserved ),
+            _extendedBootSignature( o._extendedBootSignature ),
+            _volumeSerialNumber(    o._volumeSerialNumber ),
+            _volumeLabel(           o._volumeLabel ),
+            _fileSystem(            o._fileSystem ),
+            _bootCode(              o._bootCode ),
+            _bootSignature(         o._bootSignature )
+        {}
     }
 }

@@ -27,9 +27,12 @@
 
 #include <memory>
 #include <algorithm>
+#include <ostream>
 
 namespace UB
 {
+    class BinaryStream;
+    
     namespace FAT
     {
         class MBR
@@ -37,13 +40,16 @@ namespace UB
             public:
                 
                 MBR( void );
+                MBR( BinaryStream & stream );
                 MBR( const MBR & o );
-                MBR( MBR && o );
+                MBR( MBR && o ) noexcept;
                 ~MBR( void );
                 
                 MBR & operator =( MBR o );
                 
                 friend void swap( MBR & o1, MBR & o2 );
+                
+                friend std::ostream & operator <<( std::ostream & os, const MBR & o );
                 
             private:
                 

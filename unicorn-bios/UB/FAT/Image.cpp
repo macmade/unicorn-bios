@@ -23,6 +23,7 @@
  ******************************************************************************/
 
 #include "UB/FAT/Image.hpp"
+#include "UB/BinaryFileStream.hpp"
 
 namespace UB
 {
@@ -36,6 +37,7 @@ namespace UB
                 IMPL( const IMPL & o );
                 
                 std::string _path;
+                MBR         _mbr;
         };
         
         Image::Image( const std::string & path ):
@@ -46,7 +48,7 @@ namespace UB
             impl( std::make_unique< IMPL >( *( o.impl ) ) )
         {}
         
-        Image::Image( Image && o ):
+        Image::Image( Image && o ) noexcept:
             impl( std::move( o.impl ) )
         {}
         
@@ -65,6 +67,11 @@ namespace UB
             return this->impl->_path;
         }
         
+        MBR Image::mbr( void ) const
+        {
+            return this->impl->_mbr;
+        }
+        
         void swap( Image & o1, Image & o2 )
         {
             using std::swap;
@@ -74,7 +81,11 @@ namespace UB
         
         Image::IMPL::IMPL( const std::string & path ):
             _path( path )
-        {}
+        {
+            BinaryFileStream stream( path );
+            
+            this->_mbr = MBR( stream );
+        }
         
         Image::IMPL::IMPL( const IMPL & o ):
             _path( o._path )
