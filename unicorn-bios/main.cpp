@@ -22,10 +22,8 @@
  * THE SOFTWARE.
  ******************************************************************************/
 
-#include <cstdlib>
 #include <iostream>
 #include "UB/Arguments.hpp"
-#include "UB/Engine.hpp"
 
 static void showHelp( void );
 
@@ -38,35 +36,6 @@ int main( int argc, const char * argv[] )
         showHelp();
         
         return EXIT_SUCCESS;
-    }
-    
-    {
-        UB::Engine engine( 1024 * 1024 * 64 );
-        
-        engine.cx( 42 );
-        engine.dx( 42 );
-        
-        std::cout << "CX: " << engine.cx() << std::endl;
-        std::cout << "DX: " << engine.dx() << std::endl;
-        
-        engine.onInterrupt
-        (
-            42,
-            []( uint32_t i, UB::Engine & e ) -> bool
-            {
-                ( void )e;
-                
-                std::cout << "Interrupt " << i << " called" << std::endl;
-                
-                return true;
-            }
-        );
-        
-        engine.write( 0, { 0x66, 0xFF, 0xC1, 0x66, 0xFF, 0xCA, 0xCD, 0x2A } );
-        engine.start( 0 );
-        
-        std::cout << "CX: " << engine.cx() << std::endl;
-        std::cout << "DX: " << engine.dx() << std::endl;
     }
     
     return EXIT_SUCCESS;
