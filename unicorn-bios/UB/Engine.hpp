@@ -71,9 +71,10 @@ namespace UB
             void es( uint16_t value );
             void ss( uint16_t value );
             
-            void onInterrupt( uint32_t i, const std::function< bool( uint32_t i, Engine & ) > handler );
+            void onInterrupt( const std::function< bool( uint32_t i, Engine & ) > handler );
             void write( size_t address, const std::vector< uint8_t > & bytes );
-            void start( size_t address );
+            bool start( size_t address );
+            void waitUntilFinished( void ) const;
             
         private:
             

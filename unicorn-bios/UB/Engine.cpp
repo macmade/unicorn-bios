@@ -30,7 +30,9 @@
 #include "UB/Engine.hpp"
 #include <unicorn/unicorn.h>
 #include <map>
-#include <iostream>
+#include <mutex>
+#include <condition_variable>
+#include <thread>
 
 namespace UB
 {
@@ -47,9 +49,12 @@ namespace UB
             void     _writeRegister( int reg, uint16_t value );
             void     _write( size_t address, const std::vector< uint8_t > & bytes );
             
-            size_t                                                              _memory;
-            std::map< uint32_t, std::function< bool( uint32_t i, Engine & ) > > _interrupts;
-            uc_engine                                                         * _uc;
+            size_t                                                       _memory;
+            std::vector< std::function< bool( uint32_t i, Engine & ) > > _interrupts;
+            uc_engine                                                  * _uc;
+            bool                                                         _running;
+            mutable std::recursive_mutex                                 _rmtx;
+            std::condition_variable_any                                  _cv;
     };
     
     Engine::Engine( size_t memory ):
@@ -187,9 +192,9 @@ namespace UB
         this->impl->_writeRegister( UC_X86_REG_SS, value );
     }
     
-    void Engine::onInterrupt( uint32_t i, const std::function< bool( uint32_t i, Engine & ) > handler )
+    void Engine::onInterrupt( const std::function< bool( uint32_t i, Engine & ) > handler )
     {
-        this->impl->_interrupts[ i ] = handler;
+        this->impl->_interrupts.push_back( handler );
     }
     
     void Engine::write( size_t address, const std::vector< uint8_t > & bytes )
@@ -197,19 +202,64 @@ namespace UB
         this->impl->_write( address, bytes );
     }
     
-    void Engine::start( size_t address )
+    bool Engine::start( size_t address )
     {
-        uc_err e;
-        
-        if( ( e = uc_emu_start( this->impl->_uc, address, std::numeric_limits< uint64_t >::max(), 0, 0 ) ) != UC_ERR_OK )
         {
-            throw std::runtime_error( uc_strerror( e ) );
+            std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+            
+            if( this->impl->_running )
+            {
+                return false;
+            }
+            
+            this->impl->_running = true;
+            
+            this->impl->_cv.notify_all();
         }
+        
+        std::thread
+        (
+            [ = ]
+            {
+                uc_err e;
+                
+                if( ( e = uc_emu_start( this->impl->_uc, address, std::numeric_limits< uint64_t >::max(), 0, 0 ) ) != UC_ERR_OK )
+                {
+                    throw std::runtime_error( uc_strerror( e ) );
+                }
+                
+                {
+                    std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+                    
+                    this->impl->_running = false;
+                    
+                    this->impl->_cv.notify_all();
+                }
+            }
+        )
+        .detach();
+        
+        return true;
+    }
+    
+    void Engine::waitUntilFinished( void ) const
+    {
+        std::unique_lock< std::recursive_mutex > l( this->impl->_rmtx );
+        
+        this->impl->_cv.wait
+        (
+            l,
+            [ & ]( void ) -> bool
+            {
+                return this->impl->_running == false;
+            }
+        );
     }
     
     Engine::IMPL::IMPL( size_t memory ):
         _memory( memory ),
-        _uc( nullptr )
+        _uc( nullptr ),
+        _running( false )
     {
         uc_err e;
         
@@ -245,21 +295,26 @@ namespace UB
             throw std::runtime_error( "Unhandled interrupt: " + std::to_string( i ) );
         }
         
-        if( engine->impl->_interrupts.find( i ) == engine->impl->_interrupts.end() )
         {
-            throw std::runtime_error( "Unhandled interrupt: " + std::to_string( i ) );
+            std::lock_guard< std::recursive_mutex > l( engine->impl->_rmtx );
+            
+            for( const auto & f: engine->impl->_interrupts )
+            {
+                if( f( i, *( engine ) ) )
+                {
+                    return;
+                }
+            }
         }
         
-        if( engine->impl->_interrupts[ i ]( i, *( engine ) ) == false )
-        {
-            throw std::runtime_error( "Unhandled interrupt: " + std::to_string( i ) );
-        }
+        throw std::runtime_error( "Unhandled interrupt: " + std::to_string( i ) );
     }
     
     uint16_t Engine::IMPL::_readRegister( int reg ) const
     {
-        uint16_t v( 0 );
-        uc_err   e;
+        uint16_t                                v( 0 );
+        uc_err                                  e;
+        std::lock_guard< std::recursive_mutex > l( this->_rmtx );
         
         if( ( e = uc_reg_read( this->_uc, reg, &v ) ) != UC_ERR_OK )
         {
@@ -271,7 +326,8 @@ namespace UB
     
     void Engine::IMPL::_writeRegister( int reg, uint16_t value )
     {
-        uc_err e;
+        uc_err                                  e;
+        std::lock_guard< std::recursive_mutex > l( this->_rmtx );
         
         if( ( e = uc_reg_write( this->_uc, reg, &value ) ) != UC_ERR_OK )
         {
@@ -281,7 +337,8 @@ namespace UB
     
     void Engine::IMPL::_write( size_t address, const std::vector< uint8_t > & bytes )
     {
-        uc_err e;
+        uc_err                                  e;
+        std::lock_guard< std::recursive_mutex > l( this->_rmtx );
         
         if( ( e = uc_mem_write( this->_uc, address, &( bytes[ 0 ] ), bytes.size() ) ) != UC_ERR_OK )
         {
