@@ -45,6 +45,15 @@ namespace UB
             Engine & operator =( const Engine & o ) = delete;
             Engine & operator =( Engine && o )      = delete;
             
+            uint8_t ah( void ) const;
+            uint8_t al( void ) const;
+            uint8_t bh( void ) const;
+            uint8_t bl( void ) const;
+            uint8_t ch( void ) const;
+            uint8_t cl( void ) const;
+            uint8_t dh( void ) const;
+            uint8_t dl( void ) const;
+            
             uint16_t ax( void ) const;
             uint16_t bx( void ) const;
             uint16_t cx( void ) const;
@@ -57,6 +66,15 @@ namespace UB
             uint16_t ds( void ) const;
             uint16_t es( void ) const;
             uint16_t ss( void ) const;
+            
+            void ah( uint8_t value );
+            void al( uint8_t value );
+            void bh( uint8_t value );
+            void bl( uint8_t value );
+            void ch( uint8_t value );
+            void cl( uint8_t value );
+            void dh( uint8_t value );
+            void dl( uint8_t value );
             
             void ax( uint16_t value );
             void bx( uint16_t value );

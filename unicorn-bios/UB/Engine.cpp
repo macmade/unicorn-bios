@@ -46,9 +46,7 @@ namespace UB
             
             static void _handleInterrupt( uc_engine * uc, uint32_t i, void * data );
             
-            uint16_t _readRegister( int reg ) const;
-            void     _writeRegister( int reg, uint16_t value );
-            void     _write( size_t address, const std::vector< uint8_t > & bytes );
+            void _write( size_t address, const std::vector< uint8_t > & bytes );
             
             size_t                                                       _memory;
             std::vector< std::function< bool( uint32_t i, Engine & ) > > _interrupts;
@@ -56,6 +54,33 @@ namespace UB
             bool                                                         _running;
             mutable std::recursive_mutex                                 _rmtx;
             std::condition_variable_any                                  _cv;
+            
+            template< typename _T_ >
+            _T_ _readRegister( int reg ) const
+            {
+                _T_                                     v( 0 );
+                uc_err                                  e;
+                std::lock_guard< std::recursive_mutex > l( this->_rmtx );
+                
+                if( ( e = uc_reg_read( this->_uc, reg, &v ) ) != UC_ERR_OK )
+                {
+                    throw std::runtime_error( uc_strerror( e ) );
+                }
+                
+                return v;
+            }
+            
+            template< typename _T_ >
+            void _writeRegister( int reg, _T_ value )
+            {
+                uc_err                                  e;
+                std::lock_guard< std::recursive_mutex > l( this->_rmtx );
+                
+                if( ( e = uc_reg_write( this->_uc, reg, &value ) ) != UC_ERR_OK )
+                {
+                    throw std::runtime_error( uc_strerror( e ) );
+                }
+            }
     };
     
     Engine::Engine( size_t memory ):
@@ -73,64 +98,144 @@ namespace UB
     Engine::~Engine( void )
     {}
     
+    uint8_t Engine::ah( void ) const
+    {
+        return this->impl->_readRegister< uint8_t >( UC_X86_REG_AH );
+    }
+    
+    uint8_t Engine::al( void ) const
+    {
+        return this->impl->_readRegister< uint8_t >( UC_X86_REG_AL );
+    }
+    
+    uint8_t Engine::bh( void ) const
+    {
+        return this->impl->_readRegister< uint8_t >( UC_X86_REG_BH );
+    }
+    
+    uint8_t Engine::bl( void ) const
+    {
+        return this->impl->_readRegister< uint8_t >( UC_X86_REG_BL );
+    }
+    
+    uint8_t Engine::ch( void ) const
+    {
+        return this->impl->_readRegister< uint8_t >( UC_X86_REG_CH );
+    }
+    
+    uint8_t Engine::cl( void ) const
+    {
+        return this->impl->_readRegister< uint8_t >( UC_X86_REG_CL );
+    }
+    
+    uint8_t Engine::dh( void ) const
+    {
+        return this->impl->_readRegister< uint8_t >( UC_X86_REG_DH );
+    }
+    
+    uint8_t Engine::dl( void ) const
+    {
+        return this->impl->_readRegister< uint8_t >( UC_X86_REG_DL );
+    }
+    
     uint16_t Engine::ax( void ) const
     {
-        return this->impl->_readRegister( UC_X86_REG_AX );
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_AX );
     }
     
     uint16_t Engine::bx( void ) const
     {
-        return this->impl->_readRegister( UC_X86_REG_BX );
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_BX );
     }
     
     uint16_t Engine::cx( void ) const
     {
-        return this->impl->_readRegister( UC_X86_REG_CX );
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_CX );
     }
     
     uint16_t Engine::dx( void ) const
     {
-        return this->impl->_readRegister( UC_X86_REG_DX );
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_DX );
     }
     
     uint16_t Engine::si( void ) const
     {
-        return this->impl->_readRegister( UC_X86_REG_SI );
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_SI );
     }
     
     uint16_t Engine::di( void ) const
     {
-        return this->impl->_readRegister( UC_X86_REG_DI );
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_DI );
     }
     
     uint16_t Engine::sp( void ) const
     {
-        return this->impl->_readRegister( UC_X86_REG_SP );
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_SP );
     }
     
     uint16_t Engine::bp( void ) const
     {
-        return this->impl->_readRegister( UC_X86_REG_BP );
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_BP );
     }
     
     uint16_t Engine::cs( void ) const
     {
-        return this->impl->_readRegister( UC_X86_REG_CS );
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_CS );
     }
     
     uint16_t Engine::ds( void ) const
     {
-        return this->impl->_readRegister( UC_X86_REG_DS );
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_DS );
     }
     
     uint16_t Engine::es( void ) const
     {
-        return this->impl->_readRegister( UC_X86_REG_ES );
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_ES );
     }
     
     uint16_t Engine::ss( void ) const
     {
-        return this->impl->_readRegister( UC_X86_REG_SS );
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_SS );
+    }
+    
+    void Engine::ah( uint8_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_AH, value );
+    }
+    
+    void Engine::al( uint8_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_AL, value );
+    }
+    
+    void Engine::bh( uint8_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_BH, value );
+    }
+    
+    void Engine::bl( uint8_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_BL, value );
+    }
+    
+    void Engine::ch( uint8_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_CH, value );
+    }
+    
+    void Engine::cl( uint8_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_CL, value );
+    }
+    
+    void Engine::dh( uint8_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_DH, value );
+    }
+    
+    void Engine::dl( uint8_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_DL, value );
     }
     
     void Engine::ax( uint16_t value )
@@ -312,31 +417,6 @@ namespace UB
         }
         
         throw std::runtime_error( "Unhandled interrupt: " + std::to_string( i ) );
-    }
-    
-    uint16_t Engine::IMPL::_readRegister( int reg ) const
-    {
-        uint16_t                                v( 0 );
-        uc_err                                  e;
-        std::lock_guard< std::recursive_mutex > l( this->_rmtx );
-        
-        if( ( e = uc_reg_read( this->_uc, reg, &v ) ) != UC_ERR_OK )
-        {
-            throw std::runtime_error( uc_strerror( e ) );
-        }
-        
-        return v;
-    }
-    
-    void Engine::IMPL::_writeRegister( int reg, uint16_t value )
-    {
-        uc_err                                  e;
-        std::lock_guard< std::recursive_mutex > l( this->_rmtx );
-        
-        if( ( e = uc_reg_write( this->_uc, reg, &value ) ) != UC_ERR_OK )
-        {
-            throw std::runtime_error( uc_strerror( e ) );
-        }
     }
     
     void Engine::IMPL::_write( size_t address, const std::vector< uint8_t > & bytes )
