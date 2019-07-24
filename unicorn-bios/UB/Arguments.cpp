@@ -101,6 +101,22 @@ namespace UB
             {
                 this->_showHelp = true;
             }
+            else if( arg == "--memory" || arg == "-m" )
+            {
+                if( ++i < argc )
+                {
+                    try
+                    {
+                        this->_memory = static_cast< size_t >( std::atoll( argv[ i ] ) );
+                    }
+                    catch( ... )
+                    {}
+                }
+            }
+            else if( this->_bootImage.length() == 0 )
+            {
+                this->_bootImage = arg;
+            }
         }
     }
     
