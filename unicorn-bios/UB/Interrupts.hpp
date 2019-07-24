@@ -32,18 +32,18 @@ namespace UB
     
     namespace Interrupts
     {
-        void int0x05( const Machine & machine, Engine & engine );
-        void int0x10( const Machine & machine, Engine & engine );
-        void int0x11( const Machine & machine, Engine & engine );
-        void int0x12( const Machine & machine, Engine & engine );
-        void int0x13( const Machine & machine, Engine & engine );
-        void int0x14( const Machine & machine, Engine & engine );
-        void int0x15( const Machine & machine, Engine & engine );
-        void int0x16( const Machine & machine, Engine & engine );
-        void int0x17( const Machine & machine, Engine & engine );
-        void int0x18( const Machine & machine, Engine & engine );
-        void int0x19( const Machine & machine, Engine & engine );
-        void int0x1A( const Machine & machine, Engine & engine );
+        bool int0x05( const Machine & machine, Engine & engine );
+        bool int0x10( const Machine & machine, Engine & engine );
+        bool int0x11( const Machine & machine, Engine & engine );
+        bool int0x12( const Machine & machine, Engine & engine );
+        bool int0x13( const Machine & machine, Engine & engine );
+        bool int0x14( const Machine & machine, Engine & engine );
+        bool int0x15( const Machine & machine, Engine & engine );
+        bool int0x16( const Machine & machine, Engine & engine );
+        bool int0x17( const Machine & machine, Engine & engine );
+        bool int0x18( const Machine & machine, Engine & engine );
+        bool int0x19( const Machine & machine, Engine & engine );
+        bool int0x1A( const Machine & machine, Engine & engine );
     }
 }
 

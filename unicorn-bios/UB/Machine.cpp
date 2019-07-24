@@ -130,25 +130,27 @@ namespace UB
         (
             [ & ]( uint32_t i, Engine & engine ) -> bool
             {
+                bool ret( false );
+                
                 switch( i )
                 {
-                    case 0x05: Interrupts::int0x05( machine, engine ); break;
-                    case 0x10: Interrupts::int0x10( machine, engine ); break;
-                    case 0x11: Interrupts::int0x11( machine, engine ); break;
-                    case 0x12: Interrupts::int0x12( machine, engine ); break;
-                    case 0x13: Interrupts::int0x13( machine, engine ); break;
-                    case 0x14: Interrupts::int0x14( machine, engine ); break;
-                    case 0x15: Interrupts::int0x15( machine, engine ); break;
-                    case 0x16: Interrupts::int0x16( machine, engine ); break;
-                    case 0x17: Interrupts::int0x17( machine, engine ); break;
-                    case 0x18: Interrupts::int0x18( machine, engine ); break;
-                    case 0x19: Interrupts::int0x19( machine, engine ); break;
-                    case 0x1A: Interrupts::int0x1A( machine, engine ); break;
+                    case 0x05: ret = Interrupts::int0x05( machine, engine ); break;
+                    case 0x10: ret = Interrupts::int0x10( machine, engine ); break;
+                    case 0x11: ret = Interrupts::int0x11( machine, engine ); break;
+                    case 0x12: ret = Interrupts::int0x12( machine, engine ); break;
+                    case 0x13: ret = Interrupts::int0x13( machine, engine ); break;
+                    case 0x14: ret = Interrupts::int0x14( machine, engine ); break;
+                    case 0x15: ret = Interrupts::int0x15( machine, engine ); break;
+                    case 0x16: ret = Interrupts::int0x16( machine, engine ); break;
+                    case 0x17: ret = Interrupts::int0x17( machine, engine ); break;
+                    case 0x18: ret = Interrupts::int0x18( machine, engine ); break;
+                    case 0x19: ret = Interrupts::int0x19( machine, engine ); break;
+                    case 0x1A: ret = Interrupts::int0x1A( machine, engine ); break;
                     
-                    default: return false;
+                    default: break;
                 }
                 
-                return true;
+                return ret;
             }
         );
     }
