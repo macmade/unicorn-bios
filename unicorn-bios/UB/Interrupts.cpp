@@ -25,6 +25,7 @@
 #include "UB/Interrupts.hpp"
 #include "UB/Engine.hpp"
 #include "UB/Machine.hpp"
+#include "UB/BIOS/Video.hpp"
 
 namespace UB
 {
@@ -40,8 +41,11 @@ namespace UB
         
         bool int0x10( const Machine & machine, Engine & engine )
         {
-            ( void )machine;
-            ( void )engine;
+            switch( engine.ah() )
+            {
+                case 0x0E: BIOS::Video::ttyOutput( machine, engine ); return true;
+                default:   break;
+            }
             
             return false;
         }

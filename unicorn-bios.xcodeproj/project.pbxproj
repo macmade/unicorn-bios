@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		053F365F22E892C5003BD8AC /* Interrupts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053F365D22E892C5003BD8AC /* Interrupts.cpp */; };
 		058182F622E8CC1F008D1BFF /* String.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 058182F422E8CC1F008D1BFF /* String.cpp */; };
+		0581833B22E8EC63008D1BFF /* Video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0581833922E8EC63008D1BFF /* Video.cpp */; };
 		058D772922E8B7F100FA58A4 /* Machine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 058D772722E8B7F100FA58A4 /* Machine.cpp */; };
 		05B2813322E77AC700110404 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B2813222E77AC700110404 /* main.cpp */; };
 		05B2818722E78B7400110404 /* Engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B2818622E78B7400110404 /* Engine.cpp */; };
@@ -38,6 +39,8 @@
 		058182F422E8CC1F008D1BFF /* String.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = String.cpp; sourceTree = "<group>"; };
 		058182F522E8CC1F008D1BFF /* String.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = String.hpp; sourceTree = "<group>"; };
 		0581831D22E8DC5C008D1BFF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		0581833922E8EC63008D1BFF /* Video.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Video.cpp; sourceTree = "<group>"; };
+		0581833A22E8EC63008D1BFF /* Video.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Video.hpp; sourceTree = "<group>"; };
 		058D772722E8B7F100FA58A4 /* Machine.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Machine.cpp; sourceTree = "<group>"; };
 		058D772822E8B7F100FA58A4 /* Machine.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Machine.hpp; sourceTree = "<group>"; };
 		05B2812F22E77AC700110404 /* unicorn-bios */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "unicorn-bios"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -111,6 +114,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0581833822E8EC51008D1BFF /* BIOS */ = {
+			isa = PBXGroup;
+			children = (
+				0581833922E8EC63008D1BFF /* Video.cpp */,
+				0581833A22E8EC63008D1BFF /* Video.hpp */,
+			);
+			path = BIOS;
+			sourceTree = "<group>";
+		};
 		05B2812622E77AC700110404 = {
 			isa = PBXGroup;
 			children = (
@@ -254,6 +266,7 @@
 		05B2818422E78B7400110404 /* UB */ = {
 			isa = PBXGroup;
 			children = (
+				0581833822E8EC51008D1BFF /* BIOS */,
 				05B2818C22E7ABFF00110404 /* FAT */,
 				05B2818922E7AA5300110404 /* Arguments.cpp */,
 				05B2818822E7AA5300110404 /* Arguments.hpp */,
@@ -349,6 +362,7 @@
 				05B2818F22E7AC1300110404 /* Image.cpp in Sources */,
 				058D772922E8B7F100FA58A4 /* Machine.cpp in Sources */,
 				05B2819B22E7AF1A00110404 /* BinaryStream.cpp in Sources */,
+				0581833B22E8EC63008D1BFF /* Video.cpp in Sources */,
 				05B2819922E7AF1A00110404 /* BinaryDataStream.cpp in Sources */,
 				05B2819A22E7AF1A00110404 /* BinaryFileStream.cpp in Sources */,
 				05B2818A22E7AA5300110404 /* Arguments.cpp in Sources */,
