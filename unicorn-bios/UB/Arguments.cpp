@@ -46,7 +46,7 @@ namespace UB
         impl( std::make_unique< IMPL >( *( o.impl ) ) )
     {}
     
-    Arguments::Arguments( Arguments && o ):
+    Arguments::Arguments( Arguments && o ) noexcept:
         impl( std::move( o.impl ) )
     {}
     

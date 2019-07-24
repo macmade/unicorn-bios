@@ -37,7 +37,7 @@ namespace UB
             
             Arguments( int argc, const char * argv[] );
             Arguments( const Arguments & o );
-            Arguments( Arguments && o );
+            Arguments( Arguments && o ) noexcept;
             ~Arguments( void );
             
             Arguments & operator =( Arguments o );
