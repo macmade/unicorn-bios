@@ -42,6 +42,8 @@ namespace UB
             
             Machine & operator =( Machine o );
             
+            const FAT::Image & bootImage( void ) const;
+            
             void run( void );
             
             friend void swap( Machine & o1, Machine & o2 );

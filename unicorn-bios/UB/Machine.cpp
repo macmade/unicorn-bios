@@ -72,6 +72,11 @@ namespace UB
         return *( this );
     }
     
+    const FAT::Image & Machine::bootImage( void ) const
+    {
+        return this->impl->_fat;
+    }
+    
     void Machine::run( void )
     {
         if( this->impl->_engine.start( 0x7C00 ) == false )
