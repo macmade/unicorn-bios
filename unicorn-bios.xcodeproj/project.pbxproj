@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		053F365F22E892C5003BD8AC /* Interrupts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053F365D22E892C5003BD8AC /* Interrupts.cpp */; };
+		058182F622E8CC1F008D1BFF /* String.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 058182F422E8CC1F008D1BFF /* String.cpp */; };
+		058D772922E8B7F100FA58A4 /* Machine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 058D772722E8B7F100FA58A4 /* Machine.cpp */; };
 		05B2813322E77AC700110404 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B2813222E77AC700110404 /* main.cpp */; };
 		05B2818722E78B7400110404 /* Engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B2818622E78B7400110404 /* Engine.cpp */; };
 		05B2818A22E7AA5300110404 /* Arguments.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B2818922E7AA5300110404 /* Arguments.cpp */; };
@@ -30,6 +33,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		053F365D22E892C5003BD8AC /* Interrupts.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Interrupts.cpp; sourceTree = "<group>"; };
+		053F365E22E892C5003BD8AC /* Interrupts.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Interrupts.hpp; sourceTree = "<group>"; };
+		058182F422E8CC1F008D1BFF /* String.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = String.cpp; sourceTree = "<group>"; };
+		058182F522E8CC1F008D1BFF /* String.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = String.hpp; sourceTree = "<group>"; };
+		058D772722E8B7F100FA58A4 /* Machine.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Machine.cpp; sourceTree = "<group>"; };
+		058D772822E8B7F100FA58A4 /* Machine.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Machine.hpp; sourceTree = "<group>"; };
 		05B2812F22E77AC700110404 /* unicorn-bios */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "unicorn-bios"; sourceTree = BUILT_PRODUCTS_DIR; };
 		05B2813222E77AC700110404 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		05B2815322E78A0300110404 /* Release - ccache.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Release - ccache.xcconfig"; sourceTree = "<group>"; };
@@ -255,6 +264,12 @@
 				05B2818B22E7AAA600110404 /* Casts.hpp */,
 				05B2818522E78B7400110404 /* Engine.hpp */,
 				05B2818622E78B7400110404 /* Engine.cpp */,
+				053F365D22E892C5003BD8AC /* Interrupts.cpp */,
+				053F365E22E892C5003BD8AC /* Interrupts.hpp */,
+				058D772722E8B7F100FA58A4 /* Machine.cpp */,
+				058D772822E8B7F100FA58A4 /* Machine.hpp */,
+				058182F422E8CC1F008D1BFF /* String.cpp */,
+				058182F522E8CC1F008D1BFF /* String.hpp */,
 			);
 			path = UB;
 			sourceTree = "<group>";
@@ -328,12 +343,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				05B2813322E77AC700110404 /* main.cpp in Sources */,
+				053F365F22E892C5003BD8AC /* Interrupts.cpp in Sources */,
 				05B2818F22E7AC1300110404 /* Image.cpp in Sources */,
+				058D772922E8B7F100FA58A4 /* Machine.cpp in Sources */,
 				05B2819B22E7AF1A00110404 /* BinaryStream.cpp in Sources */,
 				05B2819922E7AF1A00110404 /* BinaryDataStream.cpp in Sources */,
 				05B2819A22E7AF1A00110404 /* BinaryFileStream.cpp in Sources */,
 				05B2818A22E7AA5300110404 /* Arguments.cpp in Sources */,
 				05B2819222E7AE8300110404 /* MBR.cpp in Sources */,
+				058182F622E8CC1F008D1BFF /* String.cpp in Sources */,
 				05B2818722E78B7400110404 /* Engine.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
