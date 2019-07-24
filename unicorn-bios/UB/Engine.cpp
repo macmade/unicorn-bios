@@ -348,6 +348,18 @@ namespace UB
         return true;
     }
     
+    void Engine::stop( void )
+    {
+        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+        
+        if( this->impl->_running == false )
+        {
+            return;
+        }
+        
+        uc_emu_stop( this->impl->_uc );
+    }
+    
     void Engine::waitUntilFinished( void ) const
     {
         std::unique_lock< std::recursive_mutex > l( this->impl->_rmtx );
@@ -401,7 +413,7 @@ namespace UB
         
         if( engine == nullptr )
         {
-            throw std::runtime_error( "Unhandled interrupt: " + std::to_string( i ) );
+            throw std::runtime_error( "Unhandled interrupt: " + String::toHex( i ) );
         }
         
         {
@@ -416,7 +428,7 @@ namespace UB
             }
         }
         
-        throw std::runtime_error( "Unhandled interrupt: " + std::to_string( i ) );
+        throw std::runtime_error( "Unhandled interrupt: " + String::toHex( i ) );
     }
     
     void Engine::IMPL::_write( size_t address, const std::vector< uint8_t > & bytes )

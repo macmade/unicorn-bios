@@ -26,6 +26,9 @@
 #include "UB/Engine.hpp"
 #include "UB/Machine.hpp"
 #include "UB/BIOS/Video.hpp"
+#include "UB/BIOS/Disk.hpp"
+#include "UB/BIOS/Keyboard.hpp"
+#include <iostream>
 
 namespace UB
 {
@@ -68,8 +71,11 @@ namespace UB
         
         bool int0x13( const Machine & machine, Engine & engine )
         {
-            ( void )machine;
-            ( void )engine;
+            switch( engine.ah() )
+            {
+                case 0x02: BIOS::Disk::readSectors( machine, engine ); return true;
+                default:   break;
+            }
             
             return false;
         }
@@ -92,8 +98,11 @@ namespace UB
         
         bool int0x16( const Machine & machine, Engine & engine )
         {
-            ( void )machine;
-            ( void )engine;
+            switch( engine.ah() )
+            {
+                case 0x00: BIOS::Keyboard::readKey( machine, engine ); return true;
+                default:   break;
+            }
             
             return false;
         }
@@ -109,17 +118,23 @@ namespace UB
         bool int0x18( const Machine & machine, Engine & engine )
         {
             ( void )machine;
-            ( void )engine;
             
-            return false;
+            engine.stop();
+            
+            std::cout << "Interrupt 0x18 called - Stopping emulation" << std::endl;
+            
+            return true;
         }
         
         bool int0x19( const Machine & machine, Engine & engine )
         {
             ( void )machine;
-            ( void )engine;
             
-            return false;
+            engine.stop();
+            
+            std::cout << "Interrupt 0x19 called - Stopping emulation" << std::endl;
+            
+            return true;
         }
         
         bool int0x1A( const Machine & machine, Engine & engine )

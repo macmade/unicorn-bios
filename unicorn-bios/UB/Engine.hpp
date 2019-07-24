@@ -92,6 +92,7 @@ namespace UB
             void onInterrupt( const std::function< bool( uint32_t i, Engine & ) > handler );
             void write( size_t address, const std::vector< uint8_t > & bytes );
             bool start( size_t address );
+            void stop( void );
             void waitUntilFinished( void ) const;
             
         private:

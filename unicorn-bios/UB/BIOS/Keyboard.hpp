@@ -22,33 +22,21 @@
  * THE SOFTWARE.
  ******************************************************************************/
 
-#include "UB/BIOS/Video.hpp"
-#include "UB/Machine.hpp"
-#include "UB/Engine.hpp"
-#include <iostream>
-#include <cctype>
+#ifndef UB_BIOS_KEYBOARD_HPP
+#define UB_BIOS_KEYBOARD_HPP
 
 namespace UB
 {
+    class Machine;
+    class Engine;
+    
     namespace BIOS
     {
-        namespace Video
+        namespace Keyboard
         {
-            void ttyOutput( const Machine & machine, Engine & engine )
-            {
-                char c( static_cast< char >( engine.al() ) );
-                
-                ( void )machine;
-                
-                if( std::isprint( c ) || std::isspace( c ) )
-                {
-                    std::cout << c;
-                }
-                else
-                {
-                    std::cout << '.';
-                }
-            }
+            void readKey( const Machine & machine, Engine & engine );
         }
     }
 }
+
+#endif /* UB_BIOS_KEYBOARD_HPP */
