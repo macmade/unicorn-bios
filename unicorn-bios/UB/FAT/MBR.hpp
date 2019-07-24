@@ -47,6 +47,8 @@ namespace UB
                 
                 MBR & operator =( MBR o );
                 
+                std::vector< uint8_t > data( void ) const;
+                
                 friend void swap( MBR & o1, MBR & o2 );
                 
                 friend std::ostream & operator <<( std::ostream & os, const MBR & o );

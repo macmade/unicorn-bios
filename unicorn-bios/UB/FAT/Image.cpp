@@ -88,7 +88,8 @@ namespace UB
         }
         
         Image::IMPL::IMPL( const IMPL & o ):
-            _path( o._path )
+            _path( o._path ),
+            _mbr(  o._mbr )
         {}
     }
 }

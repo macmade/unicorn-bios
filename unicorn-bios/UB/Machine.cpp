@@ -25,6 +25,7 @@
 #include "UB/Machine.hpp"
 #include "UB/Engine.hpp"
 #include "UB/Interrupts.hpp"
+#include "UB/FAT/MBR.hpp"
 
 namespace UB
 {
@@ -110,6 +111,16 @@ namespace UB
     
     void Machine::IMPL::_setup( const Machine & machine )
     {
+        FAT::MBR               mbr( this->_fat.mbr() );
+        std::vector< uint8_t > mbrData( mbr.data() );
+        
+        if( mbrData.size() != 512 )
+        {
+            throw std::runtime_error( "Invalid MBR size: " + std::to_string( mbrData.size() ) );
+        }
+        
+        this->_engine.write( 0x7C00, mbrData );
+        
         this->_engine.onInterrupt
         (
             [ & ]( uint32_t i, Engine & engine ) -> bool

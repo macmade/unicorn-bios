@@ -24,6 +24,7 @@
 
 #include "UB/FAT/MBR.hpp"
 #include "UB/BinaryStream.hpp"
+#include "UB/Casts.hpp"
 #include <array>
 
 namespace UB
@@ -38,6 +39,7 @@ namespace UB
                 IMPL( BinaryStream & stream );
                 IMPL( const IMPL & o );
                 
+                std::vector< uint8_t >     _data;
                 std::array< uint8_t, 3 >   _jmp;
                 std::array< uint8_t, 8 >   _oemID;
                 uint16_t                   _bytesPerSector;
@@ -86,6 +88,11 @@ namespace UB
             swap( *( this ), o );
             
             return *( this );
+        }
+        
+        std::vector< uint8_t > MBR::data( void ) const
+        {
+            return this->impl->_data;
         }
         
         void swap( MBR & o1, MBR & o2 )
@@ -156,6 +163,14 @@ namespace UB
         MBR::IMPL::IMPL( BinaryStream & stream ):
             IMPL()
         {
+            {
+                size_t pos( stream.Tell() );
+                
+                this->_data = stream.Read( 512 );
+                
+                stream.Seek( numeric_cast< ssize_t >( pos ), BinaryStream::SeekDirection::Begin );
+            }
+            
             stream.Read( this->_jmp.data(),   this->_jmp.size() );
             stream.Read( this->_oemID.data(), this->_oemID.size() );
             
@@ -184,6 +199,7 @@ namespace UB
         }
         
         MBR::IMPL::IMPL( const IMPL & o ):
+            _data(                  o._data ),
             _jmp(                   o._jmp ),
             _oemID(                 o._oemID ),
             _bytesPerSector(        o._bytesPerSector ),
