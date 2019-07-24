@@ -24,21 +24,43 @@
 
 #include <iostream>
 #include "UB/Arguments.hpp"
+#include "UB/Machine.hpp"
 
 static void showHelp( void );
 
 int main( int argc, const char * argv[] )
 {
-    UB::Arguments args( argc, argv );
-    
-    if( args.showHelp() )
+    try
     {
-        showHelp();
+        UB::Arguments args( argc, argv );
+        
+        if( args.showHelp() || args.bootImage().length() == 0 )
+        {
+            showHelp();
+            
+            return EXIT_SUCCESS;
+        }
+        
+        {
+            UB::Machine machine( args.memory() * 1024 * 1024, args.bootImage() );
+            
+            machine.run();
+        }
         
         return EXIT_SUCCESS;
     }
-    
-    return EXIT_SUCCESS;
+    catch( const std::exception & e )
+    {
+        std::cerr << "Error: " << e.what() << std::endl;
+        
+        return EXIT_FAILURE;
+    }
+    catch( ... )
+    {
+        std::cerr << "Unknown error" << std::endl;
+        
+        return EXIT_FAILURE;
+    }
 }
 
 static void showHelp( void )

@@ -36,6 +36,8 @@ namespace UB
             IMPL( const IMPL & o );
             ~IMPL( void );
             
+            static size_t memorySizeOrDefault( size_t memory );
+            
             void _setup( const Machine & machine );
             
             size_t     _memory;
@@ -69,9 +71,14 @@ namespace UB
         return *( this );
     }
     
-    bool Machine::start( void )
+    void Machine::run( void )
     {
-        return this->impl->_engine.start( 0x7C00 );
+        if( this->impl->_engine.start( 0x7C00 ) == false )
+        {
+            throw std::runtime_error( "Cannot start engine" );
+        }
+        
+        this->impl->_engine.waitUntilFinished();
     }
     
     void swap( Machine & o1, Machine & o2 )
@@ -82,9 +89,9 @@ namespace UB
     }
 
     Machine::IMPL::IMPL( size_t memory, const FAT::Image & fat ):
-        _memory( memory ),
+        _memory( memorySizeOrDefault( memory ) ),
         _fat(    fat ),
-        _engine( memory )
+        _engine( memorySizeOrDefault( memory ) )
     {}
 
     Machine::IMPL::IMPL( const IMPL & o ):
@@ -95,6 +102,11 @@ namespace UB
 
     Machine::IMPL::~IMPL( void )
     {}
+    
+    size_t Machine::IMPL::memorySizeOrDefault( size_t memory )
+    {
+        return ( memory == 0 ) ? 64 * 1024 * 1024 : memory;
+    }
     
     void Machine::IMPL::_setup( const Machine & machine )
     {

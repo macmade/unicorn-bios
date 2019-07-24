@@ -35,7 +35,9 @@ namespace UB
             IMPL( int argc, const char * argv[] );
             IMPL( const IMPL & o );
             
-            bool _showHelp;
+            bool        _showHelp;
+            size_t      _memory;
+            std::string _bootImage;
     };
     
     Arguments::Arguments( int argc, const char * argv[] ):
@@ -65,6 +67,16 @@ namespace UB
         return this->impl->_showHelp;
     }
     
+    size_t Arguments::memory( void ) const
+    {
+        return this->impl->_memory;
+    }
+    
+    std::string Arguments::bootImage( void ) const
+    {
+        return this->impl->_bootImage;
+    }
+    
     void swap( Arguments & o1, Arguments & o2 )
     {
         using std::swap;
@@ -73,7 +85,8 @@ namespace UB
     }
     
     Arguments::IMPL::IMPL( int argc, const char * argv[] ):
-        _showHelp( false )
+        _showHelp( false ),
+        _memory( 0 )
     {
         if( argc < 1 )
         {
@@ -92,6 +105,8 @@ namespace UB
     }
     
     Arguments::IMPL::IMPL( const IMPL & o ):
-        _showHelp( o._showHelp )
+        _showHelp(  o._showHelp ),
+        _memory(    o._memory ),
+        _bootImage( o._bootImage )
     {}
 }

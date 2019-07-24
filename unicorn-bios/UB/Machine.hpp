@@ -42,7 +42,7 @@ namespace UB
             
             Machine & operator =( Machine o );
             
-            bool start( void );
+            void run( void );
             
             friend void swap( Machine & o1, Machine & o2 );
             

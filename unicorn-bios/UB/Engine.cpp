@@ -28,6 +28,7 @@
  */
 
 #include "UB/Engine.hpp"
+#include "UB/String.hpp"
 #include <unicorn/unicorn.h>
 #include <map>
 #include <mutex>
@@ -268,9 +269,12 @@ namespace UB
             throw std::runtime_error( uc_strerror( e ) );
         }
         
-        if( ( e = uc_mem_map( this->_uc, 0, memory, UC_PROT_ALL ) ) != UC_ERR_OK )
+        if( memory > 0 )
         {
-            throw std::runtime_error( uc_strerror( e ) );
+            if( ( e = uc_mem_map( this->_uc, 0, memory, UC_PROT_ALL ) ) != UC_ERR_OK )
+            {
+                throw std::runtime_error( uc_strerror( e ) );
+            }
         }
     }
     
@@ -339,6 +343,11 @@ namespace UB
     {
         uc_err                                  e;
         std::lock_guard< std::recursive_mutex > l( this->_rmtx );
+        
+        if( address >= this->_memory )
+        {
+            throw std::runtime_error( "Cannot write to address " + String::toHex( address ) + " - Not enough memory allocated" );
+        }
         
         if( ( e = uc_mem_write( this->_uc, address, &( bytes[ 0 ] ), bytes.size() ) ) != UC_ERR_OK )
         {
