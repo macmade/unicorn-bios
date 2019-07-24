@@ -42,4 +42,17 @@ int main( int argc, const char * argv[] )
 }
 
 static void showHelp( void )
-{}
+{
+    std::cout << "Usage: unicorn-bios [OPTIONS] BOOT_IMG"
+              << std::endl
+              << std::endl
+              << "Options:"
+              << std::endl
+              << std::endl
+              << "    --help   / -h:  Displays help"
+              << std::endl
+              << "    --memory / -m:  The amount of memory to allocate for the virtual machine"
+              << std::endl
+              << "                    (in megabytes). Defaults to 64."
+              << std::endl;
+}

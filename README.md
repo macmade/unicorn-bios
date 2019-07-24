@@ -18,7 +18,13 @@ Basic BIOS emulator for Unicorn Engine.
 
 ### Usage:
 
-...
+    Usage: unicorn-bios [OPTIONS] BOOT_IMG
+    
+    Options:
+        
+        --help   / -h:  Displays help
+        --memory / -m:  The amount of memory to allocate for the virtual machine
+                        (in megabytes). Defaults to 64.
 
 ### Installation:
 
