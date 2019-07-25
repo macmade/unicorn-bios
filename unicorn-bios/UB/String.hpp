@@ -62,7 +62,7 @@ namespace UB
                << std::uppercase
                << std::setfill( '0' )
                << std::setw( sizeof( _T_ ) * 2 )
-               << v;
+               << static_cast< uint64_t >( v );
             
             return ss.str();
         }
