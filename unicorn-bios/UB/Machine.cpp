@@ -26,6 +26,8 @@
 #include "UB/Engine.hpp"
 #include "UB/Interrupts.hpp"
 #include "UB/FAT/MBR.hpp"
+#include "UB/String.hpp"
+#include <sstream>
 
 namespace UB
 {
@@ -44,6 +46,7 @@ namespace UB
             size_t     _memory;
             FAT::Image _fat;
             Engine     _engine;
+            UI         _ui;
     };
 
     Machine::Machine( size_t memory, const FAT::Image & fat ):
@@ -77,6 +80,11 @@ namespace UB
         return this->impl->_fat;
     }
     
+    UI & Machine::ui( void ) const
+    {
+        return this->impl->_ui;
+    }
+    
     void Machine::run( void )
     {
         if( this->impl->_engine.start( 0x7C00 ) == false )
@@ -84,7 +92,8 @@ namespace UB
             throw std::runtime_error( "Cannot start engine" );
         }
         
-        this->impl->_engine.waitUntilFinished();
+        this->impl->_ui.run();
+        this->impl->_engine.stop();
     }
     
     void swap( Machine & o1, Machine & o2 )
@@ -103,7 +112,8 @@ namespace UB
     Machine::IMPL::IMPL( const IMPL & o ):
         _memory( o._memory ),
         _fat(    o._fat ),
-        _engine( o._memory )
+        _engine( o._memory ),
+        _ui(     o._ui )
     {}
 
     Machine::IMPL::~IMPL( void )
@@ -131,6 +141,28 @@ namespace UB
             [ & ]( uint32_t i, Engine & engine ) -> bool
             {
                 bool ret( false );
+                
+                {
+                    std::stringstream ss;
+                    
+                    ss << "Interrupt " << String::toHex( i ) << " called:" << std::endl
+                       << "{" << std::endl
+                       << "    AX (AH/AL): " << String::toHex( engine.ax() ) << " (" << String::toHex( engine.ah() ) << "/" << String::toHex( engine.al() ) << ")" << std::endl
+                       << "    BX (BH/BL): " << String::toHex( engine.bx() ) << " (" << String::toHex( engine.bh() ) << "/" << String::toHex( engine.bl() ) << ")" << std::endl
+                       << "    CX (CH/CL): " << String::toHex( engine.cx() ) << " (" << String::toHex( engine.ch() ) << "/" << String::toHex( engine.cl() ) << ")" << std::endl
+                       << "    DX (DH/DL): " << String::toHex( engine.dx() ) << " (" << String::toHex( engine.dh() ) << "/" << String::toHex( engine.dl() ) << ")" << std::endl
+                       << "    SI:         " << String::toHex( engine.si() ) << std::endl
+                       << "    DI:         " << String::toHex( engine.di() ) << std::endl
+                       << "    SP:         " << String::toHex( engine.sp() ) << std::endl
+                       << "    BP:         " << String::toHex( engine.bp() ) << std::endl
+                       << "    CS:         " << String::toHex( engine.cs() ) << std::endl
+                       << "    DS:         " << String::toHex( engine.ds() ) << std::endl
+                       << "    ES:         " << String::toHex( engine.es() ) << std::endl
+                       << "    SS:         " << String::toHex( engine.ss() ) << std::endl
+                       << "}" << std::endl;
+                    
+                    this->_ui.debug( ss.str() );
+                }
                 
                 switch( i )
                 {

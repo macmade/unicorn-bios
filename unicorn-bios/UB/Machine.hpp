@@ -28,6 +28,7 @@
 #include <memory>
 #include <algorithm>
 #include "UB/FAT/Image.hpp"
+#include "UB/UI.hpp"
 
 namespace UB
 {
@@ -43,6 +44,8 @@ namespace UB
             Machine & operator =( Machine o );
             
             const FAT::Image & bootImage( void ) const;
+            
+            UI & ui( void ) const;
             
             void run( void );
             
