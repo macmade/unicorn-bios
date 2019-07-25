@@ -12,6 +12,9 @@
 		0581833B22E8EC63008D1BFF /* Video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0581833922E8EC63008D1BFF /* Video.cpp */; };
 		0581833E22E8EE88008D1BFF /* Disk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0581833C22E8EE88008D1BFF /* Disk.cpp */; };
 		0581834122E8EF49008D1BFF /* Keyboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0581833F22E8EF49008D1BFF /* Keyboard.cpp */; };
+		0581834422E9ACFF008D1BFF /* Screen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0581834222E9ACFF008D1BFF /* Screen.cpp */; };
+		0581834722E9AD06008D1BFF /* UI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0581834522E9AD06008D1BFF /* UI.cpp */; };
+		0581834A22E9AE24008D1BFF /* libncurses.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0581834922E9AE24008D1BFF /* libncurses.tbd */; };
 		058D772922E8B7F100FA58A4 /* Machine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 058D772722E8B7F100FA58A4 /* Machine.cpp */; };
 		05B2813322E77AC700110404 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B2813222E77AC700110404 /* main.cpp */; };
 		05B2818722E78B7400110404 /* Engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B2818622E78B7400110404 /* Engine.cpp */; };
@@ -47,6 +50,11 @@
 		0581833D22E8EE88008D1BFF /* Disk.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Disk.hpp; sourceTree = "<group>"; };
 		0581833F22E8EF49008D1BFF /* Keyboard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Keyboard.cpp; sourceTree = "<group>"; };
 		0581834022E8EF49008D1BFF /* Keyboard.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Keyboard.hpp; sourceTree = "<group>"; };
+		0581834222E9ACFF008D1BFF /* Screen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Screen.cpp; sourceTree = "<group>"; };
+		0581834322E9ACFF008D1BFF /* Screen.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Screen.hpp; sourceTree = "<group>"; };
+		0581834522E9AD06008D1BFF /* UI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UI.cpp; sourceTree = "<group>"; };
+		0581834622E9AD06008D1BFF /* UI.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = UI.hpp; sourceTree = "<group>"; };
+		0581834922E9AE24008D1BFF /* libncurses.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libncurses.tbd; path = usr/lib/libncurses.tbd; sourceTree = SDKROOT; };
 		058D772722E8B7F100FA58A4 /* Machine.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Machine.cpp; sourceTree = "<group>"; };
 		058D772822E8B7F100FA58A4 /* Machine.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Machine.hpp; sourceTree = "<group>"; };
 		05B2812F22E77AC700110404 /* unicorn-bios */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "unicorn-bios"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -114,6 +122,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0581834A22E9AE24008D1BFF /* libncurses.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -133,6 +142,14 @@
 			path = BIOS;
 			sourceTree = "<group>";
 		};
+		0581834822E9AE24008D1BFF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0581834922E9AE24008D1BFF /* libncurses.tbd */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		05B2812622E77AC700110404 = {
 			isa = PBXGroup;
 			children = (
@@ -140,6 +157,7 @@
 				05B2815222E78A0300110404 /* xcconfig */,
 				05B2813122E77AC700110404 /* unicorn-bios */,
 				05B2813022E77AC700110404 /* Products */,
+				0581834822E9AE24008D1BFF /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -293,8 +311,12 @@
 				053F365E22E892C5003BD8AC /* Interrupts.hpp */,
 				058D772722E8B7F100FA58A4 /* Machine.cpp */,
 				058D772822E8B7F100FA58A4 /* Machine.hpp */,
+				0581834222E9ACFF008D1BFF /* Screen.cpp */,
+				0581834322E9ACFF008D1BFF /* Screen.hpp */,
 				058182F422E8CC1F008D1BFF /* String.cpp */,
 				058182F522E8CC1F008D1BFF /* String.hpp */,
+				0581834522E9AD06008D1BFF /* UI.cpp */,
+				0581834622E9AD06008D1BFF /* UI.hpp */,
 			);
 			path = UB;
 			sourceTree = "<group>";
@@ -372,6 +394,8 @@
 				053F365F22E892C5003BD8AC /* Interrupts.cpp in Sources */,
 				05B2818F22E7AC1300110404 /* Image.cpp in Sources */,
 				058D772922E8B7F100FA58A4 /* Machine.cpp in Sources */,
+				0581834722E9AD06008D1BFF /* UI.cpp in Sources */,
+				0581834422E9ACFF008D1BFF /* Screen.cpp in Sources */,
 				05B2819B22E7AF1A00110404 /* BinaryStream.cpp in Sources */,
 				0581833B22E8EC63008D1BFF /* Video.cpp in Sources */,
 				05B2819922E7AF1A00110404 /* BinaryDataStream.cpp in Sources */,

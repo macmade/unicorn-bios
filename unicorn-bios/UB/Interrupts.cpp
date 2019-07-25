@@ -28,7 +28,6 @@
 #include "UB/BIOS/Video.hpp"
 #include "UB/BIOS/Disk.hpp"
 #include "UB/BIOS/Keyboard.hpp"
-#include <iostream>
 
 namespace UB
 {
@@ -119,9 +118,8 @@ namespace UB
         {
             ( void )machine;
             
+            machine.ui().debug( "Stopping emulation" );
             engine.stop();
-            
-            std::cout << "Interrupt 0x18 called - Stopping emulation" << std::endl;
             
             return true;
         }
@@ -130,9 +128,8 @@ namespace UB
         {
             ( void )machine;
             
+            machine.ui().debug( "Stopping emulation" );
             engine.stop();
-            
-            std::cout << "Interrupt 0x19 called - Stopping emulation" << std::endl;
             
             return true;
         }

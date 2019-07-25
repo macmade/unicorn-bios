@@ -25,7 +25,6 @@
 #include "UB/BIOS/Video.hpp"
 #include "UB/Machine.hpp"
 #include "UB/Engine.hpp"
-#include <iostream>
 #include <cctype>
 
 namespace UB
@@ -42,11 +41,11 @@ namespace UB
                 
                 if( std::isprint( c ) || std::isspace( c ) )
                 {
-                    std::cout << c;
+                    machine.ui().output( std::string( 1, c ) );
                 }
                 else
                 {
-                    std::cout << '.';
+                    machine.ui().output( "." );
                 }
             }
         }
