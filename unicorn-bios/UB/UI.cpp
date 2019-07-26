@@ -32,6 +32,7 @@
 #include <ncurses.h>
 #include <sstream>
 #include <mutex>
+#include <optional>
 
 namespace UB
 {
@@ -50,12 +51,20 @@ namespace UB
             void _displayInstructions( void );
             void _displayDisassembly( void );
             void _displayMemory( void );
+            void _memoryScrollUp( size_t n = 1 );
+            void _memoryScrollDown( size_t n = 1 );
+            void _memoryPageUp( void );
+            void _memoryPageDown( void );
             
             bool                         _running;
             Screen                       _screen;
             Engine                     & _engine;
             std::stringstream            _output;
             std::stringstream            _debug;
+            size_t                       _memoryOffset;
+            size_t                       _memoryBytesPerLine;
+            size_t                       _memoryLines;
+            std::optional< std::string > _memoryAddressPrompt;
             mutable std::recursive_mutex _rmtx;
     };
     
@@ -135,8 +144,11 @@ namespace UB
     }
     
     UI::IMPL::IMPL( Engine & engine ):
-        _running( false ),
-        _engine( engine )
+        _running(            false ),
+        _engine(             engine ),
+        _memoryOffset(       0x7C00 ),
+        _memoryBytesPerLine( 0 ),
+        _memoryLines(        0 )
     {
         this->_setup();
     }
@@ -146,11 +158,14 @@ namespace UB
     {}
     
     UI::IMPL::IMPL( const IMPL & o, const std::lock_guard< std::recursive_mutex > & l ):
-        _running( false ),
-        _screen(  o._screen ),
-        _engine(  o._engine ),
-        _output(  o._output.str() ),
-        _debug(   o._debug.str() )
+        _running(            false ),
+        _screen(             o._screen ),
+        _engine(             o._engine ),
+        _output(             o._output.str() ),
+        _debug(              o._debug.str() ),
+        _memoryOffset(       o._memoryOffset ),
+        _memoryBytesPerLine( o._memoryBytesPerLine ),
+        _memoryLines(        o._memoryLines )
     {
         ( void )l;
         
@@ -179,6 +194,64 @@ namespace UB
                 if( key == 'q' )
                 {
                     this->_screen.stop();
+                }
+                else if( key == 'm' )
+                {
+                    if( this->_memoryAddressPrompt.has_value() )
+                    {
+                        this->_memoryAddressPrompt = {};
+                    }
+                    else
+                    {
+                        this->_memoryAddressPrompt = "";
+                    }
+                }
+                else if( ( key == 10 || key == 13 ) && this->_memoryAddressPrompt.has_value() )
+                {
+                    std::string prompt( this->_memoryAddressPrompt.value() );
+                    
+                    if( prompt.length() > 0 )
+                    {
+                        this->_memoryOffset = String::fromHex< size_t >( prompt );
+                    }
+                    
+                    this->_memoryAddressPrompt = {};
+                }
+                else if( key == 127 && this->_memoryAddressPrompt.has_value() )
+                {
+                    std::string prompt( this->_memoryAddressPrompt.value() );
+                    
+                    if( prompt.length() > 0 )
+                    {
+                        this->_memoryAddressPrompt = prompt.substr( 0, prompt.length() - 1 );
+                    }
+                }
+                else
+                {
+                    if( this->_memoryAddressPrompt.has_value() && key >= 0 && key < 128 && isprint( key ) )
+                    {
+                        this->_memoryAddressPrompt = this->_memoryAddressPrompt.value() + numeric_cast< char >( key );
+                    }
+                    else if( key == 'a' )
+                    {
+                        this->_memoryScrollUp();
+                    }
+                    else if( key == 's' )
+                    {
+                        this->_memoryScrollDown();
+                    }
+                    else if( key == 'd' )
+                    {
+                        this->_memoryPageUp();
+                    }
+                    else if( key == 'f' )
+                    {
+                        this->_memoryPageDown();
+                    }
+                    else if( key == 'g' )
+                    {
+                        this->_memoryOffset = 0;
+                    }
                 }
             }
         );
@@ -469,8 +542,61 @@ namespace UB
                 y = 3;
             }
             
+            if( this->_memoryAddressPrompt.has_value() )
             {
+                ::wmove( win, 3, 2 );
+                ::wprintw( win, "Enter a memory address:" );
+                ::wmove( win, 4, 2 );
+                ::wprintw( win, this->_memoryAddressPrompt.value().c_str() );
+            }
+            else
+            {
+                size_t cols(  this->_screen.width()  - 4 );
+                size_t lines( numeric_cast< size_t >( height ) - 4 );
                 
+                this->_memoryBytesPerLine = ( cols / 4 ) - 5;
+                this->_memoryLines        = lines;
+                
+                {
+                    size_t                 size(   this->_memoryBytesPerLine * lines );
+                    size_t                 offset( this->_memoryOffset );
+                    std::vector< uint8_t > mem(    this->_engine.read( offset, size ) );
+                    
+                    for( size_t i = 0; i < mem.size(); i++ )
+                    {
+                        if( i % this->_memoryBytesPerLine == 0 )
+                        {
+                            ::wmove( win, y++, 2 );
+                            ::wprintw( win, "%016X: ", offset );
+                            
+                            offset += this->_memoryBytesPerLine;
+                        }
+                        
+                        ::wprintw( win, "%02X ", numeric_cast< int >( mem[ i ] ) );
+                    }
+                    
+                    y = 3;
+                    
+                    ::wmove( win, y, numeric_cast< int >( this->_memoryBytesPerLine * 3 ) + 4 + 16 );
+                    ::wvline( win, 0, numeric_cast< int >( lines ) );
+                    
+                    for( size_t i = 0; i < mem.size(); i++ )
+                    {
+                        char c = static_cast< char >( mem[ i ] );
+                        
+                        if( i % this->_memoryBytesPerLine == 0 )
+                        {
+                            ::wmove( win, y++, numeric_cast< int >( this->_memoryBytesPerLine * 3 ) + 4 + 18 );
+                        }
+                        
+                        if( isprint( c ) == false || isspace( c ) )
+                        {
+                            c = '.';
+                        }
+                        
+                        ::wprintw( win, "%c", c );
+                    }
+                }
             }
             
             this->_screen.refresh();
@@ -478,5 +604,35 @@ namespace UB
             ::wrefresh( win );
             ::delwin( win );
         }
+    }
+    
+    void UI::IMPL::_memoryScrollUp( size_t n )
+    {
+        if( this->_memoryOffset > ( this->_memoryBytesPerLine * n ) )
+        {
+            this->_memoryOffset -= ( this->_memoryBytesPerLine * n );
+        }
+        else
+        {
+            this->_memoryOffset = 0;
+        }
+    }
+    
+    void UI::IMPL::_memoryScrollDown( size_t n )
+    {
+        if( ( this->_memoryOffset + ( this->_memoryBytesPerLine * n ) ) < this->_engine.memory() )
+        {
+            this->_memoryOffset += ( this->_memoryBytesPerLine * n );
+        }
+    }
+    
+    void UI::IMPL::_memoryPageUp( void )
+    {
+        this->_memoryScrollUp( this->_memoryLines );
+    }
+    
+    void UI::IMPL::_memoryPageDown( void )
+    {
+        this->_memoryScrollDown( this->_memoryLines );
     }
 }

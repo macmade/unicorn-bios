@@ -99,6 +99,11 @@ namespace UB
     Engine::~Engine( void )
     {}
     
+    size_t Engine::memory( void ) const
+    {
+        return this->impl->_memory;
+    }
+    
     uint8_t Engine::ah( void ) const
     {
         return this->impl->_readRegister< uint8_t >( UC_X86_REG_AH );

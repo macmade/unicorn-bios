@@ -45,6 +45,8 @@ namespace UB
             Engine & operator =( const Engine & o ) = delete;
             Engine & operator =( Engine && o )      = delete;
             
+            size_t memory( void ) const;
+            
             uint8_t ah( void ) const;
             uint8_t al( void ) const;
             uint8_t bh( void ) const;
