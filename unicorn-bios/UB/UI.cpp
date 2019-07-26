@@ -279,6 +279,7 @@ namespace UB
             
             {
                 std::vector< std::string > lines;
+                size_t                     maxLines( numeric_cast< size_t >( height ) - 4 );
                 
                 {
                     std::lock_guard< std::recursive_mutex > l( this->_rmtx );
@@ -286,13 +287,13 @@ namespace UB
                     lines = String::lines( this->_output.str() );
                 }
                 
+                if( lines.size() > maxLines )
+                {
+                    lines = std::vector< std::string >( lines.end() - numeric_cast< ssize_t >( maxLines ), lines.end() );
+                }
+                
                 for( const auto & s: lines )
                 {
-                    if( y == height - 1 )
-                    {
-                        break;
-                    }
-                    
                     ::wmove( win, y++, 2 );
                     ::wprintw( win, s.c_str() );
                 }
@@ -327,6 +328,7 @@ namespace UB
             
             {
                 std::vector< std::string > lines;
+                size_t                     maxLines( numeric_cast< size_t >( height ) - 4 );
                 
                 {
                     std::lock_guard< std::recursive_mutex > l( this->_rmtx );
@@ -334,13 +336,13 @@ namespace UB
                     lines = String::lines( this->_debug.str() );
                 }
                 
+                if( lines.size() > maxLines )
+                {
+                    lines = std::vector< std::string >( lines.end() - numeric_cast< ssize_t >( maxLines ), lines.end() );
+                }
+                
                 for( const auto & s: lines )
                 {
-                    if( y == height - 1 )
-                    {
-                        break;
-                    }
-                    
                     ::wmove( win, y++, 2 );
                     ::wprintw( win, s.c_str() );
                 }
