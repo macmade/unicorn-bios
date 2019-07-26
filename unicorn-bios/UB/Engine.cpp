@@ -436,7 +436,8 @@ namespace UB
     
     void Engine::IMPL::_handleInterrupt( uc_engine * uc, uint32_t i, void * data )
     {
-        Engine * engine;
+        Engine                                                     * engine;
+        std::vector< std::function< bool( uint32_t i, Engine & ) > > interrupts;
         
         ( void )uc;
         
@@ -450,12 +451,14 @@ namespace UB
         {
             std::lock_guard< std::recursive_mutex > l( engine->impl->_rmtx );
             
-            for( const auto & f: engine->impl->_interrupts )
+            interrupts = engine->impl->_interrupts;
+        }
+        
+        for( const auto & f: interrupts )
+        {
+            if( f( i, *( engine ) ) )
             {
-                if( f( i, *( engine ) ) )
-                {
-                    return;
-                }
+                return;
             }
         }
         
