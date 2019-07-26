@@ -34,6 +34,7 @@
 #include <mutex>
 #include <optional>
 #include <thread>
+#include <functional>
 #include <condition_variable>
 
 namespace UB
@@ -59,16 +60,18 @@ namespace UB
             void _memoryPageUp( void );
             void _memoryPageDown( void );
             
-            bool                         _running;
-            Screen                       _screen;
-            Engine                     & _engine;
-            std::stringstream            _output;
-            std::stringstream            _debug;
-            size_t                       _memoryOffset;
-            size_t                       _memoryBytesPerLine;
-            size_t                       _memoryLines;
-            std::optional< std::string > _memoryAddressPrompt;
-            mutable std::recursive_mutex _rmtx;
+            bool                                         _running;
+            Screen                                       _screen;
+            Engine                                     & _engine;
+            std::stringstream                            _output;
+            std::stringstream                            _debug;
+            std::string                                  _status;
+            size_t                                       _memoryOffset;
+            size_t                                       _memoryBytesPerLine;
+            size_t                                       _memoryLines;
+            std::optional< std::string >                 _memoryAddressPrompt;
+            std::vector< std::function< void( void ) > > _waitEnterKeyPress;
+            mutable std::recursive_mutex                 _rmtx;
     };
     
     UI::UI( Engine & engine ):
@@ -144,6 +147,46 @@ namespace UB
         }
     }
     
+    void UI::waitForUserResume( void )
+    {
+        bool                        keyPressed( false );
+        std::condition_variable_any cv;
+        
+        {
+            std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+            std::string                             s;
+            
+            this->impl->_status = "Emulation paused - Press [ENTER] to continue...";
+            
+            this->impl->_waitEnterKeyPress.push_back
+            (
+                [ & ]
+                {
+                    std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+                    
+                    keyPressed = true;
+                    
+                    this->impl->_status = ( this->impl->_engine.running() ) ? "Emulation running..." : "Emulation stopped";
+                    
+                    cv.notify_all();
+                }
+            );
+        }
+        
+        {
+            std::unique_lock< std::recursive_mutex > l( this->impl->_rmtx );
+            
+            cv.wait
+            (
+                l,
+                [ & ]( void ) -> bool
+                {
+                    return keyPressed;
+                }
+            );
+        }
+    }
+    
     void UI::output( const std::string & s )
     {
         std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
@@ -175,6 +218,7 @@ namespace UB
     UI::IMPL::IMPL( Engine & engine ):
         _running(            false ),
         _engine(             engine ),
+        _status(             "Emulation not running" ),
         _memoryOffset(       0x7C00 ),
         _memoryBytesPerLine( 0 ),
         _memoryLines(        0 )
@@ -192,6 +236,7 @@ namespace UB
         _engine(             o._engine ),
         _output(             o._output.str() ),
         _debug(              o._debug.str() ),
+        _status(             "Emulation not running" ),
         _memoryOffset(       o._memoryOffset ),
         _memoryBytesPerLine( o._memoryBytesPerLine ),
         _memoryLines(        o._memoryLines )
@@ -203,6 +248,26 @@ namespace UB
     
     void UI::IMPL::_setup( void )
     {
+        this->_engine.onStart
+        (
+            [ & ]
+            {
+                std::lock_guard< std::recursive_mutex > l( this->_rmtx );
+                
+                this->_status = "Emulation running...";
+            }
+        );
+        
+        this->_engine.onStop
+        (
+            [ & ]
+            {
+                std::lock_guard< std::recursive_mutex > l( this->_rmtx );
+                
+                this->_status = "Emulation stopped";
+            }
+        );
+        
         this->_screen.onUpdate
         (
             [ & ]( void )
@@ -246,6 +311,17 @@ namespace UB
                     }
                     
                     this->_memoryAddressPrompt = {};
+                }
+                else if( ( key == 10 || key == 13 ) )
+                {
+                    std::lock_guard< std::recursive_mutex > l( this->_rmtx );
+                    
+                    for( const auto & f: this->_waitEnterKeyPress )
+                    {
+                        f();
+                    }
+                    
+                    this->_waitEnterKeyPress = {};
                 }
                 else if( key == 127 && this->_memoryAddressPrompt.has_value() )
                 {
@@ -298,9 +374,11 @@ namespace UB
             ::WINDOW * win( ::newwin( height, width, y, x ) );
             
             {
+                std::lock_guard< std::recursive_mutex > l( this->_rmtx );
+                
                 ::box( win, 0, 0 );
                 ::wmove( win, 1, 2 );
-                ::wprintw( win, "Status: running..." );
+                ::wprintw( win, this->_status.c_str() );
                 ::wmove( win, 2, 1 );
                 ::whline( win, 0, width - 2 );
             }

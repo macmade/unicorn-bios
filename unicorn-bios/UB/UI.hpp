@@ -45,6 +45,7 @@ namespace UB
             UI & operator =( UI o );
             
             void run( void );
+            void waitForUserResume( void );
             
             void output( const std::string & s );
             void debug(  const std::string & s );

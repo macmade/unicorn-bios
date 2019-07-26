@@ -143,13 +143,10 @@ namespace UB
             {
                 bool ret( false );
                 
-                {
-                    std::stringstream ss;
-                    
-                    ss << "Interrupt " << String::toHex( i ) << " called" << std::endl;
-                    
-                    this->_ui.debug( ss.str() );
-                }
+                this->_ui.debug( "[ BREAK ]> Interrupt " + String::toHex( i ) + "\n" );
+                this->_ui.waitForUserResume();
+                this->_ui.debug( "[ BREAK ]> Return from interrupt\n" );
+                this->_ui.waitForUserResume();
                 
                 switch( i )
                 {

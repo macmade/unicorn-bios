@@ -50,6 +50,8 @@ namespace UB
             void                   _write( size_t address, const std::vector< uint8_t > & bytes );
             
             size_t                                                       _memory;
+            std::vector< std::function< void( void ) > >                 _onStart;
+            std::vector< std::function< void( void ) > >                 _onStop;
             std::vector< std::function< bool( uint32_t i, Engine & ) > > _interrupts;
             uc_engine                                                  * _uc;
             bool                                                         _running;
@@ -324,8 +326,31 @@ namespace UB
         this->impl->_writeRegister( UC_X86_REG_EFLAGS, value );
     }
     
+    bool Engine::running( void ) const
+    {
+        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+        
+        return this->impl->_running;
+    }
+    
+    void Engine::onStart( const std::function< void( void ) > f )
+    {
+        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+        
+        this->impl->_onStart.push_back( f );
+    }
+    
+    void Engine::onStop( const std::function< void( void ) > f )
+    {
+        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+        
+        this->impl->_onStop.push_back( f );
+    }
+    
     void Engine::onInterrupt( const std::function< bool( uint32_t i, Engine & ) > handler )
     {
+        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+        
         this->impl->_interrupts.push_back( handler );
     }
     
@@ -352,6 +377,11 @@ namespace UB
             this->impl->_running = true;
             
             this->impl->_cv.notify_all();
+            
+            for( const auto & f: this->impl->_onStart )
+            {
+                f();
+            }
         }
         
         std::thread
@@ -371,6 +401,11 @@ namespace UB
                     this->impl->_running = false;
                     
                     this->impl->_cv.notify_all();
+                    
+                    for( const auto & f: this->impl->_onStop )
+                    {
+                        f();
+                    }
                 }
             }
         )

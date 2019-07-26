@@ -95,6 +95,10 @@ namespace UB
             void ip( uint16_t value );
             void eflags( uint32_t value );
             
+            bool running( void ) const;
+            
+            void onStart(     const std::function< void( void ) > f );
+            void onStop(      const std::function< void( void ) > f );
             void onInterrupt( const std::function< bool( uint32_t i, Engine & ) > handler );
             
             std::vector< uint8_t > read( size_t address, size_t size );
