@@ -4,3 +4,6 @@
 [submodule "Submodules/unicorn"]
 	path = Submodules/unicorn
 	url = https://github.com/macmade/unicorn.git
+[submodule "Submodules/capstone"]
+	path = Submodules/capstone
+	url = https://github.com/macmade/capstone.git

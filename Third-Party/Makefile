@@ -22,17 +22,24 @@
 # THE SOFTWARE.
 ################################################################################
 
-PATH_UNICORN := ../Submodules/unicorn
-PATH_INC     := include
-PATH_LIB     := lib
+PATH_UNICORN  := ../Submodules/unicorn
+PATH_CAPSTONE := ../Submodules/capstone
+PATH_INC      := include
+PATH_LIB      := lib
 
-all: unicorn
+all: unicorn capstone
 	
 	@rm -rf $(PATH_INC)/*
 	@rm -rf $(PATH_LIB)/*
 	@cp -r $(PATH_UNICORN)/include/* $(PATH_INC)
 	@cp -r $(PATH_UNICORN)/libunicorn.a $(PATH_LIB)
+	@cp -r $(PATH_CAPSTONE)/include/* $(PATH_INC)
+	@cp -r $(PATH_CAPSTONE)/libcapstone.a $(PATH_LIB)
 	
 unicorn:
 	
 	@cd $(PATH_UNICORN) && $(MAKE) clean && $(MAKE)
+	
+capstone:
+	
+	@cd $(PATH_CAPSTONE) && $(MAKE) clean && $(MAKE)
