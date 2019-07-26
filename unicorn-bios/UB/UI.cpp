@@ -182,22 +182,85 @@ namespace UB
     }
     
     void UI::IMPL::_displayOutput( void )
-    {}
+    {
+        int x(      0 );
+        int y(      15 + ( ( static_cast< int >( this->_screen.height() ) - 15 ) / 2 ) );
+        int width(  static_cast< int >( this->_screen.width() ) / 2 );
+        int height( ( static_cast< int >( this->_screen.height() ) - 15 ) / 2 );
+        
+        {
+            ::WINDOW * win( ::newwin( height, width, y, x ) );
+            
+            {
+                ::box( win, 0, 0 );
+                ::wmove( win, 1, 2 );
+                ::wprintw( win, "Output:" );
+                ::wmove( win, 2, 1 );
+                ::whline( win, 0, width - 2 );
+                
+                y = 3;
+            }
+            
+            {
+                
+            }
+            
+            this->_screen.refresh();
+            ::wmove( win, 0, 0 );
+            ::wrefresh( win );
+            ::delwin( win );
+        }
+    }
     
     void UI::IMPL::_displayDebug( void )
-    {}
+    {
+        int x(      static_cast< int >( this->_screen.width() ) / 2 );
+        int y(      15 + ( ( static_cast< int >( this->_screen.height() ) - 15 ) / 2 ) );
+        int width(  static_cast< int >( this->_screen.width() ) / 2 );
+        int height( ( static_cast< int >( this->_screen.height() ) - 15 ) / 2 );
+        
+        {
+            ::WINDOW * win( ::newwin( height, width, y, x ) );
+            
+            {
+                ::box( win, 0, 0 );
+                ::wmove( win, 1, 2 );
+                ::wprintw( win, "Debug:" );
+                ::wmove( win, 2, 1 );
+                ::whline( win, 0, width - 2 );
+                
+                y = 3;
+            }
+            
+            {
+                
+            }
+            
+            this->_screen.refresh();
+            ::wmove( win, 0, 0 );
+            ::wrefresh( win );
+            ::delwin( win );
+        }
+    }
     
     void UI::IMPL::_displayRegisters( void )
     {
+        int x(      0 );
+        int y(      0 );
+        int width(  36 );
+        int height( 15 );
+        
         {
-            ::WINDOW * win( ::newwin( 15, 36, 0, 0 ) );
+            ::WINDOW * win( ::newwin( height, width, y, x ) );
             
             {
                 ::box( win, 0, 0 );
                 ::wmove( win, 1, 2 );
                 ::wprintw( win, "CPU Registers:" );
                 ::wmove( win, 2, 1 );
-                ::whline( win, 0, 34 );
+                ::whline( win, 0, width - 2 );
+                
+                y = 3;
             }
             
             {
@@ -223,7 +286,6 @@ namespace UB
                 std::string ss( String::toHex( this->_engine.ss() ) );
                 std::string ip( String::toHex( this->_engine.ip() ) );
                 std::string fl( String::toHex( this->_engine.eflags() ) );
-                int         y( 3 );
                 
                 ::wmove( win, y++, 2 );
                 ::wprintw( win, ( "AX: " + ax + " | AH: " + ah + " | AL: " + al ).c_str() );
@@ -234,7 +296,7 @@ namespace UB
                 ::wmove( win, y++, 2 );
                 ::wprintw( win, ( "DX: " + dx + " | DH: " + dh + " | DL: " + dl ).c_str() );
                 ::wmove( win, y++, 1 );
-                ::whline( win, 0, 34 );
+                ::whline( win, 0, width - 2 );
                 ::wmove( win, y++, 2 );
                 ::wprintw( win, ( "SI: " + si + " | DI: " + di ).c_str() );
                 ::wmove( win, y++, 2 );
@@ -244,7 +306,7 @@ namespace UB
                 ::wmove( win, y++, 2 );
                 ::wprintw( win, ( "ES: " + es + " | SS: " + ss ).c_str() );
                 ::wmove( win, y++, 1 );
-                ::whline( win, 0, 34 );
+                ::whline( win, 0, width - 2 );
                 ::wmove( win, y++, 2 );
                 ::wprintw( win, ( "IP: " + ip + " | Flags: " + fl ).c_str() );
             }
@@ -257,8 +319,64 @@ namespace UB
     }
     
     void UI::IMPL::_displayDisassembly( void )
-    {}
+    {
+        int x(      36 );
+        int y(      0 );
+        int width(  static_cast< int >( this->_screen.width() ) - x );
+        int height( 15 );
+        
+        {
+            ::WINDOW * win( ::newwin( height, width, y, x ) );
+            
+            {
+                ::box( win, 0, 0 );
+                ::wmove( win, 1, 2 );
+                ::wprintw( win, "Disassembly:" );
+                ::wmove( win, 2, 1 );
+                ::whline( win, 0, width - 2 );
+                
+                y = 3;
+            }
+            
+            {
+                
+            }
+            
+            this->_screen.refresh();
+            ::wmove( win, 0, 0 );
+            ::wrefresh( win );
+            ::delwin( win );
+        }
+    }
     
     void UI::IMPL::_displayMemory( void )
-    {}
+    {
+        int x(      0 );
+        int y(      15 );
+        int width(  static_cast< int >( this->_screen.width() ) );
+        int height( ( static_cast< int >( this->_screen.height() ) - y ) / 2 );
+        
+        {
+            ::WINDOW * win( ::newwin( height, width, y, x ) );
+            
+            {
+                ::box( win, 0, 0 );
+                ::wmove( win, 1, 2 );
+                ::wprintw( win, "Memory:" );
+                ::wmove( win, 2, 1 );
+                ::whline( win, 0, width - 2 );
+                
+                y = 3;
+            }
+            
+            {
+                
+            }
+            
+            this->_screen.refresh();
+            ::wmove( win, 0, 0 );
+            ::wrefresh( win );
+            ::delwin( win );
+        }
+    }
 }
