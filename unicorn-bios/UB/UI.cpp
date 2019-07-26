@@ -45,6 +45,7 @@ namespace UB
             IMPL( const IMPL & o, const std::lock_guard< std::recursive_mutex > & l );
             
             void _setup( void );
+            void _displayStatus( void );
             void _displayOutput( void );
             void _displayDebug( void );
             void _displayRegisters( void );
@@ -178,12 +179,13 @@ namespace UB
         (
             [ & ]( void )
             {
-                this->_displayOutput();
-                this->_displayDebug();
                 this->_displayRegisters();
                 this->_displayInstructions();
                 this->_displayDisassembly();
                 this->_displayMemory();
+                this->_displayOutput();
+                this->_displayDebug();
+                this->_displayStatus();
             }
         );
         
@@ -257,12 +259,37 @@ namespace UB
         );
     }
     
+    void UI::IMPL::_displayStatus( void )
+    {
+        int x(      0 );
+        int y(      static_cast< int >( this->_screen.height() ) - 3 );
+        int width(  static_cast< int >( this->_screen.width() ) );
+        int height( 3 );
+        
+        {
+            ::WINDOW * win( ::newwin( height, width, y, x ) );
+            
+            {
+                ::box( win, 0, 0 );
+                ::wmove( win, 1, 2 );
+                ::wprintw( win, "Status: running..." );
+                ::wmove( win, 2, 1 );
+                ::whline( win, 0, width - 2 );
+            }
+            
+            this->_screen.refresh();
+            ::wmove( win, 0, 0 );
+            ::wrefresh( win );
+            ::delwin( win );
+        }
+    }
+    
     void UI::IMPL::_displayOutput( void )
     {
         int x(      0 );
         int y(      15 + ( ( static_cast< int >( this->_screen.height() ) - 15 ) / 2 ) );
         int width(  static_cast< int >( this->_screen.width() ) / 2 );
-        int height( ( static_cast< int >( this->_screen.height() ) - 15 ) / 2 );
+        int height( ( ( static_cast< int >( this->_screen.height() ) - 15 ) / 2 ) - 2 );
         
         {
             ::WINDOW * win( ::newwin( height, width, y, x ) );
@@ -311,7 +338,7 @@ namespace UB
         int x(      static_cast< int >( this->_screen.width() ) / 2 );
         int y(      15 + ( ( static_cast< int >( this->_screen.height() ) - 15 ) / 2 ) );
         int width(  static_cast< int >( this->_screen.width() ) / 2 );
-        int height( ( static_cast< int >( this->_screen.height() ) - 15 ) / 2 );
+        int height( ( ( static_cast< int >( this->_screen.height() ) - 15 ) / 2 ) - 2 );
         
         {
             ::WINDOW * win( ::newwin( height, width, y, x ) );
