@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		053F365F22E892C5003BD8AC /* Interrupts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053F365D22E892C5003BD8AC /* Interrupts.cpp */; };
+		0559286B22EB3048003878B6 /* Capstone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0559286922EB3048003878B6 /* Capstone.cpp */; };
 		058182F622E8CC1F008D1BFF /* String.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 058182F422E8CC1F008D1BFF /* String.cpp */; };
 		0581833B22E8EC63008D1BFF /* Video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0581833922E8EC63008D1BFF /* Video.cpp */; };
 		0581833E22E8EE88008D1BFF /* Disk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0581833C22E8EE88008D1BFF /* Disk.cpp */; };
@@ -41,6 +42,8 @@
 /* Begin PBXFileReference section */
 		053F365D22E892C5003BD8AC /* Interrupts.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Interrupts.cpp; sourceTree = "<group>"; };
 		053F365E22E892C5003BD8AC /* Interrupts.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Interrupts.hpp; sourceTree = "<group>"; };
+		0559286922EB3048003878B6 /* Capstone.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Capstone.cpp; sourceTree = "<group>"; };
+		0559286A22EB3048003878B6 /* Capstone.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Capstone.hpp; sourceTree = "<group>"; };
 		058182F422E8CC1F008D1BFF /* String.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = String.cpp; sourceTree = "<group>"; };
 		058182F522E8CC1F008D1BFF /* String.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = String.hpp; sourceTree = "<group>"; };
 		0581831D22E8DC5C008D1BFF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -304,6 +307,8 @@
 				05B2819522E7AF1A00110404 /* BinaryFileStream.hpp */,
 				05B2819622E7AF1A00110404 /* BinaryStream.cpp */,
 				05B2819822E7AF1A00110404 /* BinaryStream.hpp */,
+				0559286922EB3048003878B6 /* Capstone.cpp */,
+				0559286A22EB3048003878B6 /* Capstone.hpp */,
 				05B2818B22E7AAA600110404 /* Casts.hpp */,
 				05B2818522E78B7400110404 /* Engine.hpp */,
 				05B2818622E78B7400110404 /* Engine.cpp */,
@@ -395,6 +400,7 @@
 				05B2818F22E7AC1300110404 /* Image.cpp in Sources */,
 				058D772922E8B7F100FA58A4 /* Machine.cpp in Sources */,
 				0581834722E9AD06008D1BFF /* UI.cpp in Sources */,
+				0559286B22EB3048003878B6 /* Capstone.cpp in Sources */,
 				0581834422E9ACFF008D1BFF /* Screen.cpp in Sources */,
 				05B2819B22E7AF1A00110404 /* BinaryStream.cpp in Sources */,
 				0581833B22E8EC63008D1BFF /* Video.cpp in Sources */,
@@ -437,7 +443,10 @@
 				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = NO;
 				HEADER_SEARCH_PATHS = "Third-Party/include";
 				LIBRARY_SEARCH_PATHS = "Third-Party/lib";
-				OTHER_LDFLAGS = "-lunicorn";
+				OTHER_LDFLAGS = (
+					"-lunicorn",
+					"-lcapstone",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "unicorn-bios";
 			};
@@ -451,7 +460,10 @@
 				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = NO;
 				HEADER_SEARCH_PATHS = "Third-Party/include";
 				LIBRARY_SEARCH_PATHS = "Third-Party/lib";
-				OTHER_LDFLAGS = "-lunicorn";
+				OTHER_LDFLAGS = (
+					"-lunicorn",
+					"-lcapstone",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "unicorn-bios";
 			};

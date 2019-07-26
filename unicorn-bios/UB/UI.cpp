@@ -28,6 +28,7 @@
 #include "UB/Casts.hpp"
 #include "UB/Engine.hpp"
 #include "UB/Casts.hpp"
+#include "UB/Capstone.hpp"
 #include <ncurses.h>
 #include <sstream>
 #include <mutex>
@@ -46,6 +47,7 @@ namespace UB
             void _displayOutput( void );
             void _displayDebug( void );
             void _displayRegisters( void );
+            void _displayInstructions( void );
             void _displayDisassembly( void );
             void _displayMemory( void );
             
@@ -164,6 +166,7 @@ namespace UB
                 this->_displayOutput();
                 this->_displayDebug();
                 this->_displayRegisters();
+                this->_displayInstructions();
                 this->_displayDisassembly();
                 this->_displayMemory();
             }
@@ -318,9 +321,56 @@ namespace UB
         }
     }
     
-    void UI::IMPL::_displayDisassembly( void )
+    void UI::IMPL::_displayInstructions( void )
     {
         int x(      36 );
+        int y(      0 );
+        int width(  56 );
+        int height( 15 );
+        
+        {
+            ::WINDOW * win( ::newwin( height, width, y, x ) );
+            
+            {
+                ::box( win, 0, 0 );
+                ::wmove( win, 1, 2 );
+                ::wprintw( win, "Instructions:" );
+                ::wmove( win, 2, 1 );
+                ::whline( win, 0, width - 2 );
+                
+                y = 3;
+            }
+            
+            try
+            {
+                uint16_t                   ip( this->_engine.ip() );
+                std::vector< uint8_t >     bytes( this->_engine.read( ip, 512 ) );
+                std::vector< std::string > instructions( Capstone::instructions( bytes, ip ) );
+                
+                for( const auto & s: instructions )
+                {
+                    if( y == height - 1 )
+                    {
+                        break;
+                    }
+                    
+                    ::wmove( win, y++, 2 );
+                    ::wprintw( win, s.c_str() );
+                }
+            }
+            catch( ... )
+            {}
+            
+            this->_screen.refresh();
+            ::wmove( win, 0, 0 );
+            ::wrefresh( win );
+            ::delwin( win );
+        }
+    }
+    
+    void UI::IMPL::_displayDisassembly( void )
+    {
+        int x(      36 + 56 );
         int y(      0 );
         int width(  static_cast< int >( this->_screen.width() ) - x );
         int height( 15 );
@@ -338,9 +388,25 @@ namespace UB
                 y = 3;
             }
             
+            try
             {
+                uint16_t                   ip( this->_engine.ip() );
+                std::vector< uint8_t >     bytes( this->_engine.read( ip, 512 ) );
+                std::vector< std::string > instructions( Capstone::disassemble( bytes, ip ) );
                 
+                for( const auto & s: instructions )
+                {
+                    if( y == height - 1 )
+                    {
+                        break;
+                    }
+                    
+                    ::wmove( win, y++, 2 );
+                    ::wprintw( win, s.c_str() );
+                }
             }
+            catch( ... )
+            {}
             
             this->_screen.refresh();
             ::wmove( win, 0, 0 );

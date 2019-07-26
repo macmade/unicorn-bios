@@ -94,7 +94,10 @@ namespace UB
             void eflags( uint32_t value );
             
             void onInterrupt( const std::function< bool( uint32_t i, Engine & ) > handler );
-            void write( size_t address, const std::vector< uint8_t > & bytes );
+            
+            std::vector< uint8_t > read( size_t address, size_t size );
+            void                   write( size_t address, const std::vector< uint8_t > & bytes );
+            
             bool start( size_t address );
             void stop( void );
             void waitUntilFinished( void ) const;

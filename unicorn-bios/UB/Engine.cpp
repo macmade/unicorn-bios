@@ -46,7 +46,8 @@ namespace UB
             
             static void _handleInterrupt( uc_engine * uc, uint32_t i, void * data );
             
-            void _write( size_t address, const std::vector< uint8_t > & bytes );
+            std::vector< uint8_t > _read( size_t address, size_t size );
+            void                   _write( size_t address, const std::vector< uint8_t > & bytes );
             
             size_t                                                       _memory;
             std::vector< std::function< bool( uint32_t i, Engine & ) > > _interrupts;
@@ -323,6 +324,11 @@ namespace UB
         this->impl->_interrupts.push_back( handler );
     }
     
+    std::vector< uint8_t > Engine::read( size_t address, size_t size )
+    {
+        return this->impl->_read( address, size );
+    }
+    
     void Engine::write( size_t address, const std::vector< uint8_t > & bytes )
     {
         this->impl->_write( address, bytes );
@@ -449,6 +455,28 @@ namespace UB
         }
         
         throw std::runtime_error( "Unhandled interrupt: " + String::toHex( i ) );
+    }
+    
+    std::vector< uint8_t > Engine::IMPL::_read( size_t address, size_t size )
+    {
+        uc_err                                  e;
+        std::lock_guard< std::recursive_mutex > l( this->_rmtx );
+        
+        if( address + size >= this->_memory )
+        {
+            throw std::runtime_error( "Cannot read from address " + String::toHex( address ) + " - Not enough memory allocated" );
+        }
+        
+        {
+            std::vector< uint8_t > bytes( size, 0 );
+            
+            if( ( e = uc_mem_read( this->_uc, address, &( bytes[ 0 ] ), size ) ) != UC_ERR_OK )
+            {
+                throw std::runtime_error( uc_strerror( e ) );
+            }
+            
+            return bytes;
+        }
     }
     
     void Engine::IMPL::_write( size_t address, const std::vector< uint8_t > & bytes )
