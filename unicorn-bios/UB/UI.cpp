@@ -205,7 +205,24 @@ namespace UB
             }
             
             {
+                std::vector< std::string > lines;
                 
+                {
+                    std::lock_guard< std::recursive_mutex > l( this->_rmtx );
+                    
+                    lines = String::lines( this->_output.str() );
+                }
+                
+                for( const auto & s: lines )
+                {
+                    if( y == height - 1 )
+                    {
+                        break;
+                    }
+                    
+                    ::wmove( win, y++, 2 );
+                    ::wprintw( win, s.c_str() );
+                }
             }
             
             this->_screen.refresh();
@@ -236,7 +253,24 @@ namespace UB
             }
             
             {
+                std::vector< std::string > lines;
                 
+                {
+                    std::lock_guard< std::recursive_mutex > l( this->_rmtx );
+                    
+                    lines = String::lines( this->_debug.str() );
+                }
+                
+                for( const auto & s: lines )
+                {
+                    if( y == height - 1 )
+                    {
+                        break;
+                    }
+                    
+                    ::wmove( win, y++, 2 );
+                    ::wprintw( win, s.c_str() );
+                }
             }
             
             this->_screen.refresh();
