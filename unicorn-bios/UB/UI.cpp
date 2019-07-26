@@ -33,6 +33,8 @@
 #include <sstream>
 #include <mutex>
 #include <optional>
+#include <thread>
+#include <condition_variable>
 
 namespace UB
 {
@@ -107,12 +109,38 @@ namespace UB
             this->impl->_running = true;
         }
         
-        this->impl->_screen.start();
-        
         {
-            std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+            std::condition_variable_any cv;
             
-            this->impl->_running = false;
+            std::thread
+            (
+                [ & ]
+                {
+                    this->impl->_screen.start();
+                    
+                    {
+                        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+                        
+                        this->impl->_running = false;
+                        
+                        cv.notify_all();
+                    }
+                }
+            )
+            .detach();
+            
+            {
+                std::unique_lock< std::recursive_mutex > l( this->impl->_rmtx );
+                
+                cv.wait
+                (
+                    l,
+                    [ & ]( void ) -> bool
+                    {
+                        return this->impl->_running == false;
+                    }
+                );
+            }
         }
     }
     
