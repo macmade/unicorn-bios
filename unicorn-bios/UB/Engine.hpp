@@ -54,18 +54,20 @@ namespace UB
             uint8_t dh( void ) const;
             uint8_t dl( void ) const;
             
-            uint16_t ax( void ) const;
-            uint16_t bx( void ) const;
-            uint16_t cx( void ) const;
-            uint16_t dx( void ) const;
-            uint16_t si( void ) const;
-            uint16_t di( void ) const;
-            uint16_t sp( void ) const;
-            uint16_t bp( void ) const;
-            uint16_t cs( void ) const;
-            uint16_t ds( void ) const;
-            uint16_t es( void ) const;
-            uint16_t ss( void ) const;
+            uint16_t ax( void )     const;
+            uint16_t bx( void )     const;
+            uint16_t cx( void )     const;
+            uint16_t dx( void )     const;
+            uint16_t si( void )     const;
+            uint16_t di( void )     const;
+            uint16_t sp( void )     const;
+            uint16_t bp( void )     const;
+            uint16_t cs( void )     const;
+            uint16_t ds( void )     const;
+            uint16_t es( void )     const;
+            uint16_t ss( void )     const;
+            uint16_t ip( void )     const;
+            uint32_t eflags( void ) const;
             
             void ah( uint8_t value );
             void al( uint8_t value );
@@ -88,6 +90,8 @@ namespace UB
             void ds( uint16_t value );
             void es( uint16_t value );
             void ss( uint16_t value );
+            void ip( uint16_t value );
+            void eflags( uint32_t value );
             
             void onInterrupt( const std::function< bool( uint32_t i, Engine & ) > handler );
             void write( size_t address, const std::vector< uint8_t > & bytes );

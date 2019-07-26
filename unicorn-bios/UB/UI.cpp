@@ -26,6 +26,8 @@
 #include "UB/Screen.hpp"
 #include "UB/String.hpp"
 #include "UB/Casts.hpp"
+#include "UB/Engine.hpp"
+#include "UB/Casts.hpp"
 #include <ncurses.h>
 #include <sstream>
 #include <mutex>
@@ -36,7 +38,7 @@ namespace UB
     {
         public:
             
-            IMPL( void );
+            IMPL( Engine & engine );
             IMPL( const IMPL & o );
             IMPL( const IMPL & o, const std::lock_guard< std::recursive_mutex > & l );
             
@@ -49,13 +51,14 @@ namespace UB
             
             bool                         _running;
             Screen                       _screen;
+            Engine                     & _engine;
             std::stringstream            _output;
             std::stringstream            _debug;
             mutable std::recursive_mutex _rmtx;
     };
     
-    UI::UI( void ):
-        impl( std::make_unique< IMPL >() )
+    UI::UI( Engine & engine ):
+        impl( std::make_unique< IMPL >( engine ) )
     {}
     
     UI::UI( const UI & o ):
@@ -129,8 +132,9 @@ namespace UB
         }
     }
     
-    UI::IMPL::IMPL( void ):
-        _running( false )
+    UI::IMPL::IMPL( Engine & engine ):
+        _running( false ),
+        _engine( engine )
     {
         this->_setup();
     }
@@ -142,6 +146,7 @@ namespace UB
     UI::IMPL::IMPL( const IMPL & o, const std::lock_guard< std::recursive_mutex > & l ):
         _running( false ),
         _screen(  o._screen ),
+        _engine(  o._engine ),
         _output(  o._output.str() ),
         _debug(   o._debug.str() )
     {
@@ -183,7 +188,73 @@ namespace UB
     {}
     
     void UI::IMPL::_displayRegisters( void )
-    {}
+    {
+        {
+            ::WINDOW * win( ::newwin( 15, 36, 0, 0 ) );
+            
+            {
+                ::box( win, 0, 0 );
+                ::wmove( win, 1, 2 );
+                ::wprintw( win, "CPU Registers:" );
+                ::wmove( win, 2, 1 );
+                ::whline( win, 0, 34 );
+            }
+            
+            {
+                std::string ah( String::toHex( this->_engine.ah() ) );
+                std::string al( String::toHex( this->_engine.al() ) );
+                std::string bh( String::toHex( this->_engine.bh() ) );
+                std::string bl( String::toHex( this->_engine.bl() ) );
+                std::string ch( String::toHex( this->_engine.ch() ) );
+                std::string cl( String::toHex( this->_engine.cl() ) );
+                std::string dh( String::toHex( this->_engine.dh() ) );
+                std::string dl( String::toHex( this->_engine.dl() ) );
+                std::string ax( String::toHex( this->_engine.ax() ) );
+                std::string bx( String::toHex( this->_engine.bx() ) );
+                std::string cx( String::toHex( this->_engine.cx() ) );
+                std::string dx( String::toHex( this->_engine.dx() ) );
+                std::string si( String::toHex( this->_engine.si() ) );
+                std::string di( String::toHex( this->_engine.di() ) );
+                std::string sp( String::toHex( this->_engine.sp() ) );
+                std::string bp( String::toHex( this->_engine.bp() ) );
+                std::string cs( String::toHex( this->_engine.cs() ) );
+                std::string ds( String::toHex( this->_engine.ds() ) );
+                std::string es( String::toHex( this->_engine.es() ) );
+                std::string ss( String::toHex( this->_engine.ss() ) );
+                std::string ip( String::toHex( this->_engine.ip() ) );
+                std::string fl( String::toHex( this->_engine.eflags() ) );
+                int         y( 3 );
+                
+                ::wmove( win, y++, 2 );
+                ::wprintw( win, ( "AX: " + ax + " | AH: " + ah + " | AL: " + al ).c_str() );
+                ::wmove( win, y++, 2 );
+                ::wprintw( win, ( "BX: " + bx + " | BH: " + bh + " | BL: " + bl ).c_str() );
+                ::wmove( win, y++, 2 );
+                ::wprintw( win, ( "CX: " + cx + " | CH: " + ch + " | CL: " + cl ).c_str() );
+                ::wmove( win, y++, 2 );
+                ::wprintw( win, ( "DX: " + dx + " | DH: " + dh + " | DL: " + dl ).c_str() );
+                ::wmove( win, y++, 1 );
+                ::whline( win, 0, 34 );
+                ::wmove( win, y++, 2 );
+                ::wprintw( win, ( "SI: " + si + " | DI: " + di ).c_str() );
+                ::wmove( win, y++, 2 );
+                ::wprintw( win, ( "SP: " + sp + " | BP: " + bp ).c_str() );
+                ::wmove( win, y++, 2 );
+                ::wprintw( win, ( "CS: " + cs + " | DS: " + ds ).c_str() );
+                ::wmove( win, y++, 2 );
+                ::wprintw( win, ( "ES: " + es + " | SS: " + ss ).c_str() );
+                ::wmove( win, y++, 1 );
+                ::whline( win, 0, 34 );
+                ::wmove( win, y++, 2 );
+                ::wprintw( win, ( "IP: " + ip + " | Flags: " + fl ).c_str() );
+            }
+            
+            this->_screen.refresh();
+            ::wmove( win, 0, 0 );
+            ::wrefresh( win );
+            ::delwin( win );
+        }
+    }
     
     void UI::IMPL::_displayDisassembly( void )
     {}

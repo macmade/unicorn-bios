@@ -31,11 +31,13 @@
 
 namespace UB
 {
+    class Engine;
+    
     class UI
     {
         public:
             
-            UI( void );
+            UI( Engine & engine );
             UI( const UI & o );
             UI( UI && o ) noexcept;
             ~UI( void );

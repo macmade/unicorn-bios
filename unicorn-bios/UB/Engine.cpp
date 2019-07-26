@@ -198,6 +198,16 @@ namespace UB
         return this->impl->_readRegister< uint16_t >( UC_X86_REG_SS );
     }
     
+    uint16_t Engine::ip( void ) const
+    {
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_IP );
+    }
+    
+    uint32_t Engine::eflags( void ) const
+    {
+        return this->impl->_readRegister< uint32_t >( UC_X86_REG_EFLAGS );
+    }
+    
     void Engine::ah( uint8_t value )
     {
         this->impl->_writeRegister( UC_X86_REG_AH, value );
@@ -296,6 +306,16 @@ namespace UB
     void Engine::ss( uint16_t value )
     {
         this->impl->_writeRegister( UC_X86_REG_SS, value );
+    }
+    
+    void Engine::ip( uint16_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_IP, value );
+    }
+    
+    void Engine::eflags( uint32_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_EFLAGS, value );
     }
     
     void Engine::onInterrupt( const std::function< bool( uint32_t i, Engine & ) > handler )

@@ -106,14 +106,15 @@ namespace UB
     Machine::IMPL::IMPL( size_t memory, const FAT::Image & fat ):
         _memory( memorySizeOrDefault( memory ) ),
         _fat(    fat ),
-        _engine( memorySizeOrDefault( memory ) )
+        _engine( memorySizeOrDefault( memory ) ),
+        _ui( this->_engine )
     {}
 
     Machine::IMPL::IMPL( const IMPL & o ):
         _memory( o._memory ),
         _fat(    o._fat ),
         _engine( o._memory ),
-        _ui(     o._ui )
+        _ui(     this->_engine )
     {}
 
     Machine::IMPL::~IMPL( void )
