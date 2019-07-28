@@ -42,9 +42,10 @@ namespace UB
             
             Arguments & operator =( Arguments o );
             
-            bool        showHelp( void )  const;
-            size_t      memory( void )    const;
-            std::string bootImage( void ) const;
+            bool        showHelp( void )          const;
+            bool        breakOnInterrupts( void ) const;
+            size_t      memory( void )            const;
+            std::string bootImage( void )         const;
             
             friend void swap( Arguments & o1, Arguments & o2 );
             

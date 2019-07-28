@@ -36,6 +36,7 @@ namespace UB
             IMPL( const IMPL & o );
             
             bool        _showHelp;
+            bool        _breakOnInterrupts;
             size_t      _memory;
             std::string _bootImage;
     };
@@ -67,6 +68,11 @@ namespace UB
         return this->impl->_showHelp;
     }
     
+    bool Arguments::breakOnInterrupts( void ) const
+    {
+        return this->impl->_breakOnInterrupts;
+    }
+    
     size_t Arguments::memory( void ) const
     {
         return this->impl->_memory;
@@ -86,6 +92,7 @@ namespace UB
     
     Arguments::IMPL::IMPL( int argc, const char * argv[] ):
         _showHelp( false ),
+        _breakOnInterrupts( false ),
         _memory( 0 )
     {
         if( argc < 1 )
@@ -100,6 +107,10 @@ namespace UB
             if( arg == "--help" || arg == "-h" )
             {
                 this->_showHelp = true;
+            }
+            if( arg == "--int-break" )
+            {
+                this->_breakOnInterrupts = true;
             }
             else if( arg == "--memory" || arg == "-m" )
             {
@@ -121,8 +132,9 @@ namespace UB
     }
     
     Arguments::IMPL::IMPL( const IMPL & o ):
-        _showHelp(  o._showHelp ),
-        _memory(    o._memory ),
-        _bootImage( o._bootImage )
+        _showHelp(           o._showHelp ),
+        _breakOnInterrupts(  o._breakOnInterrupts ),
+        _memory(             o._memory ),
+        _bootImage(          o._bootImage )
     {}
 }

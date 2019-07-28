@@ -22,9 +22,10 @@ Basic BIOS emulator for Unicorn Engine.
     
     Options:
         
-        --help   / -h:  Displays help
+        --help   / -h:  Displays help.
         --memory / -m:  The amount of memory to allocate for the virtual machine
                         (in megabytes). Defaults to 64.
+        --int-break:    Breaks on interrupt calls.
 
 ### Installation:
 

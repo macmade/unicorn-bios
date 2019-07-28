@@ -47,6 +47,7 @@ namespace UB
             FAT::Image _fat;
             Engine     _engine;
             UI         _ui;
+            bool       _breakOnInterrupts;
     };
 
     Machine::Machine( size_t memory, const FAT::Image & fat ):
@@ -96,6 +97,16 @@ namespace UB
         this->impl->_engine.stop();
     }
     
+    bool Machine::breakOnInterrupts( void ) const
+    {
+        return this->impl->_breakOnInterrupts;
+    }
+    
+    void Machine::breakOnInterrupts( bool value )
+    {
+        this->impl->_breakOnInterrupts = value;
+    }
+    
     void swap( Machine & o1, Machine & o2 )
     {
         using std::swap;
@@ -104,17 +115,19 @@ namespace UB
     }
 
     Machine::IMPL::IMPL( size_t memory, const FAT::Image & fat ):
-        _memory( memorySizeOrDefault( memory ) ),
-        _fat(    fat ),
-        _engine( memorySizeOrDefault( memory ) ),
-        _ui( this->_engine )
+        _memory(            memorySizeOrDefault( memory ) ),
+        _fat(               fat ),
+        _engine(            memorySizeOrDefault( memory ) ),
+        _ui(                this->_engine ),
+        _breakOnInterrupts( false )
     {}
 
     Machine::IMPL::IMPL( const IMPL & o ):
-        _memory( o._memory ),
-        _fat(    o._fat ),
-        _engine( o._memory ),
-        _ui(     this->_engine )
+        _memory(            o._memory ),
+        _fat(               o._fat ),
+        _engine(            o._memory ),
+        _ui(                this->_engine ),
+        _breakOnInterrupts( o._breakOnInterrupts )
     {}
 
     Machine::IMPL::~IMPL( void )
@@ -144,9 +157,11 @@ namespace UB
                 bool ret( false );
                 
                 this->_ui.debug( "[ BREAK ]> Interrupt " + String::toHex( i ) + "\n" );
-                this->_ui.waitForUserResume();
-                this->_ui.debug( "[ BREAK ]> Return from interrupt\n" );
-                this->_ui.waitForUserResume();
+                
+                if( this->_breakOnInterrupts )
+                {
+                    this->_ui.waitForUserResume();
+                }
                 
                 switch( i )
                 {
@@ -164,6 +179,12 @@ namespace UB
                     case 0x1A: ret = Interrupts::int0x1A( machine, engine ); break;
                     
                     default: break;
+                }
+                
+                if( this->_breakOnInterrupts )
+                {
+                    this->_ui.debug( "[ BREAK ]> Return from interrupt\n" );
+                    this->_ui.waitForUserResume();
                 }
                 
                 return ret;

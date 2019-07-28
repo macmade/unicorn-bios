@@ -44,6 +44,7 @@ int main( int argc, const char * argv[] )
         {
             UB::Machine machine( args.memory() * 1024 * 1024, args.bootImage() );
             
+            machine.breakOnInterrupts( args.breakOnInterrupts() );
             machine.run();
         }
         
@@ -71,10 +72,12 @@ static void showHelp( void )
               << "Options:"
               << std::endl
               << std::endl
-              << "    --help   / -h:  Displays help"
+              << "    --help   / -h:  Displays help."
               << std::endl
               << "    --memory / -m:  The amount of memory to allocate for the virtual machine"
               << std::endl
               << "                    (in megabytes). Defaults to 64."
+              << std::endl
+              << "    --int-break:    Breaks on interrupt calls."
               << std::endl;
 }

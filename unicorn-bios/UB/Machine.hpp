@@ -49,6 +49,9 @@ namespace UB
             
             void run( void );
             
+            bool breakOnInterrupts( void ) const;
+            void breakOnInterrupts( bool value );
+            
             friend void swap( Machine & o1, Machine & o2 );
             
         private:
