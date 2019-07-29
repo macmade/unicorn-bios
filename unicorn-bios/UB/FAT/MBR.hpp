@@ -49,6 +49,24 @@ namespace UB
                 
                 std::vector< uint8_t > data( void ) const;
                 
+                uint16_t bytesPerSector( void )        const;
+                uint8_t  sectorsPerCluster( void )     const;
+                uint16_t reservedSectors( void )       const;
+                uint8_t  numberOfFATs( void )          const;
+                uint16_t maxRootDirEntries( void )     const;
+                uint16_t totalSectors( void )          const;
+                uint8_t  mediaDescriptor( void )       const;
+                uint16_t sectorsPerFAT( void )         const;
+                uint16_t sectorsPerTrack( void )       const;
+                uint16_t headsPerCylinder( void )      const;
+                uint32_t hiddenSectors( void )         const;
+                uint32_t lbaSectors( void )            const;
+                uint8_t  driveNumber( void )           const;
+                uint8_t  reserved( void )              const;
+                uint8_t  extendedBootSignature( void ) const;
+                uint32_t volumeSerialNumber( void )    const;
+                uint16_t bootSignature( void )         const;
+                
                 friend void swap( MBR & o1, MBR & o2 );
                 
                 friend std::ostream & operator <<( std::ostream & os, const MBR & o );

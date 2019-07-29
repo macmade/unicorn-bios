@@ -25,6 +25,7 @@
 #include "UB/FAT/MBR.hpp"
 #include "UB/BinaryStream.hpp"
 #include "UB/Casts.hpp"
+#include "UB/String.hpp"
 #include <array>
 
 namespace UB
@@ -95,6 +96,91 @@ namespace UB
             return this->impl->_data;
         }
         
+        uint16_t MBR::bytesPerSector( void ) const
+        {
+            return this->impl->_bytesPerSector;
+        }
+        
+        uint8_t MBR::sectorsPerCluster( void ) const
+        {
+            return this->impl->_sectorsPerCluster;
+        }
+        
+        uint16_t MBR::reservedSectors( void ) const
+        {
+            return this->impl->_reservedSectors;
+        }
+        
+        uint8_t MBR::numberOfFATs( void ) const
+        {
+            return this->impl->_numberOfFATs;
+        }
+        
+        uint16_t MBR::maxRootDirEntries( void ) const
+        {
+            return this->impl->_maxRootDirEntries;
+        }
+        
+        uint16_t MBR::totalSectors( void ) const
+        {
+            return this->impl->_totalSectors;
+        }
+        
+        uint8_t MBR::mediaDescriptor( void ) const
+        {
+            return this->impl->_mediaDescriptor;
+        }
+        
+        uint16_t MBR::sectorsPerFAT( void ) const
+        {
+            return this->impl->_sectorsPerFAT;
+        }
+        
+        uint16_t MBR::sectorsPerTrack( void ) const
+        {
+            return this->impl->_sectorsPerTrack;
+        }
+        
+        uint16_t MBR::headsPerCylinder( void ) const
+        {
+            return this->impl->_headsPerCylinder;
+        }
+        
+        uint32_t MBR::hiddenSectors( void ) const
+        {
+            return this->impl->_hiddenSectors;
+        }
+        
+        uint32_t MBR::lbaSectors( void ) const
+        {
+            return this->impl->_lbaSectors;
+        }
+        
+        uint8_t MBR::driveNumber( void ) const
+        {
+            return this->impl->_driveNumber;
+        }
+        
+        uint8_t MBR::reserved( void ) const
+        {
+            return this->impl->_reserved;
+        }
+        
+        uint8_t MBR::extendedBootSignature( void ) const
+        {
+            return this->impl->_extendedBootSignature;
+        }
+        
+        uint32_t MBR::volumeSerialNumber( void ) const
+        {
+            return this->impl->_volumeSerialNumber;
+        }
+        
+        uint16_t MBR::bootSignature( void ) const
+        {
+            return this->impl->_bootSignature;
+        }
+        
         void swap( MBR & o1, MBR & o2 )
         {
             using std::swap;
@@ -108,27 +194,27 @@ namespace UB
             std::string volumeLabel( reinterpret_cast< char * >( o.impl->_volumeLabel.data() ), o.impl->_volumeLabel.size() );
             std::string fileSystem(  reinterpret_cast< char * >( o.impl->_fileSystem.data() ),  o.impl->_fileSystem.size() );
             
-            os << "{"                                                               << std::endl
-               << "    OEM ID:                  " << oemID                          << std::endl
-               << "    Bytes per sector:        " << o.impl->_bytesPerSector        << std::endl
-               << "    Sectors per cluster:     " << o.impl->_sectorsPerCluster     << std::endl
-               << "    Reserved sectors:        " << o.impl->_reservedSectors       << std::endl
-               << "    Number of FATs:          " << o.impl->_numberOfFATs          << std::endl
-               << "    Max root dir entries:    " << o.impl->_maxRootDirEntries     << std::endl
-               << "    Total sectors:           " << o.impl->_totalSectors          << std::endl
-               << "    Media descriptor:        " << o.impl->_mediaDescriptor       << std::endl
-               << "    Sectors per FAT:         " << o.impl->_sectorsPerFAT         << std::endl
-               << "    Sectors per track:       " << o.impl->_sectorsPerTrack       << std::endl
-               << "    Heads per cylinder:      " << o.impl->_headsPerCylinder      << std::endl
-               << "    Hidden sectors:          " << o.impl->_hiddenSectors         << std::endl
-               << "    LBA sectors:             " << o.impl->_lbaSectors            << std::endl
-               << "    Drive number:            " << o.impl->_driveNumber           << std::endl
-               << "    Reserved:                " << o.impl->_reserved              << std::endl
-               << "    Extended boot signature: " << o.impl->_extendedBootSignature << std::endl
-               << "    Volume serial number:    " << o.impl->_volumeSerialNumber    << std::endl
-               << "    Volume label:            " << volumeLabel                    << std::endl
-               << "    Filesystem:              " << fileSystem                     << std::endl
-               << "    Boot signature:          " << o.impl->_bootSignature         << std::endl
+            os << "{"                                                                                      << std::endl
+               << "    OEM ID:                  " << oemID                                                 << std::endl
+               << "    Bytes per sector:        " << o.impl->_bytesPerSector                               << std::endl
+               << "    Sectors per cluster:     " << static_cast< uint16_t >( o.impl->_sectorsPerCluster ) << std::endl
+               << "    Reserved sectors:        " << o.impl->_reservedSectors                              << std::endl
+               << "    Number of FATs:          " << static_cast< uint16_t >( o.impl->_numberOfFATs )      << std::endl
+               << "    Max root dir entries:    " << o.impl->_maxRootDirEntries                            << std::endl
+               << "    Total sectors:           " << o.impl->_totalSectors                                 << std::endl
+               << "    Media descriptor:        " << String::toHex( o.impl->_mediaDescriptor )             << std::endl
+               << "    Sectors per FAT:         " << o.impl->_sectorsPerFAT                                << std::endl
+               << "    Sectors per track:       " << o.impl->_sectorsPerTrack                              << std::endl
+               << "    Heads per cylinder:      " << o.impl->_headsPerCylinder                             << std::endl
+               << "    Hidden sectors:          " << o.impl->_hiddenSectors                                << std::endl
+               << "    LBA sectors:             " << o.impl->_lbaSectors                                   << std::endl
+               << "    Drive number:            " << static_cast< uint16_t >( o.impl->_driveNumber )       << std::endl
+               << "    Reserved:                " << String::toHex( o.impl->_reserved )                    << std::endl
+               << "    Extended boot signature: " << String::toHex( o.impl->_extendedBootSignature )       << std::endl
+               << "    Volume serial number:    " << String::toHex( o.impl->_volumeSerialNumber )          << std::endl
+               << "    Volume label:            " << volumeLabel                                           << std::endl
+               << "    Filesystem:              " << fileSystem                                            << std::endl
+               << "    Boot signature:          " << String::toHex( o.impl->_bootSignature )               << std::endl
                << "}";
             
             return os;
