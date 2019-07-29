@@ -33,6 +33,7 @@ namespace UB
         public:
             
             IMPL( void );
+            IMPL( const std::string & s );
             IMPL( const IMPL & o );
             IMPL( const IMPL & o, const std::lock_guard< std::recursive_mutex > & l );
             ~IMPL( void );
@@ -43,6 +44,10 @@ namespace UB
 
     StringStream::StringStream( void ):
         impl( std::make_unique< IMPL >() )
+    {}
+
+    StringStream::StringStream( const std::string & s ):
+        impl( std::make_unique< IMPL >( s ) )
     {}
 
     StringStream::StringStream( const StringStream & o ):
@@ -209,6 +214,10 @@ namespace UB
     }
 
     StringStream::IMPL::IMPL()
+    {}
+
+    StringStream::IMPL::IMPL( const std::string & s ):
+        _ss( s )
     {}
 
     StringStream::IMPL::IMPL( const IMPL & o ):

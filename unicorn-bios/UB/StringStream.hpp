@@ -39,6 +39,7 @@ namespace UB
         public:
             
             StringStream( void );
+            StringStream( const std::string & s );
             StringStream( const StringStream & o );
             StringStream( StringStream && o ) noexcept;
             ~StringStream( void );

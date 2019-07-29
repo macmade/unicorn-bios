@@ -28,6 +28,7 @@
 #include <string>
 #include <memory>
 #include <algorithm>
+#include "UB/StringStream.hpp"
 
 namespace UB
 {
@@ -47,8 +48,8 @@ namespace UB
             void run( void );
             void waitForUserResume( void );
             
-            void output( const std::string & s );
-            void debug(  const std::string & s );
+            StringStream & output( void );
+            StringStream & debug( void );
             
             friend void swap( UI & o1, UI & o2 );
             

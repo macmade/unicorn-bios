@@ -156,7 +156,7 @@ namespace UB
             {
                 bool ret( false );
                 
-                this->_ui.debug( "[ BREAK ]> Interrupt " + String::toHex( i ) + "\n" );
+                this->_ui.debug() << "[ BREAK ]> Interrupt " << String::toHex( i ) << std::endl;
                 
                 if( this->_breakOnInterrupts )
                 {
@@ -183,7 +183,7 @@ namespace UB
                 
                 if( this->_breakOnInterrupts )
                 {
-                    this->_ui.debug( "[ BREAK ]> Return from interrupt\n" );
+                    this->_ui.debug() << "[ BREAK ]> Return from interrupt" << std::endl;
                     this->_ui.waitForUserResume();
                 }
                 

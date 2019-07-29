@@ -118,7 +118,7 @@ namespace UB
         {
             ( void )machine;
             
-            machine.ui().debug( "Stopping emulation" );
+            machine.ui().debug() << "Stopping emulation" << std::endl;
             engine.stop();
             
             return true;
@@ -128,7 +128,7 @@ namespace UB
         {
             ( void )machine;
             
-            machine.ui().debug( "Stopping emulation" );
+            machine.ui().debug() << "Stopping emulation" << std::endl;
             engine.stop();
             
             return true;

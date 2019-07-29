@@ -41,11 +41,11 @@ namespace UB
                 
                 if( std::isprint( c ) || std::isspace( c ) )
                 {
-                    machine.ui().output( std::string( 1, c ) );
+                    machine.ui().output() << std::string( 1, c );
                 }
                 else
                 {
-                    machine.ui().output( "." );
+                    machine.ui().output() << ".";
                 }
             }
         }

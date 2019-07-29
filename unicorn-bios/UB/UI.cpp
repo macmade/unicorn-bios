@@ -30,7 +30,6 @@
 #include "UB/Casts.hpp"
 #include "UB/Capstone.hpp"
 #include <ncurses.h>
-#include <sstream>
 #include <mutex>
 #include <optional>
 #include <thread>
@@ -63,8 +62,8 @@ namespace UB
             bool                                         _running;
             Screen                                       _screen;
             Engine                                     & _engine;
-            std::stringstream                            _output;
-            std::stringstream                            _debug;
+            StringStream                                 _output;
+            StringStream                                 _debug;
             std::string                                  _status;
             size_t                                       _memoryOffset;
             size_t                                       _memoryBytesPerLine;
@@ -187,18 +186,18 @@ namespace UB
         }
     }
     
-    void UI::output( const std::string & s )
+    StringStream & UI::output( void )
     {
         std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
         
-        this->impl->_output << s;
+        return this->impl->_output;
     }
     
-    void UI::debug( const std::string & s )
+    StringStream & UI::debug( void )
     {
         std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
         
-        this->impl->_debug << s;
+        return this->impl->_debug;
     }
     
     void swap( UI & o1, UI & o2 )
@@ -234,8 +233,8 @@ namespace UB
         _running(            false ),
         _screen(             o._screen ),
         _engine(             o._engine ),
-        _output(             o._output.str() ),
-        _debug(              o._debug.str() ),
+        _output(             o._output.string() ),
+        _debug(              o._debug.string() ),
         _status(             "Emulation not running" ),
         _memoryOffset(       o._memoryOffset ),
         _memoryBytesPerLine( o._memoryBytesPerLine ),
@@ -417,7 +416,7 @@ namespace UB
                 {
                     std::lock_guard< std::recursive_mutex > l( this->_rmtx );
                     
-                    lines = String::lines( this->_output.str() );
+                    lines = String::lines( this->_output.string() );
                 }
                 
                 if( lines.size() > maxLines )
@@ -466,7 +465,7 @@ namespace UB
                 {
                     std::lock_guard< std::recursive_mutex > l( this->_rmtx );
                     
-                    lines = String::lines( this->_debug.str() );
+                    lines = String::lines( this->_debug.string() );
                 }
                 
                 if( lines.size() > maxLines )
