@@ -62,16 +62,31 @@ namespace UB
                 address <<= 4;
                 address  += engine.bx();
                 
-                machine.ui().debug() << "Reading " << static_cast< unsigned int >( sectors ) << " sector" << ( ( sectors > 1 ) ? "s" : "" ) << " from drive " << String::toHex( driveNumber )
-                                     << std::endl
-                                     << "  - Cylinder:    " << String::toHex( cylinder )
-                                     << std::endl
-                                     << "  - Head:        " << String::toHex( head )
-                                     << std::endl
-                                     << "  - Sector:      " << String::toHex( sector )
-                                     << std::endl
-                                     << "  - Destination: " << String::toHex( address ) << " (" << String::toHex( engine.es() ) << ":" << String::toHex( engine.bx() ) << ")"
-                                     << std::endl;
+                {
+                    uint64_t           lba( 0 );
+                    const FAT::Image & img( machine.bootImage() );
+                    uint16_t           hpc( img.mbr().headsPerCylinder() );
+                    uint16_t           spt( img.mbr().sectorsPerTrack() );
+                    
+                    lba = ( ( ( numeric_cast< uint64_t >( cylinder ) * numeric_cast< uint64_t >( hpc ) ) + numeric_cast< uint64_t >( head ) ) * numeric_cast< uint64_t >( spt ) ) + ( numeric_cast< uint64_t >( sector ) - 1 );
+                    
+                    machine.ui().debug() << "Reading " << static_cast< unsigned int >( sectors ) << " sector" << ( ( sectors > 1 ) ? "s" : "" ) << " from drive " << String::toHex( driveNumber )
+                                         << std::endl
+                                         << "  - Cylinder:    " << String::toHex( cylinder )
+                                         << std::endl
+                                         << "  - Head:        " << String::toHex( head )
+                                         << std::endl
+                                         << "  - Sector:      " << String::toHex( sector )
+                                         << std::endl
+                                         << "  - LBA:         " << String::toHex( lba )
+                                         << std::endl
+                                         << "  - Destination: " << String::toHex( address ) << " (" << String::toHex( engine.es() ) << ":" << String::toHex( engine.bx() ) << ")"
+                                         << std::endl;
+                                         
+                                         std::stringstream ss;
+                                         ss << img.mbr();
+                                         machine.ui().debug() << ss.str();
+                }
                 
                 {
                     std::vector< uint8_t > bytes( machine.bootImage().read( sectors, cylinder, sector, head ) );
