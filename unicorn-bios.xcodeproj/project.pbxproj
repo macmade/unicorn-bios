@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		053F365F22E892C5003BD8AC /* Interrupts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053F365D22E892C5003BD8AC /* Interrupts.cpp */; };
 		0559286B22EB3048003878B6 /* Capstone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0559286922EB3048003878B6 /* Capstone.cpp */; };
+		0559286F22EEF488003878B6 /* StringStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0559286D22EEF488003878B6 /* StringStream.cpp */; };
 		058182F622E8CC1F008D1BFF /* String.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 058182F422E8CC1F008D1BFF /* String.cpp */; };
 		0581833B22E8EC63008D1BFF /* Video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0581833922E8EC63008D1BFF /* Video.cpp */; };
 		0581833E22E8EE88008D1BFF /* Disk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0581833C22E8EE88008D1BFF /* Disk.cpp */; };
@@ -44,6 +45,8 @@
 		053F365E22E892C5003BD8AC /* Interrupts.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Interrupts.hpp; sourceTree = "<group>"; };
 		0559286922EB3048003878B6 /* Capstone.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Capstone.cpp; sourceTree = "<group>"; };
 		0559286A22EB3048003878B6 /* Capstone.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Capstone.hpp; sourceTree = "<group>"; };
+		0559286D22EEF488003878B6 /* StringStream.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = StringStream.cpp; sourceTree = "<group>"; };
+		0559286E22EEF488003878B6 /* StringStream.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = StringStream.hpp; sourceTree = "<group>"; };
 		058182F422E8CC1F008D1BFF /* String.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = String.cpp; sourceTree = "<group>"; };
 		058182F522E8CC1F008D1BFF /* String.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = String.hpp; sourceTree = "<group>"; };
 		0581831D22E8DC5C008D1BFF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -314,6 +317,8 @@
 				05B2818622E78B7400110404 /* Engine.cpp */,
 				053F365D22E892C5003BD8AC /* Interrupts.cpp */,
 				053F365E22E892C5003BD8AC /* Interrupts.hpp */,
+				0559286D22EEF488003878B6 /* StringStream.cpp */,
+				0559286E22EEF488003878B6 /* StringStream.hpp */,
 				058D772722E8B7F100FA58A4 /* Machine.cpp */,
 				058D772822E8B7F100FA58A4 /* Machine.hpp */,
 				0581834222E9ACFF008D1BFF /* Screen.cpp */,
@@ -402,6 +407,7 @@
 				0581834722E9AD06008D1BFF /* UI.cpp in Sources */,
 				0559286B22EB3048003878B6 /* Capstone.cpp in Sources */,
 				0581834422E9ACFF008D1BFF /* Screen.cpp in Sources */,
+				0559286F22EEF488003878B6 /* StringStream.cpp in Sources */,
 				05B2819B22E7AF1A00110404 /* BinaryStream.cpp in Sources */,
 				0581833B22E8EC63008D1BFF /* Video.cpp in Sources */,
 				05B2819922E7AF1A00110404 /* BinaryDataStream.cpp in Sources */,
