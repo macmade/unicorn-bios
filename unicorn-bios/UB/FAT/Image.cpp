@@ -72,6 +72,16 @@ namespace UB
             return this->impl->_mbr;
         }
         
+        std::vector< uint8_t > Image::read( uint8_t sectors, uint8_t cylinder, uint8_t sector, uint8_t head ) const
+        {
+            ( void )sectors;
+            ( void )cylinder;
+            ( void )sector;
+            ( void )head;
+            
+            return {};
+        }
+        
         void swap( Image & o1, Image & o2 )
         {
             using std::swap;

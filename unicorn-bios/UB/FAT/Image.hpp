@@ -28,6 +28,8 @@
 #include <memory>
 #include <algorithm>
 #include <string>
+#include <cstdint>
+#include <vector>
 #include "UB/FAT/MBR.hpp"
 
 namespace UB
@@ -47,6 +49,8 @@ namespace UB
                 
                 std::string path( void ) const;
                 MBR         mbr( void )  const;
+                
+                std::vector< uint8_t > read( uint8_t sectors, uint8_t cylinder, uint8_t sector, uint8_t head ) const;
                 
                 friend void swap( Image & o1, Image & o2 );
                 
