@@ -72,6 +72,7 @@ namespace UB
         {
             switch( engine.ah() )
             {
+                case 0x00: BIOS::Disk::reset( machine, engine );       return true;
                 case 0x02: BIOS::Disk::readSectors( machine, engine ); return true;
                 default:   break;
             }

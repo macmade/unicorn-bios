@@ -25,6 +25,7 @@
 #include "UB/BIOS/Disk.hpp"
 #include "UB/Machine.hpp"
 #include "UB/Engine.hpp"
+#include "UB/String.hpp"
 
 namespace UB
 {
@@ -32,6 +33,14 @@ namespace UB
     {
         namespace Disk
         {
+            void reset( const Machine & machine, Engine & engine )
+            {
+                machine.ui().debug() << "Resetting drive " << String::toHex( engine.dl() ) << std::endl;
+                
+                engine.cf( false );
+                engine.ah( 0 );
+            }
+            
             void readSectors( const Machine & machine, Engine & engine )
             {
                 ( void )machine;
