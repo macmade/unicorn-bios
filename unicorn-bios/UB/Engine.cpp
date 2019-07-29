@@ -106,6 +106,13 @@ namespace UB
         return this->impl->_memory;
     }
     
+    bool Engine::cf( void ) const
+    {
+        uint32_t flags( this->eflags() );
+        
+        return ( flags & 0x01 ) != 0;
+    }
+    
     uint8_t Engine::ah( void ) const
     {
         return this->impl->_readRegister< uint8_t >( UC_X86_REG_AH );
@@ -214,6 +221,23 @@ namespace UB
     uint32_t Engine::eflags( void ) const
     {
         return this->impl->_readRegister< uint32_t >( UC_X86_REG_EFLAGS );
+    }
+    
+    void Engine::cf( bool value )
+    {
+        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+        uint32_t                                flags( this->eflags() );
+        
+        if( value )
+        {
+            flags |= 0x01;
+        }
+        else
+        {
+            flags &= ~static_cast< uint32_t >( 0x01 );
+        }
+        
+        this->eflags( flags );
     }
     
     void Engine::ah( uint8_t value )

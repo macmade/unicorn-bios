@@ -47,6 +47,8 @@ namespace UB
             
             size_t memory( void ) const;
             
+            bool cf( void ) const;
+            
             uint8_t ah( void ) const;
             uint8_t al( void ) const;
             uint8_t bh( void ) const;
@@ -70,6 +72,8 @@ namespace UB
             uint16_t ss( void )     const;
             uint16_t ip( void )     const;
             uint32_t eflags( void ) const;
+            
+            void cf( bool value );
             
             void ah( uint8_t value );
             void al( uint8_t value );
