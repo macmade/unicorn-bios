@@ -16,6 +16,8 @@ About
 
 Basic BIOS emulator for Unicorn Engine.
 
+![Screenshot](Assets/Screen.png "Screenshot")
+
 ### Usage:
 
     Usage: unicorn-bios [OPTIONS] BOOT_IMG
