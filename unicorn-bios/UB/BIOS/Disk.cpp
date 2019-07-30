@@ -90,7 +90,14 @@ namespace UB
                     }
                     
                     engine.write( destination, bytes );
-                    machine.ui().debug() << "[ SUCCESS ]> Wrote " << bytes.size() << " bytes to memory" << std::endl;
+                    
+                    machine.ui().debug() << "[ SUCCESS ]> Wrote "
+                                         << bytes.size()
+                                         << " bytes at "
+                                         << String::toHex( destination )
+                                         << "->"
+                                         << String::toHex( destination + bytes.size() )
+                                         << std::endl;
                     
                     engine.cf( false );
                     engine.ah( 0 );
