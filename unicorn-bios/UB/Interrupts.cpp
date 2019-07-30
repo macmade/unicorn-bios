@@ -28,6 +28,7 @@
 #include "UB/BIOS/Video.hpp"
 #include "UB/BIOS/Disk.hpp"
 #include "UB/BIOS/Keyboard.hpp"
+#include "UB/BIOS/SystemServices.hpp"
 
 namespace UB
 {
@@ -93,8 +94,11 @@ namespace UB
         
         bool int0x15( const Machine & machine, Engine & engine )
         {
-            ( void )machine;
-            ( void )engine;
+            switch( engine.ax() )
+            {
+                case 0xE820: return BIOS::SystemServices::getMemoryMap( machine, engine );
+                default:     break;
+            }
             
             return false;
         }
