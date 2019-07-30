@@ -108,6 +108,7 @@ namespace UB
             
             std::vector< uint8_t > read( size_t address, size_t size );
             void                   write( size_t address, const std::vector< uint8_t > & bytes );
+            void                   write( size_t address, const uint8_t * bytes, size_t size );
             
             bool start( size_t address );
             void stop( void );

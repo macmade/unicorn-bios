@@ -47,7 +47,7 @@ namespace UB
             static void _handleInterrupt( uc_engine * uc, uint32_t i, void * data );
             
             std::vector< uint8_t > _read( size_t address, size_t size );
-            void                   _write( size_t address, const std::vector< uint8_t > & bytes );
+            void                   _write( size_t address, const uint8_t * bytes, size_t size );
             
             size_t                                                         _memory;
             std::vector< std::function< void( void ) > >                   _onStart;
@@ -393,7 +393,12 @@ namespace UB
     
     void Engine::write( size_t address, const std::vector< uint8_t > & bytes )
     {
-        this->impl->_write( address, bytes );
+        this->impl->_write( address, &( bytes[ 0 ] ), bytes.size() );
+    }
+    
+    void Engine::write( size_t address, const uint8_t * bytes, size_t size )
+    {
+        this->impl->_write( address, bytes, size );
     }
     
     bool Engine::start( size_t address )
@@ -581,7 +586,7 @@ namespace UB
         }
     }
     
-    void Engine::IMPL::_write( size_t address, const std::vector< uint8_t > & bytes )
+    void Engine::IMPL::_write( size_t address, const uint8_t * bytes, size_t size )
     {
         uc_err                                  e;
         std::lock_guard< std::recursive_mutex > l( this->_rmtx );
@@ -591,7 +596,7 @@ namespace UB
             throw std::runtime_error( "Cannot write to address " + String::toHex( address ) + " - Not enough memory allocated" );
         }
         
-        if( ( e = uc_mem_write( this->_uc, address, &( bytes[ 0 ] ), bytes.size() ) ) != UC_ERR_OK )
+        if( ( e = uc_mem_write( this->_uc, address, bytes, size ) ) != UC_ERR_OK )
         {
             throw std::runtime_error( uc_strerror( e ) );
         }
