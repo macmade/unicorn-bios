@@ -104,6 +104,7 @@ namespace UB
             void onStart(     const std::function< void( void ) > f );
             void onStop(      const std::function< void( void ) > f );
             void onInterrupt( const std::function< bool( uint32_t i, Engine & ) > handler );
+            void onException( const std::function< bool( const std::exception & ) > handler );
             
             std::vector< uint8_t > read( size_t address, size_t size );
             void                   write( size_t address, const std::vector< uint8_t > & bytes );

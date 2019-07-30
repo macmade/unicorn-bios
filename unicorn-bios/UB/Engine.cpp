@@ -49,14 +49,15 @@ namespace UB
             std::vector< uint8_t > _read( size_t address, size_t size );
             void                   _write( size_t address, const std::vector< uint8_t > & bytes );
             
-            size_t                                                       _memory;
-            std::vector< std::function< void( void ) > >                 _onStart;
-            std::vector< std::function< void( void ) > >                 _onStop;
-            std::vector< std::function< bool( uint32_t i, Engine & ) > > _interrupts;
-            uc_engine                                                  * _uc;
-            bool                                                         _running;
-            mutable std::recursive_mutex                                 _rmtx;
-            std::condition_variable_any                                  _cv;
+            size_t                                                         _memory;
+            std::vector< std::function< void( void ) > >                   _onStart;
+            std::vector< std::function< void( void ) > >                   _onStop;
+            std::vector< std::function< bool( uint32_t i, Engine & ) > >   _interrupts;
+            std::vector< std::function< bool( const std::exception & ) > > _exceptions;
+            uc_engine                                                    * _uc;
+            bool                                                           _running;
+            mutable std::recursive_mutex                                   _rmtx;
+            std::condition_variable_any                                    _cv;
             
             template< typename _T_ >
             _T_ _readRegister( int reg ) const
@@ -378,6 +379,13 @@ namespace UB
         this->impl->_interrupts.push_back( handler );
     }
     
+    void Engine::onException( const std::function< bool( const std::exception & ) > handler )
+    {
+        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+        
+        this->impl->_exceptions.push_back( handler );
+    }
+    
     std::vector< uint8_t > Engine::read( size_t address, size_t size )
     {
         return this->impl->_read( address, size );
@@ -412,11 +420,38 @@ namespace UB
         (
             [ = ]
             {
-                uc_err e;
-                
-                if( ( e = uc_emu_start( this->impl->_uc, address, std::numeric_limits< uint64_t >::max(), 0, 0 ) ) != UC_ERR_OK )
+                try
                 {
-                    throw std::runtime_error( uc_strerror( e ) );
+                    uc_err e;
+                    
+                    if( ( e = uc_emu_start( this->impl->_uc, address, std::numeric_limits< uint64_t >::max(), 0, 0 ) ) != UC_ERR_OK )
+                    {
+                        throw std::runtime_error( uc_strerror( e ) );
+                    }
+                }
+                catch( const std::exception & e )
+                {
+                    std::vector< std::function< bool( const std::exception & ) > > handlers;
+                    bool                                                           handled( false );
+                    
+                    {
+                        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+                        
+                        handlers = this->impl->_exceptions;
+                    }
+                    
+                    for( const auto & f: handlers )
+                    {
+                        if( f( e ) )
+                        {
+                            handled = true;
+                        }
+                    }
+                    
+                    if( handled == false )
+                    {
+                        throw e;
+                    }
                 }
                 
                 {
@@ -521,7 +556,7 @@ namespace UB
             }
         }
         
-        throw std::runtime_error( "Unhandled interrupt: " + String::toHex( i ) );
+        throw std::runtime_error( "Unhandled interrupt: " + String::toHex( i ) + ":" + String::toHex( engine->ah() ) );
     }
     
     std::vector< uint8_t > Engine::IMPL::_read( size_t address, size_t size )

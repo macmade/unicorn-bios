@@ -150,6 +150,16 @@ namespace UB
         
         this->_engine.write( 0x7C00, mbrData );
         
+        this->_engine.onException
+        (
+            [ & ]( const std::exception & e ) -> bool
+            {
+                this->_ui.debug() << "[ ERROR ]> Exception caught: " << e.what() << std::endl;
+                
+                return true;
+            }
+        );
+        
         this->_engine.onInterrupt
         (
             [ & ]( uint32_t i, Engine & engine ) -> bool
