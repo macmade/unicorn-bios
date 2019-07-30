@@ -37,6 +37,8 @@ namespace UB
     {
         public:
             
+            static uint64_t getAddress( uint16_t segment, uint16_t offset );
+            
             Engine( size_t memory );
             ~Engine( void );
             

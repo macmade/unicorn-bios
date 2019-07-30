@@ -52,7 +52,7 @@ namespace UB
                 uint8_t    cylinder(    engine.ch() );
                 uint8_t    sector(      engine.cl() );
                 uint8_t    head(        engine.dh() );
-                uint64_t   destination( 0 );
+                uint64_t   destination( Engine::getAddress( engine.es(), engine.bx() ) );
                 FAT::Image image(       machine.bootImage() );
                 
                 if( driveNumber != 0x00 )
@@ -61,10 +61,6 @@ namespace UB
                     
                     goto error;
                 }
-                
-                destination   = engine.es();
-                destination <<= 4;
-                destination  += engine.bx();
                 
                 machine.ui().debug() << "Reading " << static_cast< unsigned int >( sectors ) << " sector" << ( ( sectors > 1 ) ? "s" : "" ) << " from drive " << String::toHex( driveNumber )
                                      << std::endl

@@ -87,6 +87,16 @@ namespace UB
             }
     };
     
+    uint64_t Engine::getAddress( uint16_t segment, uint16_t offset )
+    {
+        uint64_t address( segment );
+        
+        address <<= 4;
+        address  += offset;
+        
+        return address;
+    }
+    
     Engine::Engine( size_t memory ):
         impl( std::make_unique< IMPL >( memory ) )
     {

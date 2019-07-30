@@ -35,11 +35,7 @@ namespace UB
         {
             bool getMemoryMap( const Machine & machine, Engine & engine )
             {
-                uint64_t destination( 0 );
-                
-                destination   = engine.es();
-                destination <<= 4;
-                destination  += engine.di();
+                uint64_t destination( Engine::getAddress( engine.es(), engine.di() ) );
                 
                 machine.ui().debug() << "Getting memory map:" << std::endl
                                      << "    - Destination: " << String::toHex( destination ) << " (" << String::toHex( engine.es() ) << ":" << String::toHex( engine.di() ) << ")"
