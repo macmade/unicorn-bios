@@ -10,6 +10,7 @@
 		053F365F22E892C5003BD8AC /* Interrupts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053F365D22E892C5003BD8AC /* Interrupts.cpp */; };
 		0559286B22EB3048003878B6 /* Capstone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0559286922EB3048003878B6 /* Capstone.cpp */; };
 		0559286F22EEF488003878B6 /* StringStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0559286D22EEF488003878B6 /* StringStream.cpp */; };
+		055928B322F0B2C0003878B6 /* Functions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055928B122F0B2C0003878B6 /* Functions.cpp */; };
 		058182F622E8CC1F008D1BFF /* String.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 058182F422E8CC1F008D1BFF /* String.cpp */; };
 		0581833B22E8EC63008D1BFF /* Video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0581833922E8EC63008D1BFF /* Video.cpp */; };
 		0581833E22E8EE88008D1BFF /* Disk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0581833C22E8EE88008D1BFF /* Disk.cpp */; };
@@ -47,6 +48,8 @@
 		0559286A22EB3048003878B6 /* Capstone.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Capstone.hpp; sourceTree = "<group>"; };
 		0559286D22EEF488003878B6 /* StringStream.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = StringStream.cpp; sourceTree = "<group>"; };
 		0559286E22EEF488003878B6 /* StringStream.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = StringStream.hpp; sourceTree = "<group>"; };
+		055928B122F0B2C0003878B6 /* Functions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Functions.cpp; sourceTree = "<group>"; };
+		055928B222F0B2C0003878B6 /* Functions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Functions.hpp; sourceTree = "<group>"; };
 		058182F422E8CC1F008D1BFF /* String.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = String.cpp; sourceTree = "<group>"; };
 		058182F522E8CC1F008D1BFF /* String.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = String.hpp; sourceTree = "<group>"; };
 		0581831D22E8DC5C008D1BFF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -334,6 +337,8 @@
 		05B2818C22E7ABFF00110404 /* FAT */ = {
 			isa = PBXGroup;
 			children = (
+				055928B122F0B2C0003878B6 /* Functions.cpp */,
+				055928B222F0B2C0003878B6 /* Functions.hpp */,
 				05B2818D22E7AC1300110404 /* Image.cpp */,
 				05B2818E22E7AC1300110404 /* Image.hpp */,
 				05B2819022E7AE8300110404 /* MBR.cpp */,
@@ -408,6 +413,7 @@
 				0559286B22EB3048003878B6 /* Capstone.cpp in Sources */,
 				0581834422E9ACFF008D1BFF /* Screen.cpp in Sources */,
 				0559286F22EEF488003878B6 /* StringStream.cpp in Sources */,
+				055928B322F0B2C0003878B6 /* Functions.cpp in Sources */,
 				05B2819B22E7AF1A00110404 /* BinaryStream.cpp in Sources */,
 				0581833B22E8EC63008D1BFF /* Video.cpp in Sources */,
 				05B2819922E7AF1A00110404 /* BinaryDataStream.cpp in Sources */,
