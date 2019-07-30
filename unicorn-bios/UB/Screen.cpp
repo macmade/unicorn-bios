@@ -130,6 +130,11 @@ namespace UB
         ::refresh();
     }
     
+    void Screen::print( const std::string & s )
+    {
+        ::printw( s.c_str() );
+    }
+    
     void Screen::start( void )
     {
         if( this->impl->_running )

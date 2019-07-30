@@ -1,7 +1,7 @@
 /*******************************************************************************
  * The MIT License (MIT)
  * 
- * Copyright (c) 2018 Jean-David Gadina - www.xs-labs.com
+ * Copyright (c) 2019 Jean-David Gadina - www.xs-labs.com
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,51 +22,42 @@
  * THE SOFTWARE.
  ******************************************************************************/
 
-#ifndef UB_SCREEN_HPP
-#define UB_SCREEN_HPP
+#ifndef UB_WINDOW_HPP
+#define UB_WINDOW_HPP
 
-#include <cstdlib>
-#include <functional>
 #include <memory>
+#include <algorithm>
+#include <cstdlib>
+#include <string>
 
 namespace UB
 {
-    class Screen
+    class Window
     {
         public:
             
-            Screen( void );
-            Screen( const Screen & o );
-            Screen( Screen && o ) noexcept;
-            ~Screen( void );
+            Window( size_t x, size_t y, size_t width, size_t height );
+            Window( const Window & o );
+            Window( Window && o ) noexcept;
+            ~Window( void );
             
-            Screen & operator =( Screen o );
+            Window & operator =( Window o );
             
-            std::size_t width( void )  const;
-            std::size_t height( void ) const;
-            
-            bool supportsColors( void ) const;
-            bool isRunning( void )      const;
-            void clear( void )          const;
-            void refresh( void )        const;
-            
+            void refresh( void );
+            void move( size_t x, size_t y );
             void print( const std::string & s );
+            void print( const char * format, ... );
+            void box( void );
+            void addHorizontalLine( size_t width );
+            void addVerticalLine( size_t height );
             
-            void start( void );
-            void stop( void );
-            
-            void onResize( const std::function<   void( void ) > & f );
-            void onKeyPress( const std::function< void( int key ) > & f );
-            void onUpdate( const std::function<   void( void ) > & f );
-            
-            friend void swap( Screen & o1, Screen & o2 );
+            friend void swap( Window & o1, Window & o2 );
             
         private:
             
             class IMPL;
-            
             std::unique_ptr< IMPL > impl;
     };
 }
 
-#endif /* UB_SCREEN_HPP */
+#endif /* UB_WINDOW_HPP */

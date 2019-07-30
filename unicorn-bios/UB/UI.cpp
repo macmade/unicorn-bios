@@ -29,7 +29,7 @@
 #include "UB/Engine.hpp"
 #include "UB/Casts.hpp"
 #include "UB/Capstone.hpp"
-#include <ncurses.h>
+#include "UB/Window.hpp"
 #include <mutex>
 #include <optional>
 #include <thread>
@@ -271,11 +271,10 @@ namespace UB
         (
             [ & ]( void )
             {
-                if( this->_screen.width() < 50 || this->_screen.height() < 30 )
+                if( this->_screen.width() < 100 || this->_screen.height() < 30 )
                 {
                     this->_screen.clear();
-                    
-                    ::printw( "Screen too small..." );
+                    this->_screen.print( "Screen too small..." );
                     
                     return;
                 }
@@ -373,399 +372,357 @@ namespace UB
     
     void UI::IMPL::_displayStatus( void )
     {
-        int x(      0 );
-        int y(      static_cast< int >( this->_screen.height() ) - 3 );
-        int width(  static_cast< int >( this->_screen.width() ) );
-        int height( 3 );
+        size_t x(      0 );
+        size_t y(      this->_screen.height() - 3 );
+        size_t width(  this->_screen.width() );
+        size_t height( 3 );
+        Window win( x, y, width, height );
         
         {
-            ::WINDOW * win( ::newwin( height, width, y, x ) );
+            std::lock_guard< std::recursive_mutex > l( this->_rmtx );
             
-            {
-                std::lock_guard< std::recursive_mutex > l( this->_rmtx );
-                
-                ::box( win, 0, 0 );
-                ::wmove( win, 1, 2 );
-                ::wprintw( win, this->_status.c_str() );
-                ::wmove( win, 2, 1 );
-                ::whline( win, 0, width - 2 );
-            }
-            
-            this->_screen.refresh();
-            ::wmove( win, 0, 0 );
-            ::wrefresh( win );
-            ::delwin( win );
+            win.box();
+            win.move( 2, 1 );
+            win.print( this->_status );
         }
+        
+        this->_screen.refresh();
+        win.move( 0, 0 );
+        win.refresh();
     }
     
     void UI::IMPL::_displayOutput( void )
     {
-        int x(      0 );
-        int y(      15 + ( ( static_cast< int >( this->_screen.height() ) - 15 ) / 2 ) );
-        int width(  static_cast< int >( this->_screen.width() ) / 2 );
-        int height( ( ( static_cast< int >( this->_screen.height() ) - 15 ) / 2 ) - 2 );
+        size_t x(      0 );
+        size_t y(      15 + ( ( this->_screen.height() - 15 ) / 2 ) );
+        size_t width(  this->_screen.width() / 2 );
+        size_t height( ( ( this->_screen.height() - 15 ) / 2 ) - 2 );
+        Window win( x, y, width, height );
+        
+        win.box();
+        win.move( 2, 1 );
+        win.print( "Output:" );
+        win.move( 1, 2 );
+        win.addHorizontalLine( width - 2 );
+        
+        y = 3;
         
         {
-            ::WINDOW * win( ::newwin( height, width, y, x ) );
+            std::vector< std::string > lines;
+            std::vector< std::string > display;
+            size_t                     maxLines( numeric_cast< size_t >( height ) - 4 );
+            size_t                     max( 80 );
             
             {
-                ::box( win, 0, 0 );
-                ::wmove( win, 1, 2 );
-                ::wprintw( win, "Output:" );
-                ::wmove( win, 2, 1 );
-                ::whline( win, 0, width - 2 );
+                std::lock_guard< std::recursive_mutex > l( this->_rmtx );
                 
-                y = 3;
+                lines = String::lines( this->_output.string() );
             }
             
+            if( numeric_cast< size_t >( width - 4 ) < max )
             {
-                std::vector< std::string > lines;
-                std::vector< std::string > display;
-                size_t                     maxLines( numeric_cast< size_t >( height ) - 4 );
-                size_t                     max( 80 );
-                
-                {
-                    std::lock_guard< std::recursive_mutex > l( this->_rmtx );
-                    
-                    lines = String::lines( this->_output.string() );
-                }
-                
-                if( numeric_cast< size_t >( width - 4 ) < max )
-                {
-                    max = numeric_cast< size_t >( width - 4 );
-                }
-                
-                for( std::string s: lines )
-                {
-                    while( s.length() > max )
-                    {
-                        display.push_back( s.substr( 0, max ) );
-                        
-                        s = s.substr( max );
-                    }
-                    
-                    display.push_back( s );
-                }
-                
-                if( display.size() > maxLines )
-                {
-                    display = std::vector< std::string >( display.end() - numeric_cast< ssize_t >( maxLines ), display.end() );
-                }
-                
-                for( const auto & s: display )
-                {
-                    ::wmove( win, y++, 2 );
-                    ::wprintw( win, s.c_str() );
-                }
+                max = numeric_cast< size_t >( width - 4 );
             }
             
-            this->_screen.refresh();
-            ::wmove( win, 0, 0 );
-            ::wrefresh( win );
-            ::delwin( win );
+            for( std::string s: lines )
+            {
+                while( s.length() > max )
+                {
+                    display.push_back( s.substr( 0, max ) );
+                    
+                    s = s.substr( max );
+                }
+                
+                display.push_back( s );
+            }
+            
+            if( display.size() > maxLines )
+            {
+                display = std::vector< std::string >( display.end() - numeric_cast< ssize_t >( maxLines ), display.end() );
+            }
+            
+            for( const auto & s: display )
+            {
+                win.move( 2, y++ );
+                win.print( s );
+            }
         }
+        
+        this->_screen.refresh();
+        win.move( 0, 0 );
+        win.refresh();
     }
     
     void UI::IMPL::_displayDebug( void )
     {
-        int x(      static_cast< int >( this->_screen.width() ) / 2 );
-        int y(      15 + ( ( static_cast< int >( this->_screen.height() ) - 15 ) / 2 ) );
-        int width(  static_cast< int >( this->_screen.width() ) / 2 );
-        int height( ( ( static_cast< int >( this->_screen.height() ) - 15 ) / 2 ) - 2 );
+        size_t x(      this->_screen.width() / 2 );
+        size_t y(      15 + ( ( this->_screen.height() - 15 ) / 2 ) );
+        size_t width(  this->_screen.width() / 2 );
+        size_t height( ( ( this->_screen.height() - 15 ) / 2 ) - 2 );
+        Window win( x, y, width, height );
+        
+        win.box();
+        win.move( 2, 1 );
+        win.print( "Debug:" );
+        win.move( 1, 2 );
+        win.addHorizontalLine( width - 2 );
+        
+        y = 3;
         
         {
-            ::WINDOW * win( ::newwin( height, width, y, x ) );
+            std::vector< std::string > lines;
+            size_t                     maxLines( numeric_cast< size_t >( height ) - 4 );
             
             {
-                ::box( win, 0, 0 );
-                ::wmove( win, 1, 2 );
-                ::wprintw( win, "Debug:" );
-                ::wmove( win, 2, 1 );
-                ::whline( win, 0, width - 2 );
+                std::lock_guard< std::recursive_mutex > l( this->_rmtx );
                 
-                y = 3;
+                lines = String::lines( this->_debug.string() );
             }
             
+            if( lines.size() > maxLines )
             {
-                std::vector< std::string > lines;
-                size_t                     maxLines( numeric_cast< size_t >( height ) - 4 );
-                
-                {
-                    std::lock_guard< std::recursive_mutex > l( this->_rmtx );
-                    
-                    lines = String::lines( this->_debug.string() );
-                }
-                
-                if( lines.size() > maxLines )
-                {
-                    lines = std::vector< std::string >( lines.end() - numeric_cast< ssize_t >( maxLines ), lines.end() );
-                }
-                
-                for( const auto & s: lines )
-                {
-                    ::wmove( win, y++, 2 );
-                    ::wprintw( win, s.c_str() );
-                }
+                lines = std::vector< std::string >( lines.end() - numeric_cast< ssize_t >( maxLines ), lines.end() );
             }
             
-            this->_screen.refresh();
-            ::wmove( win, 0, 0 );
-            ::wrefresh( win );
-            ::delwin( win );
+            for( const auto & s: lines )
+            {
+                win.move( 2, y++ );
+                win.print( s );
+            }
         }
+        
+        this->_screen.refresh();
+        win.move( 0, 0 );
+        win.refresh();
     }
     
     void UI::IMPL::_displayRegisters( void )
     {
-        int x(      0 );
-        int y(      0 );
-        int width(  36 );
-        int height( 15 );
+        size_t x(      0 );
+        size_t y(      0 );
+        size_t width(  36 );
+        size_t height( 15 );
+        Window win( x, y, width, height );
+        
+        win.box();
+        win.move( 2, 1 );
+        win.print( "CPU Registers:" );
+        win.move( 1, 2 );
+        win.addHorizontalLine( width - 2 );
+        
+        y = 3;
         
         {
-            ::WINDOW * win( ::newwin( height, width, y, x ) );
+            std::string ah( String::toHex( this->_engine.ah() ) );
+            std::string al( String::toHex( this->_engine.al() ) );
+            std::string bh( String::toHex( this->_engine.bh() ) );
+            std::string bl( String::toHex( this->_engine.bl() ) );
+            std::string ch( String::toHex( this->_engine.ch() ) );
+            std::string cl( String::toHex( this->_engine.cl() ) );
+            std::string dh( String::toHex( this->_engine.dh() ) );
+            std::string dl( String::toHex( this->_engine.dl() ) );
+            std::string ax( String::toHex( this->_engine.ax() ) );
+            std::string bx( String::toHex( this->_engine.bx() ) );
+            std::string cx( String::toHex( this->_engine.cx() ) );
+            std::string dx( String::toHex( this->_engine.dx() ) );
+            std::string si( String::toHex( this->_engine.si() ) );
+            std::string di( String::toHex( this->_engine.di() ) );
+            std::string sp( String::toHex( this->_engine.sp() ) );
+            std::string bp( String::toHex( this->_engine.bp() ) );
+            std::string cs( String::toHex( this->_engine.cs() ) );
+            std::string ds( String::toHex( this->_engine.ds() ) );
+            std::string es( String::toHex( this->_engine.es() ) );
+            std::string ss( String::toHex( this->_engine.ss() ) );
+            std::string ip( String::toHex( this->_engine.ip() ) );
+            std::string fl( String::toHex( this->_engine.eflags() ) );
             
-            {
-                ::box( win, 0, 0 );
-                ::wmove( win, 1, 2 );
-                ::wprintw( win, "CPU Registers:" );
-                ::wmove( win, 2, 1 );
-                ::whline( win, 0, width - 2 );
-                
-                y = 3;
-            }
-            
-            {
-                std::string ah( String::toHex( this->_engine.ah() ) );
-                std::string al( String::toHex( this->_engine.al() ) );
-                std::string bh( String::toHex( this->_engine.bh() ) );
-                std::string bl( String::toHex( this->_engine.bl() ) );
-                std::string ch( String::toHex( this->_engine.ch() ) );
-                std::string cl( String::toHex( this->_engine.cl() ) );
-                std::string dh( String::toHex( this->_engine.dh() ) );
-                std::string dl( String::toHex( this->_engine.dl() ) );
-                std::string ax( String::toHex( this->_engine.ax() ) );
-                std::string bx( String::toHex( this->_engine.bx() ) );
-                std::string cx( String::toHex( this->_engine.cx() ) );
-                std::string dx( String::toHex( this->_engine.dx() ) );
-                std::string si( String::toHex( this->_engine.si() ) );
-                std::string di( String::toHex( this->_engine.di() ) );
-                std::string sp( String::toHex( this->_engine.sp() ) );
-                std::string bp( String::toHex( this->_engine.bp() ) );
-                std::string cs( String::toHex( this->_engine.cs() ) );
-                std::string ds( String::toHex( this->_engine.ds() ) );
-                std::string es( String::toHex( this->_engine.es() ) );
-                std::string ss( String::toHex( this->_engine.ss() ) );
-                std::string ip( String::toHex( this->_engine.ip() ) );
-                std::string fl( String::toHex( this->_engine.eflags() ) );
-                
-                ::wmove( win, y++, 2 );
-                ::wprintw( win, ( "AX: " + ax + " | AH: " + ah + " | AL: " + al ).c_str() );
-                ::wmove( win, y++, 2 );
-                ::wprintw( win, ( "BX: " + bx + " | BH: " + bh + " | BL: " + bl ).c_str() );
-                ::wmove( win, y++, 2 );
-                ::wprintw( win, ( "CX: " + cx + " | CH: " + ch + " | CL: " + cl ).c_str() );
-                ::wmove( win, y++, 2 );
-                ::wprintw( win, ( "DX: " + dx + " | DH: " + dh + " | DL: " + dl ).c_str() );
-                ::wmove( win, y++, 1 );
-                ::whline( win, 0, width - 2 );
-                ::wmove( win, y++, 2 );
-                ::wprintw( win, ( "SI: " + si + " | DI: " + di ).c_str() );
-                ::wmove( win, y++, 2 );
-                ::wprintw( win, ( "SP: " + sp + " | BP: " + bp ).c_str() );
-                ::wmove( win, y++, 2 );
-                ::wprintw( win, ( "CS: " + cs + " | DS: " + ds ).c_str() );
-                ::wmove( win, y++, 2 );
-                ::wprintw( win, ( "ES: " + es + " | SS: " + ss ).c_str() );
-                ::wmove( win, y++, 1 );
-                ::whline( win, 0, width - 2 );
-                ::wmove( win, y++, 2 );
-                ::wprintw( win, ( "IP: " + ip + " | Flags: " + fl ).c_str() );
-            }
-            
-            this->_screen.refresh();
-            ::wmove( win, 0, 0 );
-            ::wrefresh( win );
-            ::delwin( win );
+            win.move( 2, y++ );
+            win.print( "AX: " + ax + " | AH: " + ah + " | AL: " + al );
+            win.move( 2, y++ );
+            win.print( "BX: " + bx + " | BH: " + bh + " | BL: " + bl );
+            win.move( 2, y++ );
+            win.print( "CX: " + cx + " | CH: " + ch + " | CL: " + cl );
+            win.move( 2, y++ );
+            win.print( "DX: " + dx + " | DH: " + dh + " | DL: " + dl );
+            win.move( 1, y++ );
+            win.addHorizontalLine( width - 2 );
+            win.move( 2, y++ );
+            win.print( "SI: " + si + " | DI: " + di );
+            win.move( 2, y++ );
+            win.print( "SP: " + sp + " | BP: " + bp );
+            win.move( 2, y++ );
+            win.print( "CS: " + cs + " | DS: " + ds );
+            win.move( 2, y++ );
+            win.print( "ES: " + es + " | SS: " + ss );
+            win.move( 1, y++ );
+            win.addHorizontalLine( width - 2 );
+            win.move( 2, y++ );
+            win.print( "IP: " + ip + " | Flags: " + fl );
         }
+        
+        this->_screen.refresh();
+        win.move( 0, 0 );
+        win.refresh();
     }
     
     void UI::IMPL::_displayInstructions( void )
     {
-        int x(      36 );
-        int y(      0 );
-        int width(  56 );
-        int height( 15 );
+        size_t x(      36 );
+        size_t y(      0 );
+        size_t width(  56 );
+        size_t height( 15 );
+        Window win( x, y, width, height );
         
+        win.box();
+        win.move( 2, 1 );
+        win.print( "Instructions:" );
+        win.move( 1, 2 );
+        win.addHorizontalLine( width - 2 );
+        
+        y = 3;
+        
+        try
         {
-            ::WINDOW * win( ::newwin( height, width, y, x ) );
+            uint64_t                   ip( Engine::getAddress( this->_engine.cs(), this->_engine.ip() ) );
+            std::vector< uint8_t >     bytes( this->_engine.read( ip, 512 ) );
+            std::vector< std::string > instructions( Capstone::instructions( bytes, ip ) );
             
+            for( const auto & s: instructions )
             {
-                ::box( win, 0, 0 );
-                ::wmove( win, 1, 2 );
-                ::wprintw( win, "Instructions:" );
-                ::wmove( win, 2, 1 );
-                ::whline( win, 0, width - 2 );
-                
-                y = 3;
-            }
-            
-            try
-            {
-                uint64_t                   ip( Engine::getAddress( this->_engine.cs(), this->_engine.ip() ) );
-                std::vector< uint8_t >     bytes( this->_engine.read( ip, 512 ) );
-                std::vector< std::string > instructions( Capstone::instructions( bytes, ip ) );
-                
-                for( const auto & s: instructions )
+                if( y == height - 1 )
                 {
-                    if( y == height - 1 )
-                    {
-                        break;
-                    }
-                    
-                    ::wmove( win, y++, 2 );
-                    ::wprintw( win, s.c_str() );
+                    break;
                 }
+                
+                win.move( 2, y++ );
+                win.print( s );
             }
-            catch( ... )
-            {}
-            
-            this->_screen.refresh();
-            ::wmove( win, 0, 0 );
-            ::wrefresh( win );
-            ::delwin( win );
         }
+        catch( ... )
+        {}
+        
+        this->_screen.refresh();
+        win.move( 0, 0 );
+        win.refresh();
     }
     
     void UI::IMPL::_displayDisassembly( void )
     {
-        int x(      36 + 56 );
-        int y(      0 );
-        int width(  static_cast< int >( this->_screen.width() ) - x );
-        int height( 15 );
+        size_t x(      36 + 56 );
+        size_t y(      0 );
+        size_t width(  this->_screen.width() - x );
+        size_t height( 15 );
+        Window win( x, y, width, height );
         
+        win.box();
+        win.move( 2, 1 );
+        win.print( "Disassembly:" );
+        win.move( 1, 2 );
+        win.addHorizontalLine( width - 2 );
+        
+        y = 3;
+        
+        try
         {
-            ::WINDOW * win( ::newwin( height, width, y, x ) );
+            uint64_t                   ip( Engine::getAddress( this->_engine.cs(), this->_engine.ip() ) );
+            std::vector< uint8_t >     bytes( this->_engine.read( ip, 512 ) );
+            std::vector< std::string > instructions( Capstone::disassemble( bytes, ip ) );
             
+            for( const auto & s: instructions )
             {
-                ::box( win, 0, 0 );
-                ::wmove( win, 1, 2 );
-                ::wprintw( win, "Disassembly:" );
-                ::wmove( win, 2, 1 );
-                ::whline( win, 0, width - 2 );
-                
-                y = 3;
-            }
-            
-            try
-            {
-                uint64_t                   ip( Engine::getAddress( this->_engine.cs(), this->_engine.ip() ) );
-                std::vector< uint8_t >     bytes( this->_engine.read( ip, 512 ) );
-                std::vector< std::string > instructions( Capstone::disassemble( bytes, ip ) );
-                
-                for( const auto & s: instructions )
+                if( y == height - 1 )
                 {
-                    if( y == height - 1 )
-                    {
-                        break;
-                    }
-                    
-                    ::wmove( win, y++, 2 );
-                    ::wprintw( win, s.c_str() );
+                    break;
                 }
+                
+                win.move( 2, y++ );
+                win.print( s );
             }
-            catch( ... )
-            {}
-            
-            this->_screen.refresh();
-            ::wmove( win, 0, 0 );
-            ::wrefresh( win );
-            ::delwin( win );
         }
+        catch( ... )
+        {}
+        
+        this->_screen.refresh();
+        win.move( 0, 0 );
+        win.refresh();
     }
     
     void UI::IMPL::_displayMemory( void )
     {
-        int x(      0 );
-        int y(      15 );
-        int width(  static_cast< int >( this->_screen.width() ) );
-        int height( ( static_cast< int >( this->_screen.height() ) - y ) / 2 );
+        size_t x(      0 );
+        size_t y(      15 );
+        size_t width(  this->_screen.width() );
+        size_t height( ( this->_screen.height() - y ) / 2 );
+        Window win( x, y, width, height );
         
+        win.box();
+        win.move( 2, 1 );
+        win.print( "Memory:" );
+        win.move( 1, 2 );
+        win.addHorizontalLine( width - 2 );
+        
+        y = 3;
+        
+        if( this->_memoryAddressPrompt.has_value() )
         {
-            ::WINDOW * win( ::newwin( height, width, y, x ) );
+            win.move( 2, 3 );
+            win.print( "Enter a memory address:" );
+            win.move( 2, 4 );
+            win.print( this->_memoryAddressPrompt.value() );
+        }
+        else
+        {
+            size_t cols(  this->_screen.width()  - 4 );
+            size_t lines( numeric_cast< size_t >( height ) - 4 );
+            
+            this->_memoryBytesPerLine = ( cols / 4 ) - 5;
+            this->_memoryLines        = lines;
             
             {
-                ::box( win, 0, 0 );
-                ::wmove( win, 1, 2 );
-                ::wprintw( win, "Memory:" );
-                ::wmove( win, 2, 1 );
-                ::whline( win, 0, width - 2 );
+                size_t                 size(   this->_memoryBytesPerLine * lines );
+                size_t                 offset( this->_memoryOffset );
+                std::vector< uint8_t > mem(    this->_engine.read( offset, size ) );
+                
+                for( size_t i = 0; i < mem.size(); i++ )
+                {
+                    if( i % this->_memoryBytesPerLine == 0 )
+                    {
+                        win.move( 2, y++ );
+                        win.print( "%016X: ", offset );
+                        
+                        offset += this->_memoryBytesPerLine;
+                    }
+                    
+                    win.print( "%02X ", numeric_cast< int >( mem[ i ] ) );
+                }
                 
                 y = 3;
-            }
-            
-            if( this->_memoryAddressPrompt.has_value() )
-            {
-                ::wmove( win, 3, 2 );
-                ::wprintw( win, "Enter a memory address:" );
-                ::wmove( win, 4, 2 );
-                ::wprintw( win, this->_memoryAddressPrompt.value().c_str() );
-            }
-            else
-            {
-                size_t cols(  this->_screen.width()  - 4 );
-                size_t lines( numeric_cast< size_t >( height ) - 4 );
                 
-                this->_memoryBytesPerLine = ( cols / 4 ) - 5;
-                this->_memoryLines        = lines;
+                win.move( ( this->_memoryBytesPerLine * 3 ) + 4 + 16, y );
+                win.addVerticalLine( lines );
                 
+                for( size_t i = 0; i < mem.size(); i++ )
                 {
-                    size_t                 size(   this->_memoryBytesPerLine * lines );
-                    size_t                 offset( this->_memoryOffset );
-                    std::vector< uint8_t > mem(    this->_engine.read( offset, size ) );
+                    char c = static_cast< char >( mem[ i ] );
                     
-                    for( size_t i = 0; i < mem.size(); i++ )
+                    if( i % this->_memoryBytesPerLine == 0 )
                     {
-                        if( i % this->_memoryBytesPerLine == 0 )
-                        {
-                            ::wmove( win, y++, 2 );
-                            ::wprintw( win, "%016X: ", offset );
-                            
-                            offset += this->_memoryBytesPerLine;
-                        }
-                        
-                        ::wprintw( win, "%02X ", numeric_cast< int >( mem[ i ] ) );
+                        win.move( ( this->_memoryBytesPerLine * 3 ) + 4 + 18, y++ );
                     }
                     
-                    y = 3;
-                    
-                    ::wmove( win, y, numeric_cast< int >( this->_memoryBytesPerLine * 3 ) + 4 + 16 );
-                    ::wvline( win, 0, numeric_cast< int >( lines ) );
-                    
-                    for( size_t i = 0; i < mem.size(); i++ )
+                    if( isprint( c ) == false || isspace( c ) )
                     {
-                        char c = static_cast< char >( mem[ i ] );
-                        
-                        if( i % this->_memoryBytesPerLine == 0 )
-                        {
-                            ::wmove( win, y++, numeric_cast< int >( this->_memoryBytesPerLine * 3 ) + 4 + 18 );
-                        }
-                        
-                        if( isprint( c ) == false || isspace( c ) )
-                        {
-                            c = '.';
-                        }
-                        
-                        ::wprintw( win, "%c", c );
+                        c = '.';
                     }
+                    
+                    win.print( "%c", c );
                 }
             }
-            
-            this->_screen.refresh();
-            ::wmove( win, 0, 0 );
-            ::wrefresh( win );
-            ::delwin( win );
         }
+        
+        this->_screen.refresh();
+        win.move( 0, 0 );
+        win.refresh();
     }
     
     void UI::IMPL::_memoryScrollUp( size_t n )
