@@ -271,7 +271,7 @@ namespace UB
         (
             [ & ]( void )
             {
-                if( this->_screen.width() < 100 || this->_screen.height() < 30 )
+                if( this->_screen.width() < 120 || this->_screen.height() < 30 )
                 {
                     this->_screen.clear();
                     this->_screen.print( "Screen too small..." );
@@ -394,9 +394,9 @@ namespace UB
     void UI::IMPL::_displayOutput( void )
     {
         size_t x(      0 );
-        size_t y(      15 + ( ( this->_screen.height() - 15 ) / 2 ) );
+        size_t y(      20 + ( ( this->_screen.height() - 20 ) / 2 ) );
         size_t width(  this->_screen.width() / 2 );
-        size_t height( ( ( this->_screen.height() - 15 ) / 2 ) - 2 );
+        size_t height( ( ( this->_screen.height() - 20 ) / 2 ) - 2 );
         Window win( x, y, width, height );
         
         win.box();
@@ -456,9 +456,9 @@ namespace UB
     void UI::IMPL::_displayDebug( void )
     {
         size_t x(      this->_screen.width() / 2 );
-        size_t y(      15 + ( ( this->_screen.height() - 15 ) / 2 ) );
+        size_t y(      20 + ( ( this->_screen.height() - 20 ) / 2 ) );
         size_t width(  this->_screen.width() / 2 );
-        size_t height( ( ( this->_screen.height() - 15 ) / 2 ) - 2 );
+        size_t height( ( ( this->_screen.height() - 20 ) / 2 ) - 2 );
         Window win( x, y, width, height );
         
         win.box();
@@ -500,8 +500,8 @@ namespace UB
     {
         size_t x(      0 );
         size_t y(      0 );
-        size_t width(  36 );
-        size_t height( 15 );
+        size_t width(  54 );
+        size_t height( 20 );
         Window win( x, y, width, height );
         
         win.box();
@@ -534,30 +534,50 @@ namespace UB
             std::string es( String::toHex( this->_engine.es() ) );
             std::string ss( String::toHex( this->_engine.ss() ) );
             std::string ip( String::toHex( this->_engine.ip() ) );
-            std::string fl( String::toHex( this->_engine.eflags() ) );
+            std::string eax( String::toHex( this->_engine.eax() ) );
+            std::string ebx( String::toHex( this->_engine.ebx() ) );
+            std::string ecx( String::toHex( this->_engine.ecx() ) );
+            std::string edx( String::toHex( this->_engine.edx() ) );
+            std::string esi( String::toHex( this->_engine.esi() ) );
+            std::string edi( String::toHex( this->_engine.edi() ) );
+            std::string esp( String::toHex( this->_engine.esp() ) );
+            std::string ebp( String::toHex( this->_engine.ebp() ) );
+            std::string eip( String::toHex( this->_engine.eip() ) );
+            uint32_t    eflags32( this->_engine.eflags() );
+            std::string eflags( String::toHex( eflags32 ) );
             
             win.move( 2, y++ );
-            win.print( "AX: " + ax + " | AH: " + ah + " | AL: " + al );
+            win.print( "EAX: " + eax + " | AX: " + ax + " | AH: " + ah + " | AL: " + al );
             win.move( 2, y++ );
-            win.print( "BX: " + bx + " | BH: " + bh + " | BL: " + bl );
+            win.print( "EBX: " + ebx + " | BX: " + bx + " | BH: " + bh + " | BL: " + bl );
             win.move( 2, y++ );
-            win.print( "CX: " + cx + " | CH: " + ch + " | CL: " + cl );
+            win.print( "EcX: " + ecx + " | CX: " + cx + " | CH: " + ch + " | CL: " + cl );
             win.move( 2, y++ );
-            win.print( "DX: " + dx + " | DH: " + dh + " | DL: " + dl );
+            win.print( "EDX: " + edx + " | DX: " + dx + " | DH: " + dh + " | DL: " + dl );
             win.move( 1, y++ );
             win.addHorizontalLine( width - 2 );
             win.move( 2, y++ );
-            win.print( "SI: " + si + " | DI: " + di );
+            win.print( "ESI: " + esi + " | SI: " + si );
             win.move( 2, y++ );
-            win.print( "SP: " + sp + " | BP: " + bp );
+            win.print( "EDI: " + edi + " | DI: " + di );
             win.move( 2, y++ );
-            win.print( "CS: " + cs + " | DS: " + ds );
+            win.print( "EBP: " + ebp + " | BP: " + bp );
             win.move( 2, y++ );
-            win.print( "ES: " + es + " | SS: " + ss );
+            win.print( "ESP: " + esp + " | SP: " + sp );
             win.move( 1, y++ );
             win.addHorizontalLine( width - 2 );
             win.move( 2, y++ );
-            win.print( "IP: " + ip + " | Flags: " + fl );
+            win.print( "CS: " + cs + " | DS: " + ds + " | ES: " + es + " | SS: " + ss );
+            win.move( 1, y++ );
+            win.addHorizontalLine( width - 2 );
+            win.move( 2, y++ );
+            win.print( "EIP: " + eip + " | IP: " + ip );
+            win.move( 1, y++ );
+            win.addHorizontalLine( width - 2 );
+            win.move( 2, y++ );
+            win.print( "EFlags: " + eflags );
+            win.move( 2, y++ );
+            win.print( "        " + String::toBinary( eflags32 ) );
         }
         
         this->_screen.refresh();
@@ -567,10 +587,10 @@ namespace UB
     
     void UI::IMPL::_displayInstructions( void )
     {
-        size_t x(      36 );
+        size_t x(      54 );
         size_t y(      0 );
         size_t width(  56 );
-        size_t height( 15 );
+        size_t height( 20 );
         Window win( x, y, width, height );
         
         win.box();
@@ -608,10 +628,10 @@ namespace UB
     
     void UI::IMPL::_displayDisassembly( void )
     {
-        size_t x(      36 + 56 );
+        size_t x(      54 + 56 );
         size_t y(      0 );
         size_t width(  this->_screen.width() - x );
-        size_t height( 15 );
+        size_t height( 20 );
         Window win( x, y, width, height );
         
         win.box();
@@ -650,7 +670,7 @@ namespace UB
     void UI::IMPL::_displayMemory( void )
     {
         size_t x(      0 );
-        size_t y(      15 );
+        size_t y(      20 );
         size_t width(  this->_screen.width() );
         size_t height( ( this->_screen.height() - y ) / 2 );
         Window win( x, y, width, height );

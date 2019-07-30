@@ -66,6 +66,21 @@ namespace UB
             
             return ss.str();
         }
+        
+        template< typename _T_ >
+        std::string toBinary( _T_ v, typename std::enable_if< std::is_integral< _T_ >::value >::type * = 0 )
+        {
+            size_t      bits( sizeof( _T_ ) * 8 );
+            std::string s( bits, '0' );
+            
+            for( size_t i = 0; i < bits; i++ )
+            {
+                s[ ( bits - 1 ) - i ] = ( v & 0x01 ) ? '1' : '0';
+                v                   >>= 1;
+            }
+            
+            return s;
+        }
     }
 }
 
