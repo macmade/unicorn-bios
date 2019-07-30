@@ -33,7 +33,7 @@ namespace UB
     {
         namespace Video
         {
-            void ttyOutput( const Machine & machine, Engine & engine )
+            bool ttyOutput( const Machine & machine, Engine & engine )
             {
                 char c( static_cast< char >( engine.al() ) );
                 
@@ -47,6 +47,8 @@ namespace UB
                 {
                     machine.ui().output() << ".";
                 }
+                
+                return true;
             }
         }
     }

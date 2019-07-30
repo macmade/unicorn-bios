@@ -34,7 +34,7 @@ namespace UB
     {
         namespace Video
         {
-            void ttyOutput( const Machine & machine, Engine & engine );
+            bool ttyOutput( const Machine & machine, Engine & engine );
         }
     }
 }

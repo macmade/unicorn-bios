@@ -35,15 +35,17 @@ namespace UB
     {
         namespace Disk
         {
-            void reset( const Machine & machine, Engine & engine )
+            bool reset( const Machine & machine, Engine & engine )
             {
                 machine.ui().debug() << "Resetting drive " << String::toHex( engine.dl() ) << std::endl;
                 
                 engine.cf( false );
                 engine.ah( 0 );
+                
+                return true;
             }
             
-            void readSectors( const Machine & machine, Engine & engine )
+            bool readSectors( const Machine & machine, Engine & engine )
             {
                 uint8_t    driveNumber( engine.dl() );
                 uint8_t    sectors(     engine.al() );
@@ -94,7 +96,7 @@ namespace UB
                     engine.ah( 0 );
                     engine.al( sectors );
                     
-                    return;
+                    return true;
                 }
                 
                 error:
@@ -102,6 +104,8 @@ namespace UB
                     engine.cf( true );
                     engine.ah( 1 );
                     engine.al( 0 );
+                    
+                    return true;
             }
         }
     }

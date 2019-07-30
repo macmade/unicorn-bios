@@ -45,7 +45,7 @@ namespace UB
         {
             switch( engine.ah() )
             {
-                case 0x0E: BIOS::Video::ttyOutput( machine, engine ); return true;
+                case 0x0E: return BIOS::Video::ttyOutput( machine, engine );
                 default:   break;
             }
             
@@ -72,8 +72,8 @@ namespace UB
         {
             switch( engine.ah() )
             {
-                case 0x00: BIOS::Disk::reset( machine, engine );       return true;
-                case 0x02: BIOS::Disk::readSectors( machine, engine ); return true;
+                case 0x00: return BIOS::Disk::reset( machine, engine );
+                case 0x02: return BIOS::Disk::readSectors( machine, engine );
                 default:   break;
             }
             
@@ -100,7 +100,7 @@ namespace UB
         {
             switch( engine.ah() )
             {
-                case 0x00: BIOS::Keyboard::readKey( machine, engine ); return true;
+                case 0x00: return BIOS::Keyboard::readKey( machine, engine );
                 default:   break;
             }
             

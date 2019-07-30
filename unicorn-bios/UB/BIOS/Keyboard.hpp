@@ -34,7 +34,7 @@ namespace UB
     {
         namespace Keyboard
         {
-            void readKey( const Machine & machine, Engine & engine );
+            bool readKey( const Machine & machine, Engine & engine );
         }
     }
 }

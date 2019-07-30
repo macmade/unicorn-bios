@@ -34,8 +34,8 @@ namespace UB
     {
         namespace Disk
         {
-            void reset( const Machine & machine, Engine & engine );
-            void readSectors( const Machine & machine, Engine & engine );
+            bool reset( const Machine & machine, Engine & engine );
+            bool readSectors( const Machine & machine, Engine & engine );
         }
     }
 }
