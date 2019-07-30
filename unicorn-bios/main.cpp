@@ -44,7 +44,8 @@ int main( int argc, const char * argv[] )
         {
             UB::Machine machine( args.memory() * 1024 * 1024, args.bootImage() );
             
-            machine.breakOnInterrupts( args.breakOnInterrupts() );
+            machine.breakOnInterrupt( args.breakOnInterrupt() );
+            machine.breakOnInterruptReturn( args.breakOnInterruptReturn() );
             machine.run();
         }
         
@@ -78,6 +79,8 @@ static void showHelp( void )
               << std::endl
               << "                    (in megabytes). Defaults to 64."
               << std::endl
-              << "    --int-break:    Breaks on interrupt calls."
+              << "    --break-int:    Breaks on interrupt calls."
+              << std::endl
+              << "    --break-iret:   Breaks on interrupt returns."
               << std::endl;
 }

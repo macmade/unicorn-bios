@@ -47,7 +47,8 @@ namespace UB
             FAT::Image _fat;
             Engine     _engine;
             UI         _ui;
-            bool       _breakOnInterrupts;
+            bool       _breakOnInterrupt;
+            bool       _breakOnInterruptReturn;
     };
 
     Machine::Machine( size_t memory, const FAT::Image & fat ):
@@ -97,14 +98,24 @@ namespace UB
         this->impl->_engine.stop();
     }
     
-    bool Machine::breakOnInterrupts( void ) const
+    bool Machine::breakOnInterrupt( void ) const
     {
-        return this->impl->_breakOnInterrupts;
+        return this->impl->_breakOnInterrupt;
     }
     
-    void Machine::breakOnInterrupts( bool value )
+    bool Machine::breakOnInterruptReturn( void ) const
     {
-        this->impl->_breakOnInterrupts = value;
+        return this->impl->_breakOnInterruptReturn;
+    }
+    
+    void Machine::breakOnInterrupt( bool value )
+    {
+        this->impl->_breakOnInterrupt = value;
+    }
+    
+    void Machine::breakOnInterruptReturn( bool value )
+    {
+        this->impl->_breakOnInterruptReturn = value;
     }
     
     void swap( Machine & o1, Machine & o2 )
@@ -115,19 +126,21 @@ namespace UB
     }
 
     Machine::IMPL::IMPL( size_t memory, const FAT::Image & fat ):
-        _memory(            memorySizeOrDefault( memory ) ),
-        _fat(               fat ),
-        _engine(            memorySizeOrDefault( memory ) ),
-        _ui(                this->_engine ),
-        _breakOnInterrupts( false )
+        _memory(                 memorySizeOrDefault( memory ) ),
+        _fat(                    fat ),
+        _engine(                 memorySizeOrDefault( memory ) ),
+        _ui(                     this->_engine ),
+        _breakOnInterrupt(       false ),
+        _breakOnInterruptReturn( false )
     {}
 
     Machine::IMPL::IMPL( const IMPL & o ):
-        _memory(            o._memory ),
-        _fat(               o._fat ),
-        _engine(            o._memory ),
-        _ui(                this->_engine ),
-        _breakOnInterrupts( o._breakOnInterrupts )
+        _memory(                 o._memory ),
+        _fat(                    o._fat ),
+        _engine(                 o._memory ),
+        _ui(                     this->_engine ),
+        _breakOnInterrupt(       o._breakOnInterrupt ),
+        _breakOnInterruptReturn( o._breakOnInterruptReturn )
     {}
 
     Machine::IMPL::~IMPL( void )
@@ -168,7 +181,7 @@ namespace UB
                 
                 this->_ui.debug() << "[ BREAK ]> Interrupt " << String::toHex( i ) << std::endl;
                 
-                if( this->_breakOnInterrupts )
+                if( this->_breakOnInterrupt )
                 {
                     this->_ui.waitForUserResume();
                 }
@@ -191,7 +204,7 @@ namespace UB
                     default: break;
                 }
                 
-                if( this->_breakOnInterrupts )
+                if( this->_breakOnInterruptReturn )
                 {
                     this->_ui.debug() << "[ BREAK ]> Return from interrupt" << std::endl;
                     this->_ui.waitForUserResume();

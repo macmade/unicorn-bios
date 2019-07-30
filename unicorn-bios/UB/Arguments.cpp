@@ -36,7 +36,8 @@ namespace UB
             IMPL( const IMPL & o );
             
             bool        _showHelp;
-            bool        _breakOnInterrupts;
+            bool        _breakOnInterrupt;
+            bool        _breakOnInterruptReturn;
             size_t      _memory;
             std::string _bootImage;
     };
@@ -68,9 +69,14 @@ namespace UB
         return this->impl->_showHelp;
     }
     
-    bool Arguments::breakOnInterrupts( void ) const
+    bool Arguments::breakOnInterrupt( void ) const
     {
-        return this->impl->_breakOnInterrupts;
+        return this->impl->_breakOnInterrupt;
+    }
+    
+    bool Arguments::breakOnInterruptReturn( void ) const
+    {
+        return this->impl->_breakOnInterruptReturn;
     }
     
     size_t Arguments::memory( void ) const
@@ -91,9 +97,10 @@ namespace UB
     }
     
     Arguments::IMPL::IMPL( int argc, const char * argv[] ):
-        _showHelp( false ),
-        _breakOnInterrupts( false ),
-        _memory( 0 )
+        _showHelp(               false ),
+        _breakOnInterrupt(       false ),
+        _breakOnInterruptReturn( false ),
+        _memory(                 0 )
     {
         if( argc < 1 )
         {
@@ -108,9 +115,13 @@ namespace UB
             {
                 this->_showHelp = true;
             }
-            if( arg == "--int-break" )
+            else if( arg == "--break-int" )
             {
-                this->_breakOnInterrupts = true;
+                this->_breakOnInterrupt = true;
+            }
+            else if( arg == "--break-iret" )
+            {
+                this->_breakOnInterruptReturn = true;
             }
             else if( arg == "--memory" || arg == "-m" )
             {
@@ -132,9 +143,10 @@ namespace UB
     }
     
     Arguments::IMPL::IMPL( const IMPL & o ):
-        _showHelp(           o._showHelp ),
-        _breakOnInterrupts(  o._breakOnInterrupts ),
-        _memory(             o._memory ),
-        _bootImage(          o._bootImage )
+        _showHelp(                o._showHelp ),
+        _breakOnInterrupt(        o._breakOnInterrupt ),
+        _breakOnInterruptReturn(  o._breakOnInterruptReturn ),
+        _memory(                  o._memory ),
+        _bootImage(               o._bootImage )
     {}
 }
