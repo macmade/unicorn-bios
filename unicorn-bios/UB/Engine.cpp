@@ -561,7 +561,7 @@ namespace UB
             }
         }
         
-        throw std::runtime_error( "Unhandled interrupt: " + String::toHex( i ) + ":" + String::toHex( engine->ax() ) );
+        throw std::runtime_error( "Unhandled interrupt: " + String::toHex( i ) );
     }
     
     std::vector< uint8_t > Engine::IMPL::_read( size_t address, size_t size )
