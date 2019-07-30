@@ -50,7 +50,8 @@ namespace UB
                 std::string path( void ) const;
                 MBR         mbr( void )  const;
                 
-                std::vector< uint8_t > read( uint8_t sectors, uint8_t cylinder, uint8_t sector, uint8_t head ) const;
+                std::vector< uint8_t > read( uint8_t cylinder, uint8_t head, uint8_t sector, uint8_t sectors = 1 );
+                std::vector< uint8_t > read( uint64_t offset, uint64_t size );
                 
                 friend void swap( Image & o1, Image & o2 );
                 

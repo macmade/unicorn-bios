@@ -23,6 +23,7 @@
  ******************************************************************************/
 
 #include "UB/FAT/Image.hpp"
+#include "UB/FAT/Functions.hpp"
 #include "UB/BinaryFileStream.hpp"
 
 namespace UB
@@ -72,12 +73,17 @@ namespace UB
             return this->impl->_mbr;
         }
         
-        std::vector< uint8_t > Image::read( uint8_t sectors, uint8_t cylinder, uint8_t sector, uint8_t head ) const
+        std::vector< uint8_t > Image::read( uint8_t cylinder, uint8_t head, uint8_t sector, uint8_t sectors )
         {
-            ( void )sectors;
-            ( void )cylinder;
-            ( void )sector;
-            ( void )head;
+            uint64_t lba( chsToLBA( this->impl->_mbr, cylinder, sector, head ) );
+            
+            return this->read( lba * this->impl->_mbr.bytesPerSector(), sectors * this->impl->_mbr.bytesPerSector() );
+        }
+        
+        std::vector< uint8_t > Image::read( uint64_t offset, uint64_t size )
+        {
+            ( void )offset;
+            ( void )size;
             
             return {};
         }
