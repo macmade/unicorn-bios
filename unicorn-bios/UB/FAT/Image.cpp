@@ -25,6 +25,8 @@
 #include "UB/FAT/Image.hpp"
 #include "UB/FAT/Functions.hpp"
 #include "UB/BinaryFileStream.hpp"
+#include "UB/BinaryDataStream.hpp"
+#include "UB/Casts.hpp"
 
 namespace UB
 {
@@ -37,8 +39,9 @@ namespace UB
                 IMPL( const std::string & path );
                 IMPL( const IMPL & o );
                 
-                std::string _path;
-                MBR         _mbr;
+                std::string      _path;
+                BinaryDataStream _stream;
+                MBR              _mbr;
         };
         
         Image::Image( const std::string & path ):
@@ -82,10 +85,9 @@ namespace UB
         
         std::vector< uint8_t > Image::read( uint64_t offset, uint64_t size )
         {
-            ( void )offset;
-            ( void )size;
+            this->impl->_stream.Seek( numeric_cast< ssize_t >( offset ), BinaryStream::SeekDirection::Begin );
             
-            return {};
+            return this->impl->_stream.Read( size );
         }
         
         void swap( Image & o1, Image & o2 )
@@ -100,12 +102,17 @@ namespace UB
         {
             BinaryFileStream stream( path );
             
+            this->_stream = stream.ReadAll();
+            
+            stream.Seek( 0, BinaryStream::SeekDirection::Begin );
+            
             this->_mbr = MBR( stream );
         }
         
         Image::IMPL::IMPL( const IMPL & o ):
-            _path( o._path ),
-            _mbr(  o._mbr )
+            _path(   o._path ),
+            _stream( o._stream ),
+            _mbr(    o._mbr )
         {}
     }
 }
