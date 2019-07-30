@@ -229,6 +229,51 @@ namespace UB
         return this->impl->_readRegister< uint16_t >( UC_X86_REG_IP );
     }
     
+    uint32_t Engine::eax( void ) const
+    {
+        return this->impl->_readRegister< uint32_t >( UC_X86_REG_EAX );
+    }
+    
+    uint32_t Engine::ebx( void ) const
+    {
+        return this->impl->_readRegister< uint32_t >( UC_X86_REG_EBX );
+    }
+    
+    uint32_t Engine::ecx( void ) const
+    {
+        return this->impl->_readRegister< uint32_t >( UC_X86_REG_ECX );
+    }
+    
+    uint32_t Engine::edx( void ) const
+    {
+        return this->impl->_readRegister< uint32_t >( UC_X86_REG_EDX );
+    }
+    
+    uint32_t Engine::esi( void ) const
+    {
+        return this->impl->_readRegister< uint32_t >( UC_X86_REG_ESI );
+    }
+    
+    uint32_t Engine::edi( void ) const
+    {
+        return this->impl->_readRegister< uint32_t >( UC_X86_REG_EDI );
+    }
+    
+    uint32_t Engine::esp( void ) const
+    {
+        return this->impl->_readRegister< uint32_t >( UC_X86_REG_ESP );
+    }
+    
+    uint32_t Engine::ebp( void ) const
+    {
+        return this->impl->_readRegister< uint32_t >( UC_X86_REG_EBP );
+    }
+    
+    uint32_t Engine::eip( void ) const
+    {
+        return this->impl->_readRegister< uint32_t >( UC_X86_REG_EIP );
+    }
+    
     uint32_t Engine::eflags( void ) const
     {
         return this->impl->_readRegister< uint32_t >( UC_X86_REG_EFLAGS );
@@ -354,6 +399,51 @@ namespace UB
     void Engine::ip( uint16_t value )
     {
         this->impl->_writeRegister( UC_X86_REG_IP, value );
+    }
+    
+    void Engine::eax( uint32_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_EAX, value );
+    }
+    
+    void Engine::ebx( uint32_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_EBX, value );
+    }
+    
+    void Engine::ecx( uint32_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_ECX, value );
+    }
+    
+    void Engine::edx( uint32_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_EDX, value );
+    }
+    
+    void Engine::esi( uint32_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_ESI, value );
+    }
+    
+    void Engine::edi( uint32_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_EDI, value );
+    }
+    
+    void Engine::esp( uint32_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_ESP, value );
+    }
+    
+    void Engine::ebp( uint32_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_EBP, value );
+    }
+    
+    void Engine::eip( uint32_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_EIP, value );
     }
     
     void Engine::eflags( uint32_t value )

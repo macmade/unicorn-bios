@@ -60,19 +60,29 @@ namespace UB
             uint8_t dh( void ) const;
             uint8_t dl( void ) const;
             
-            uint16_t ax( void )     const;
-            uint16_t bx( void )     const;
-            uint16_t cx( void )     const;
-            uint16_t dx( void )     const;
-            uint16_t si( void )     const;
-            uint16_t di( void )     const;
-            uint16_t sp( void )     const;
-            uint16_t bp( void )     const;
-            uint16_t cs( void )     const;
-            uint16_t ds( void )     const;
-            uint16_t es( void )     const;
-            uint16_t ss( void )     const;
-            uint16_t ip( void )     const;
+            uint16_t ax( void ) const;
+            uint16_t bx( void ) const;
+            uint16_t cx( void ) const;
+            uint16_t dx( void ) const;
+            uint16_t si( void ) const;
+            uint16_t di( void ) const;
+            uint16_t sp( void ) const;
+            uint16_t bp( void ) const;
+            uint16_t cs( void ) const;
+            uint16_t ds( void ) const;
+            uint16_t es( void ) const;
+            uint16_t ss( void ) const;
+            uint16_t ip( void ) const;
+            
+            uint32_t eax( void )    const;
+            uint32_t ebx( void )    const;
+            uint32_t ecx( void )    const;
+            uint32_t edx( void )    const;
+            uint32_t esi( void )    const;
+            uint32_t edi( void )    const;
+            uint32_t esp( void )    const;
+            uint32_t ebp( void )    const;
+            uint32_t eip( void )    const;
             uint32_t eflags( void ) const;
             
             void cf( bool value );
@@ -99,6 +109,16 @@ namespace UB
             void es( uint16_t value );
             void ss( uint16_t value );
             void ip( uint16_t value );
+            
+            void eax( uint32_t value );
+            void ebx( uint32_t value );
+            void ecx( uint32_t value );
+            void edx( uint32_t value );
+            void esi( uint32_t value );
+            void edi( uint32_t value );
+            void esp( uint32_t value );
+            void ebp( uint32_t value );
+            void eip( uint32_t value );
             void eflags( uint32_t value );
             
             bool running( void ) const;
