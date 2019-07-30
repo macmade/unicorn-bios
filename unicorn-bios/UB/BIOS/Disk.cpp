@@ -68,15 +68,15 @@ namespace UB
                 
                 machine.ui().debug() << "Reading " << static_cast< unsigned int >( sectors ) << " sector" << ( ( sectors > 1 ) ? "s" : "" ) << " from drive " << String::toHex( driveNumber )
                                      << std::endl
-                                     << "  - Cylinder:    " << String::toHex( cylinder )
+                                     << "    - Cylinder:    " << String::toHex( cylinder )
                                      << std::endl
-                                     << "  - Head:        " << String::toHex( head )
+                                     << "    - Head:        " << String::toHex( head )
                                      << std::endl
-                                     << "  - Sector:      " << String::toHex( sector )
+                                     << "    - Sector:      " << String::toHex( sector )
                                      << std::endl
-                                     << "  - LBA:         " << String::toHex( FAT::chsToLBA( image.mbr(), cylinder, sector, head ) )
+                                     << "    - LBA:         " << String::toHex( FAT::chsToLBA( image.mbr(), cylinder, sector, head ) )
                                      << std::endl
-                                     << "  - Destination: " << String::toHex( destination ) << " (" << String::toHex( engine.es() ) << ":" << String::toHex( engine.bx() ) << ")"
+                                     << "    - Destination: " << String::toHex( destination ) << " (" << String::toHex( engine.es() ) << ":" << String::toHex( engine.bx() ) << ")"
                                      << std::endl;
                 
                 {
