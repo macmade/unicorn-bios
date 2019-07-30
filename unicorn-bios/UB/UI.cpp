@@ -271,6 +271,15 @@ namespace UB
         (
             [ & ]( void )
             {
+                if( this->_screen.width() < 50 || this->_screen.height() < 30 )
+                {
+                    this->_screen.clear();
+                    
+                    ::printw( "Screen too small..." );
+                    
+                    return;
+                }
+                
                 this->_displayRegisters();
                 this->_displayInstructions();
                 this->_displayDisassembly();
@@ -411,7 +420,9 @@ namespace UB
             
             {
                 std::vector< std::string > lines;
+                std::vector< std::string > display;
                 size_t                     maxLines( numeric_cast< size_t >( height ) - 4 );
+                size_t                     max( 80 );
                 
                 {
                     std::lock_guard< std::recursive_mutex > l( this->_rmtx );
@@ -419,12 +430,29 @@ namespace UB
                     lines = String::lines( this->_output.string() );
                 }
                 
-                if( lines.size() > maxLines )
+                if( numeric_cast< size_t >( width - 4 ) < max )
                 {
-                    lines = std::vector< std::string >( lines.end() - numeric_cast< ssize_t >( maxLines ), lines.end() );
+                    max = numeric_cast< size_t >( width - 4 );
                 }
                 
-                for( const auto & s: lines )
+                for( std::string s: lines )
+                {
+                    while( s.length() > max )
+                    {
+                        display.push_back( s.substr( 0, max ) );
+                        
+                        s = s.substr( max );
+                    }
+                    
+                    display.push_back( s );
+                }
+                
+                if( display.size() > maxLines )
+                {
+                    display = std::vector< std::string >( display.end() - numeric_cast< ssize_t >( maxLines ), display.end() );
+                }
+                
+                for( const auto & s: display )
                 {
                     ::wmove( win, y++, 2 );
                     ::wprintw( win, s.c_str() );

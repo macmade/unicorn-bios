@@ -87,8 +87,6 @@ namespace UB
             
             bool writeCharacterAndAttributeAtCursor( const Machine & machine, Engine & engine )
             {
-                char c( static_cast< char >( engine.al() ) );
-                
                 machine.ui().debug() << "Writing character: " << String::toHex( engine.al() )
                                      << std::endl
                                      << "    - Page:  " << std::to_string( static_cast< unsigned int >( engine.bh() ) )
@@ -97,15 +95,6 @@ namespace UB
                                      << std::endl
                                      << "    - Times: "<< std::to_string( static_cast< unsigned int >( engine.cx() ) )
                                      << std::endl;
-                
-                if( std::isprint( c ) || std::isspace( c ) )
-                {
-                    machine.ui().output() << std::string( 1, c );
-                }
-                else
-                {
-                    machine.ui().output() << ".";
-                }
                 
                 return true;
             }
