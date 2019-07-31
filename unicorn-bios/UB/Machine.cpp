@@ -28,6 +28,7 @@
 #include "UB/FAT/MBR.hpp"
 #include "UB/String.hpp"
 #include <sstream>
+#include <atomic>
 
 namespace UB
 {
@@ -43,13 +44,14 @@ namespace UB
             
             void _setup( const Machine & machine );
             
-            size_t     _memory;
-            FAT::Image _fat;
-            Engine     _engine;
-            UI         _ui;
-            bool       _breakOnInterrupt;
-            bool       _breakOnInterruptReturn;
-            bool       _debugVideo;
+            size_t              _memory;
+            FAT::Image          _fat;
+            Engine              _engine;
+            UI                  _ui;
+            std::atomic< bool > _breakOnInterrupt;
+            std::atomic< bool > _breakOnInterruptReturn;
+            std::atomic< bool > _debugVideo;
+            std::atomic< bool > _singleStep;
     };
 
     Machine::Machine( size_t memory, const FAT::Image & fat ):
@@ -114,6 +116,11 @@ namespace UB
         return this->impl->_debugVideo;
     }
     
+    bool Machine::singleStep( void ) const
+    {
+        return this->impl->_singleStep;
+    }
+    
     void Machine::breakOnInterrupt( bool value )
     {
         this->impl->_breakOnInterrupt = value;
@@ -127,6 +134,11 @@ namespace UB
     void Machine::debugVideo( bool value )
     {
         this->impl->_debugVideo = value;
+    }
+    
+    void Machine::singleStep( bool value )
+    {
+        this->impl->_singleStep = value;
     }
     
     void swap( Machine & o1, Machine & o2 )
@@ -143,7 +155,8 @@ namespace UB
         _ui(                     this->_engine ),
         _breakOnInterrupt(       false ),
         _breakOnInterruptReturn( false ),
-        _debugVideo(             false )
+        _debugVideo(             false ),
+        _singleStep(             false )
     {}
 
     Machine::IMPL::IMPL( const IMPL & o ):
@@ -151,9 +164,10 @@ namespace UB
         _fat(                    o._fat ),
         _engine(                 o._memory ),
         _ui(                     this->_engine ),
-        _breakOnInterrupt(       o._breakOnInterrupt ),
-        _breakOnInterruptReturn( o._breakOnInterruptReturn ),
-        _debugVideo(             o._debugVideo )
+        _breakOnInterrupt(       o._breakOnInterrupt.load() ),
+        _breakOnInterruptReturn( o._breakOnInterruptReturn.load() ),
+        _debugVideo(             o._debugVideo.load() ),
+        _singleStep(             o._singleStep.load() )
     {}
 
     Machine::IMPL::~IMPL( void )
@@ -186,9 +200,23 @@ namespace UB
             }
         );
         
+        this->_engine.onInstruction
+        (
+            [ & ]( uint64_t address, uint32_t size )
+            {
+                ( void )address;
+                ( void )size;
+                
+                if( this->_singleStep )
+                {
+                    this->_ui.waitForUserResume();
+                }
+            }
+        );
+        
         this->_engine.onInterrupt
         (
-            [ & ]( uint32_t i, Engine & engine ) -> bool
+            [ & ]( uint32_t i ) -> bool
             {
                 bool ret( false );
                 
@@ -201,18 +229,18 @@ namespace UB
                 
                 switch( i )
                 {
-                    case 0x05: ret = Interrupts::int0x05( machine, engine ); break;
-                    case 0x10: ret = Interrupts::int0x10( machine, engine ); break;
-                    case 0x11: ret = Interrupts::int0x11( machine, engine ); break;
-                    case 0x12: ret = Interrupts::int0x12( machine, engine ); break;
-                    case 0x13: ret = Interrupts::int0x13( machine, engine ); break;
-                    case 0x14: ret = Interrupts::int0x14( machine, engine ); break;
-                    case 0x15: ret = Interrupts::int0x15( machine, engine ); break;
-                    case 0x16: ret = Interrupts::int0x16( machine, engine ); break;
-                    case 0x17: ret = Interrupts::int0x17( machine, engine ); break;
-                    case 0x18: ret = Interrupts::int0x18( machine, engine ); break;
-                    case 0x19: ret = Interrupts::int0x19( machine, engine ); break;
-                    case 0x1A: ret = Interrupts::int0x1A( machine, engine ); break;
+                    case 0x05: ret = Interrupts::int0x05( machine, this->_engine ); break;
+                    case 0x10: ret = Interrupts::int0x10( machine, this->_engine ); break;
+                    case 0x11: ret = Interrupts::int0x11( machine, this->_engine ); break;
+                    case 0x12: ret = Interrupts::int0x12( machine, this->_engine ); break;
+                    case 0x13: ret = Interrupts::int0x13( machine, this->_engine ); break;
+                    case 0x14: ret = Interrupts::int0x14( machine, this->_engine ); break;
+                    case 0x15: ret = Interrupts::int0x15( machine, this->_engine ); break;
+                    case 0x16: ret = Interrupts::int0x16( machine, this->_engine ); break;
+                    case 0x17: ret = Interrupts::int0x17( machine, this->_engine ); break;
+                    case 0x18: ret = Interrupts::int0x18( machine, this->_engine ); break;
+                    case 0x19: ret = Interrupts::int0x19( machine, this->_engine ); break;
+                    case 0x1A: ret = Interrupts::int0x1A( machine, this->_engine ); break;
                     
                     default: break;
                 }

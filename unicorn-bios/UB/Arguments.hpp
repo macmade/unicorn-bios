@@ -46,6 +46,7 @@ namespace UB
             bool        breakOnInterrupt( void )       const;
             bool        breakOnInterruptReturn( void ) const;
             bool        debugVideo( void )             const;
+            bool        singleStep( void )             const;
             size_t      memory( void )                 const;
             std::string bootImage( void )              const;
             

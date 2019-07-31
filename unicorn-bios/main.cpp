@@ -47,6 +47,7 @@ int main( int argc, const char * argv[] )
             machine.breakOnInterrupt( args.breakOnInterrupt() );
             machine.breakOnInterruptReturn( args.breakOnInterruptReturn() );
             machine.debugVideo( args.debugVideo() );
+            machine.singleStep( args.singleStep() );
             machine.run();
         }
         
@@ -85,5 +86,7 @@ static void showHelp( void )
               << "    --break-iret:   Breaks on interrupt returns."
               << std::endl
               << "    --debug-video:  Turns on debug output for video services."
+              << std::endl
+              << "    --single-step:  Breaks on every instruction."
               << std::endl;
 }

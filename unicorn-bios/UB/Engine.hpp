@@ -123,10 +123,11 @@ namespace UB
             
             bool running( void ) const;
             
-            void onStart(     const std::function< void( void ) > f );
-            void onStop(      const std::function< void( void ) > f );
-            void onInterrupt( const std::function< bool( uint32_t i, Engine & ) > handler );
-            void onException( const std::function< bool( const std::exception & ) > handler );
+            void onStart(       const std::function< void( void ) > f );
+            void onStop(        const std::function< void( void ) > f );
+            void onInterrupt(   const std::function< bool( uint32_t ) > handler );
+            void onException(   const std::function< bool( const std::exception & ) > handler );
+            void onInstruction( const std::function< void( uint64_t, uint32_t ) > handler );
             
             std::vector< uint8_t > read( size_t address, size_t size );
             void                   write( size_t address, const std::vector< uint8_t > & bytes );

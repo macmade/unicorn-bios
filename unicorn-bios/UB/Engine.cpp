@@ -44,7 +44,8 @@ namespace UB
             IMPL( size_t memory );
             ~IMPL( void );
             
-            static void _handleInterrupt( uc_engine * uc, uint32_t i, void * data );
+            static void _handleInterrupt(   uc_engine * uc, uint32_t i, void * data );
+            static void _handleInstruction( uc_engine * uc, uint64_t address, uint32_t size, void * data );
             
             std::vector< uint8_t > _read( size_t address, size_t size );
             void                   _write( size_t address, const uint8_t * bytes, size_t size );
@@ -52,8 +53,9 @@ namespace UB
             size_t                                                         _memory;
             std::vector< std::function< void( void ) > >                   _onStart;
             std::vector< std::function< void( void ) > >                   _onStop;
-            std::vector< std::function< bool( uint32_t i, Engine & ) > >   _interrupts;
-            std::vector< std::function< bool( const std::exception & ) > > _exceptions;
+            std::vector< std::function< bool( uint32_t ) > >               _interruptHandlers;
+            std::vector< std::function< bool( const std::exception & ) > > _exceptionHandlers;
+            std::vector< std::function< void( uint64_t i, uint32_t ) > >   _instructionHandlers;
             uc_engine                                                    * _uc;
             bool                                                           _running;
             mutable std::recursive_mutex                                   _rmtx;
@@ -100,10 +102,16 @@ namespace UB
     Engine::Engine( size_t memory ):
         impl( std::make_unique< IMPL >( memory ) )
     {
-        uc_hook h;
+        uc_hook h1;
+        uc_hook h2;
         uc_err  e;
         
-        if( ( e = uc_hook_add( this->impl->_uc, &h, UC_HOOK_INTR, reinterpret_cast< void * >( &IMPL::_handleInterrupt ), this, 1, 0 ) ) != UC_ERR_OK )
+        if( ( e = uc_hook_add( this->impl->_uc, &h1, UC_HOOK_INTR, reinterpret_cast< void * >( &IMPL::_handleInterrupt ), this, 1, 0 ) ) != UC_ERR_OK )
+        {
+            throw std::runtime_error( uc_strerror( e ) );
+        }
+        
+        if( ( e = uc_hook_add( this->impl->_uc, &h2, UC_HOOK_CODE, reinterpret_cast< void * >( &IMPL::_handleInstruction ), this, 1, 0 ) ) != UC_ERR_OK )
         {
             throw std::runtime_error( uc_strerror( e ) );
         }
@@ -472,18 +480,25 @@ namespace UB
         this->impl->_onStop.push_back( f );
     }
     
-    void Engine::onInterrupt( const std::function< bool( uint32_t i, Engine & ) > handler )
+    void Engine::onInterrupt( const std::function< bool( uint32_t ) > handler )
     {
         std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
         
-        this->impl->_interrupts.push_back( handler );
+        this->impl->_interruptHandlers.push_back( handler );
     }
     
     void Engine::onException( const std::function< bool( const std::exception & ) > handler )
     {
         std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
         
-        this->impl->_exceptions.push_back( handler );
+        this->impl->_exceptionHandlers.push_back( handler );
+    }
+    
+    void Engine::onInstruction( const std::function< void( uint64_t, uint32_t ) > handler )
+    {
+        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+        
+        this->impl->_instructionHandlers.push_back( handler );
     }
     
     std::vector< uint8_t > Engine::read( size_t address, size_t size )
@@ -542,7 +557,7 @@ namespace UB
                     {
                         std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
                         
-                        handlers = this->impl->_exceptions;
+                        handlers = this->impl->_exceptionHandlers;
                     }
                     
                     for( const auto & f: handlers )
@@ -635,8 +650,8 @@ namespace UB
     
     void Engine::IMPL::_handleInterrupt( uc_engine * uc, uint32_t i, void * data )
     {
-        Engine                                                     * engine;
-        std::vector< std::function< bool( uint32_t i, Engine & ) > > interrupts;
+        Engine                                         * engine;
+        std::vector< std::function< bool( uint32_t ) > > handlers;
         
         ( void )uc;
         
@@ -644,24 +659,50 @@ namespace UB
         
         if( engine == nullptr )
         {
-            throw std::runtime_error( "Unhandled interrupt: " + String::toHex( i ) );
+            throw std::runtime_error( "Fatal internal error: unknown engine" );
         }
         
         {
             std::lock_guard< std::recursive_mutex > l( engine->impl->_rmtx );
             
-            interrupts = engine->impl->_interrupts;
+            handlers = engine->impl->_interruptHandlers;
         }
         
-        for( const auto & f: interrupts )
+        for( const auto & f: handlers )
         {
-            if( f( i, *( engine ) ) )
+            if( f( i ) )
             {
                 return;
             }
         }
         
         throw std::runtime_error( "Unhandled interrupt: " + String::toHex( i ) );
+    }
+    
+    void Engine::IMPL::_handleInstruction( uc_engine * uc, uint64_t address, uint32_t size, void * data )
+    {
+        Engine                                                   * engine;
+        std::vector< std::function< void( uint64_t, uint32_t ) > > handlers;
+        
+        ( void )uc;
+        
+        engine = static_cast< Engine * >( data );
+        
+        if( engine == nullptr )
+        {
+            throw std::runtime_error( "Fatal internal error: unknown engine" );
+        }
+        
+        {
+            std::lock_guard< std::recursive_mutex > l( engine->impl->_rmtx );
+            
+            handlers = engine->impl->_instructionHandlers;
+        }
+        
+        for( const auto & f: handlers )
+        {
+            f( address, size );
+        }
     }
     
     std::vector< uint8_t > Engine::IMPL::_read( size_t address, size_t size )

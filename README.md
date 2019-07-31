@@ -30,6 +30,7 @@ Basic BIOS emulator for Unicorn Engine.
         --break-int:    Breaks on interrupt calls.
         --break-iret:   Breaks on interrupt returns.
         --debug-video:  Turns on debug output for video services.
+        --single-step:  Breaks on every instruction.
 
 ### Installation:
 
