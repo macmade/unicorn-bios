@@ -51,9 +51,11 @@ namespace UB
             
             bool breakOnInterrupt( void )       const;
             bool breakOnInterruptReturn( void ) const;
+            bool debugVideo( void )             const;
             
             void breakOnInterrupt( bool value );
             void breakOnInterruptReturn( bool value );
+            void debugVideo( bool value );
             
             friend void swap( Machine & o1, Machine & o2 );
             

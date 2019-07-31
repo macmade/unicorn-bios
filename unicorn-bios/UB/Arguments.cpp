@@ -38,6 +38,7 @@ namespace UB
             bool        _showHelp;
             bool        _breakOnInterrupt;
             bool        _breakOnInterruptReturn;
+            bool        _debugVideo;
             size_t      _memory;
             std::string _bootImage;
     };
@@ -79,6 +80,11 @@ namespace UB
         return this->impl->_breakOnInterruptReturn;
     }
     
+    bool Arguments::debugVideo( void ) const
+    {
+        return this->impl->_debugVideo;
+    }
+    
     size_t Arguments::memory( void ) const
     {
         return this->impl->_memory;
@@ -100,6 +106,7 @@ namespace UB
         _showHelp(               false ),
         _breakOnInterrupt(       false ),
         _breakOnInterruptReturn( false ),
+        _debugVideo(             false ),
         _memory(                 0 )
     {
         if( argc < 1 )
@@ -122,6 +129,10 @@ namespace UB
             else if( arg == "--break-iret" )
             {
                 this->_breakOnInterruptReturn = true;
+            }
+            else if( arg == "--debug-video" )
+            {
+                this->_debugVideo = true;
             }
             else if( arg == "--memory" || arg == "-m" )
             {
@@ -146,6 +157,7 @@ namespace UB
         _showHelp(                o._showHelp ),
         _breakOnInterrupt(        o._breakOnInterrupt ),
         _breakOnInterruptReturn(  o._breakOnInterruptReturn ),
+        _debugVideo(              o._debugVideo ),
         _memory(                  o._memory ),
         _bootImage(               o._bootImage )
     {}

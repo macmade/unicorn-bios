@@ -36,14 +36,17 @@ namespace UB
         {
             bool setCursorPosition( const Machine & machine, Engine & engine )
             {
-                machine.ui().debug() << "Setting cursor position:"
-                                     << std::endl
-                                     << "    - Page:   " << std::to_string( static_cast< unsigned int >( engine.bh() ) )
-                                     << std::endl
-                                     << "    - Row:    " << std::to_string( static_cast< unsigned int >( engine.dh() ) )
-                                     << std::endl
-                                     << "    - Column: " << std::to_string( static_cast< unsigned int >( engine.dl() ) )
-                                     << std::endl;
+                if( machine.debugVideo() )
+                {
+                    machine.ui().debug() << "Setting cursor position:"
+                                         << std::endl
+                                         << "    - Page:   " << std::to_string( static_cast< unsigned int >( engine.bh() ) )
+                                         << std::endl
+                                         << "    - Row:    " << std::to_string( static_cast< unsigned int >( engine.dh() ) )
+                                         << std::endl
+                                         << "    - Column: " << std::to_string( static_cast< unsigned int >( engine.dl() ) )
+                                         << std::endl;
+                }
                 
                 return true;
             }
@@ -52,7 +55,10 @@ namespace UB
             {
                 char c( static_cast< char >( engine.al() ) );
                 
-                machine.ui().debug() << "TTY output: " << String::toHex( engine.al() ) << std::endl;
+                if( machine.debugVideo() )
+                {
+                    machine.ui().debug() << "TTY output: " << String::toHex( engine.al() ) << std::endl;
+                }
                 
                 if( std::isprint( c ) || std::isspace( c ) )
                 {
@@ -70,14 +76,17 @@ namespace UB
             {
                 if( engine.al() == 0x10 )
                 {
-                    machine.ui().debug() << "Setting DAC color: " << String::toHex( engine.bx() )
-                                         << std::endl
-                                         << "    - R: " << String::toHex( engine.dh() )
-                                         << std::endl
-                                         << "    - G: " << String::toHex( engine.ch() )
-                                         << std::endl
-                                         << "    - B: " << String::toHex( engine.cl() )
-                                         << std::endl;
+                    if( machine.debugVideo() )
+                    {
+                        machine.ui().debug() << "Setting DAC color: " << String::toHex( engine.bx() )
+                                             << std::endl
+                                             << "    - R: " << String::toHex( engine.dh() )
+                                             << std::endl
+                                             << "    - G: " << String::toHex( engine.ch() )
+                                             << std::endl
+                                             << "    - B: " << String::toHex( engine.cl() )
+                                             << std::endl;
+                    }
                     
                     return true;
                 }
@@ -87,14 +96,17 @@ namespace UB
             
             bool writeCharacterAndAttributeAtCursor( const Machine & machine, Engine & engine )
             {
-                machine.ui().debug() << "Writing character: " << String::toHex( engine.al() )
-                                     << std::endl
-                                     << "    - Page:  " << std::to_string( static_cast< unsigned int >( engine.bh() ) )
-                                     << std::endl
-                                     << "    - Color: " << String::toHex( engine.bl() )
-                                     << std::endl
-                                     << "    - Times: "<< std::to_string( static_cast< unsigned int >( engine.cx() ) )
-                                     << std::endl;
+                if( machine.debugVideo() )
+                {
+                    machine.ui().debug() << "Writing character: " << String::toHex( engine.al() )
+                                         << std::endl
+                                         << "    - Page:  " << std::to_string( static_cast< unsigned int >( engine.bh() ) )
+                                         << std::endl
+                                         << "    - Color: " << String::toHex( engine.bl() )
+                                         << std::endl
+                                         << "    - Times: "<< std::to_string( static_cast< unsigned int >( engine.cx() ) )
+                                         << std::endl;
+                }
                 
                 return true;
             }

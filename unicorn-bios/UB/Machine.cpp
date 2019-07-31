@@ -49,6 +49,7 @@ namespace UB
             UI         _ui;
             bool       _breakOnInterrupt;
             bool       _breakOnInterruptReturn;
+            bool       _debugVideo;
     };
 
     Machine::Machine( size_t memory, const FAT::Image & fat ):
@@ -108,6 +109,11 @@ namespace UB
         return this->impl->_breakOnInterruptReturn;
     }
     
+    bool Machine::debugVideo( void ) const
+    {
+        return this->impl->_debugVideo;
+    }
+    
     void Machine::breakOnInterrupt( bool value )
     {
         this->impl->_breakOnInterrupt = value;
@@ -116,6 +122,11 @@ namespace UB
     void Machine::breakOnInterruptReturn( bool value )
     {
         this->impl->_breakOnInterruptReturn = value;
+    }
+    
+    void Machine::debugVideo( bool value )
+    {
+        this->impl->_debugVideo = value;
     }
     
     void swap( Machine & o1, Machine & o2 )
@@ -131,7 +142,8 @@ namespace UB
         _engine(                 memorySizeOrDefault( memory ) ),
         _ui(                     this->_engine ),
         _breakOnInterrupt(       false ),
-        _breakOnInterruptReturn( false )
+        _breakOnInterruptReturn( false ),
+        _debugVideo(             false )
     {}
 
     Machine::IMPL::IMPL( const IMPL & o ):
@@ -140,7 +152,8 @@ namespace UB
         _engine(                 o._memory ),
         _ui(                     this->_engine ),
         _breakOnInterrupt(       o._breakOnInterrupt ),
-        _breakOnInterruptReturn( o._breakOnInterruptReturn )
+        _breakOnInterruptReturn( o._breakOnInterruptReturn ),
+        _debugVideo(             o._debugVideo )
     {}
 
     Machine::IMPL::~IMPL( void )
