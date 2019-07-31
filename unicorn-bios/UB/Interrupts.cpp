@@ -48,6 +48,7 @@ namespace UB
             {
                 case 0x02: return BIOS::Video::setCursorPosition( machine, engine );
                 case 0x09: return BIOS::Video::writeCharacterAndAttributeAtCursor( machine, engine );
+                case 0x0A: return BIOS::Video::writeCharacterOnlyAtCursor( machine, engine );
                 case 0x0E: return BIOS::Video::ttyOutput( machine, engine );
                 case 0x10: return BIOS::Video::palette( machine, engine );
                 default:   break;

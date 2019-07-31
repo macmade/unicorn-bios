@@ -110,6 +110,21 @@ namespace UB
                 
                 return true;
             }
+            
+            bool writeCharacterOnlyAtCursor( const Machine & machine, Engine & engine )
+            {
+                if( machine.debugVideo() )
+                {
+                    machine.ui().debug() << "Writing character: " << String::toHex( engine.al() )
+                                         << std::endl
+                                         << "    - Page:  " << std::to_string( static_cast< unsigned int >( engine.bh() ) )
+                                         << std::endl
+                                         << "    - Times: "<< std::to_string( static_cast< unsigned int >( engine.cx() ) )
+                                         << std::endl;
+                }
+                
+                return true;
+            }
         }
     }
 }

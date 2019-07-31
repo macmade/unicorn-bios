@@ -38,6 +38,7 @@ namespace UB
             bool ttyOutput( const Machine & machine, Engine & engine );
             bool palette( const Machine & machine, Engine & engine );
             bool writeCharacterAndAttributeAtCursor( const Machine & machine, Engine & engine );
+            bool writeCharacterOnlyAtCursor( const Machine & machine, Engine & engine );
         }
     }
 }
