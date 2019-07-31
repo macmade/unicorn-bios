@@ -91,7 +91,7 @@ namespace UB
                                          << bytes.size()
                                          << " bytes at "
                                          << String::toHex( destination )
-                                         << "->"
+                                         << " -> "
                                          << String::toHex( destination + bytes.size() )
                                          << std::endl;
                     
