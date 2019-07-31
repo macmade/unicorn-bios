@@ -108,6 +108,18 @@ namespace UB
             return this->impl->_base >> 32;
         }
         
+        std::array< uint32_t, 5 > MemoryMap::Entry::data( void ) const
+        {
+            return
+            {
+                this->baseLow(),
+                this->baseHigh(),
+                this->lengthLow(),
+                this->lengthHigh(),
+                static_cast< uint32_t >( this->type() )
+            };
+        }
+        
         void swap( MemoryMap::Entry & o1, MemoryMap::Entry & o2 )
         {
             using std::swap;

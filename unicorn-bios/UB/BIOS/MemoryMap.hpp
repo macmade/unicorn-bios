@@ -29,6 +29,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <vector>
+#include <array>
 
 namespace UB
 {
@@ -64,6 +65,8 @@ namespace UB
                         uint32_t baseHigh( void )   const;
                         uint32_t lengthLow( void )  const;
                         uint32_t lengthHigh( void ) const;
+                        
+                        std::array< uint32_t, 5 > data( void ) const;
                         
                         friend void swap( Entry & o1, Entry & o2 );
                         
