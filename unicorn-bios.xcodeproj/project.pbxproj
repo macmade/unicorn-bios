@@ -13,6 +13,8 @@
 		055928B322F0B2C0003878B6 /* Functions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055928B122F0B2C0003878B6 /* Functions.cpp */; };
 		055928C922F0E759003878B6 /* SystemServices.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055928C722F0E759003878B6 /* SystemServices.cpp */; };
 		055928CC22F0ED00003878B6 /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055928CA22F0ED00003878B6 /* Window.cpp */; };
+		055928F222F216EF003878B6 /* MemoryMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055928F022F216EF003878B6 /* MemoryMap.cpp */; };
+		055928F422F21CCC003878B6 /* MemoryMap-Entry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055928F322F21CCC003878B6 /* MemoryMap-Entry.cpp */; };
 		058182F622E8CC1F008D1BFF /* String.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 058182F422E8CC1F008D1BFF /* String.cpp */; };
 		0581833B22E8EC63008D1BFF /* Video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0581833922E8EC63008D1BFF /* Video.cpp */; };
 		0581833E22E8EE88008D1BFF /* Disk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0581833C22E8EE88008D1BFF /* Disk.cpp */; };
@@ -56,6 +58,9 @@
 		055928C822F0E759003878B6 /* SystemServices.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SystemServices.hpp; sourceTree = "<group>"; };
 		055928CA22F0ED00003878B6 /* Window.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Window.cpp; sourceTree = "<group>"; };
 		055928CB22F0ED00003878B6 /* Window.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Window.hpp; sourceTree = "<group>"; };
+		055928F022F216EF003878B6 /* MemoryMap.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MemoryMap.cpp; sourceTree = "<group>"; };
+		055928F122F216EF003878B6 /* MemoryMap.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MemoryMap.hpp; sourceTree = "<group>"; };
+		055928F322F21CCC003878B6 /* MemoryMap-Entry.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "MemoryMap-Entry.cpp"; sourceTree = "<group>"; };
 		058182F422E8CC1F008D1BFF /* String.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = String.cpp; sourceTree = "<group>"; };
 		058182F522E8CC1F008D1BFF /* String.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = String.hpp; sourceTree = "<group>"; };
 		0581831D22E8DC5C008D1BFF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -155,6 +160,9 @@
 				0581834022E8EF49008D1BFF /* Keyboard.hpp */,
 				055928C722F0E759003878B6 /* SystemServices.cpp */,
 				055928C822F0E759003878B6 /* SystemServices.hpp */,
+				055928F022F216EF003878B6 /* MemoryMap.cpp */,
+				055928F322F21CCC003878B6 /* MemoryMap-Entry.cpp */,
+				055928F122F216EF003878B6 /* MemoryMap.hpp */,
 			);
 			path = BIOS;
 			sourceTree = "<group>";
@@ -415,6 +423,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0581834122E8EF49008D1BFF /* Keyboard.cpp in Sources */,
+				055928F222F216EF003878B6 /* MemoryMap.cpp in Sources */,
 				05B2813322E77AC700110404 /* main.cpp in Sources */,
 				053F365F22E892C5003BD8AC /* Interrupts.cpp in Sources */,
 				05B2818F22E7AC1300110404 /* Image.cpp in Sources */,
@@ -430,6 +439,7 @@
 				05B2819922E7AF1A00110404 /* BinaryDataStream.cpp in Sources */,
 				05B2819A22E7AF1A00110404 /* BinaryFileStream.cpp in Sources */,
 				05B2818A22E7AA5300110404 /* Arguments.cpp in Sources */,
+				055928F422F21CCC003878B6 /* MemoryMap-Entry.cpp in Sources */,
 				05B2819222E7AE8300110404 /* MBR.cpp in Sources */,
 				055928C922F0E759003878B6 /* SystemServices.cpp in Sources */,
 				0581833E22E8EE88008D1BFF /* Disk.cpp in Sources */,

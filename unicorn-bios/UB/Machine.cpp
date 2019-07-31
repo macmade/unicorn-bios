@@ -48,6 +48,7 @@ namespace UB
             FAT::Image          _fat;
             Engine              _engine;
             UI                  _ui;
+            BIOS::MemoryMap     _memoryMap;
             std::atomic< bool > _breakOnInterrupt;
             std::atomic< bool > _breakOnInterruptReturn;
             std::atomic< bool > _debugVideo;
@@ -83,6 +84,11 @@ namespace UB
     const FAT::Image & Machine::bootImage( void ) const
     {
         return this->impl->_fat;
+    }
+    
+    const BIOS::MemoryMap & Machine::memoryMap( void ) const
+    {
+        return this->impl->_memoryMap;
     }
     
     UI & Machine::ui( void ) const
@@ -153,6 +159,7 @@ namespace UB
         _fat(                    fat ),
         _engine(                 memorySizeOrDefault( memory ) ),
         _ui(                     this->_engine ),
+        _memoryMap(              memorySizeOrDefault( memory ) ),
         _breakOnInterrupt(       false ),
         _breakOnInterruptReturn( false ),
         _debugVideo(             false ),
@@ -164,6 +171,7 @@ namespace UB
         _fat(                    o._fat ),
         _engine(                 o._memory ),
         _ui(                     this->_engine ),
+        _memoryMap(              o._memoryMap ),
         _breakOnInterrupt(       o._breakOnInterrupt.load() ),
         _breakOnInterruptReturn( o._breakOnInterruptReturn.load() ),
         _debugVideo(             o._debugVideo.load() ),
@@ -175,7 +183,16 @@ namespace UB
     
     size_t Machine::IMPL::memorySizeOrDefault( size_t memory )
     {
-        return ( memory == 0 ) ? 64 * 1024 * 1024 : memory;
+        if( memory == 0 )
+        {
+            memory = 64;
+        }
+        else if( memory == 1 )
+        {
+            memory = 2;
+        }
+        
+        return memory * 1024 * 1024;
     }
     
     void Machine::IMPL::_setup( const Machine & machine )

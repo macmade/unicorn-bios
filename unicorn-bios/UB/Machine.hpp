@@ -28,6 +28,7 @@
 #include <memory>
 #include <algorithm>
 #include "UB/FAT/Image.hpp"
+#include "UB/BIOS/MemoryMap.hpp"
 #include "UB/UI.hpp"
 
 namespace UB
@@ -43,7 +44,8 @@ namespace UB
             
             Machine & operator =( Machine o );
             
-            const FAT::Image & bootImage( void ) const;
+            const FAT::Image      & bootImage( void ) const;
+            const BIOS::MemoryMap & memoryMap( void ) const;
             
             UI & ui( void ) const;
             

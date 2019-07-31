@@ -79,7 +79,7 @@ static void showHelp( void )
               << std::endl
               << "    --memory / -m:  The amount of memory to allocate for the virtual machine"
               << std::endl
-              << "                    (in megabytes). Defaults to 64."
+              << "                    (in megabytes). Defaults to 64MB, minimum 2MB."
               << std::endl
               << "    --break-int:    Breaks on interrupt calls."
               << std::endl

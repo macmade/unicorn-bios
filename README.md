@@ -26,7 +26,7 @@ Basic BIOS emulator for Unicorn Engine.
         
         --help   / -h:  Displays help.
         --memory / -m:  The amount of memory to allocate for the virtual machine
-                        (in megabytes). Defaults to 64.
+                        (in megabytes). Defaults to 64MB, minimum 2MB.
         --break-int:    Breaks on interrupt calls.
         --break-iret:   Breaks on interrupt returns.
         --debug-video:  Turns on debug output for video services.
