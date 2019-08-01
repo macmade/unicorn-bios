@@ -29,6 +29,7 @@
 
 #include "UB/Engine.hpp"
 #include "UB/String.hpp"
+#include "UB/Casts.hpp"
 #include <unicorn/unicorn.h>
 #include <map>
 #include <mutex>
@@ -46,6 +47,8 @@ namespace UB
             
             static void _handleInterrupt(   uc_engine * uc, uint32_t i, void * data );
             static void _handleInstruction( uc_engine * uc, uint64_t address, uint32_t size, void * data );
+            static void _handleInvalidMemoryAccess( uc_engine * uc, uc_mem_type type, uint64_t address, int size, int64_t value, void * data );
+            static void _handleValidMemoryAccess( uc_engine * uc, uc_mem_type type, uint64_t address, int size, int64_t value, void * data );
             
             std::vector< uint8_t > _read( size_t address, size_t size );
             void                   _write( size_t address, const uint8_t * bytes, size_t size );
@@ -55,7 +58,9 @@ namespace UB
             std::vector< std::function< void( void ) > >                   _onStop;
             std::vector< std::function< bool( uint32_t ) > >               _interruptHandlers;
             std::vector< std::function< bool( const std::exception & ) > > _exceptionHandlers;
-            std::vector< std::function< void( uint64_t i, uint32_t ) > >   _instructionHandlers;
+            std::vector< std::function< void( uint64_t, uint32_t ) > >     _instructionHandlers;
+            std::vector< std::function< void( uint64_t, size_t ) > >       _invalidMemoryHandlers;
+            std::vector< std::function< void( uint64_t, size_t ) > >       _validMemoryHandlers;
             uc_engine                                                    * _uc;
             bool                                                           _running;
             mutable std::recursive_mutex                                   _rmtx;
@@ -104,6 +109,8 @@ namespace UB
     {
         uc_hook h1;
         uc_hook h2;
+        uc_hook h3;
+        uc_hook h4;
         uc_err  e;
         
         if( ( e = uc_hook_add( this->impl->_uc, &h1, UC_HOOK_INTR, reinterpret_cast< void * >( &IMPL::_handleInterrupt ), this, 1, 0 ) ) != UC_ERR_OK )
@@ -112,6 +119,16 @@ namespace UB
         }
         
         if( ( e = uc_hook_add( this->impl->_uc, &h2, UC_HOOK_CODE, reinterpret_cast< void * >( &IMPL::_handleInstruction ), this, 1, 0 ) ) != UC_ERR_OK )
+        {
+            throw std::runtime_error( uc_strerror( e ) );
+        }
+        
+        if( ( e = uc_hook_add( this->impl->_uc, &h3, UC_HOOK_MEM_INVALID, reinterpret_cast< void * >( &IMPL::_handleInvalidMemoryAccess ), this, 1, 0 ) ) != UC_ERR_OK )
+        {
+            throw std::runtime_error( uc_strerror( e ) );
+        }
+        
+        if( ( e = uc_hook_add( this->impl->_uc, &h4, UC_HOOK_MEM_VALID, reinterpret_cast< void * >( &IMPL::_handleValidMemoryAccess ), this, 1, 0 ) ) != UC_ERR_OK )
         {
             throw std::runtime_error( uc_strerror( e ) );
         }
@@ -501,6 +518,20 @@ namespace UB
         this->impl->_instructionHandlers.push_back( handler );
     }
     
+    void Engine::onInvalidMemoryAccess( const std::function< void( uint64_t, size_t ) > handler )
+    {
+        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+        
+        this->impl->_invalidMemoryHandlers.push_back( handler );
+    }
+    
+    void Engine::onValidMemoryAccess( const std::function< void( uint64_t, size_t ) > handler )
+    {
+        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+        
+        this->impl->_validMemoryHandlers.push_back( handler );
+    }
+    
     std::vector< uint8_t > Engine::read( size_t address, size_t size )
     {
         return this->impl->_read( address, size );
@@ -702,6 +733,62 @@ namespace UB
         for( const auto & f: handlers )
         {
             f( address, size );
+        }
+    }
+    
+    void Engine::IMPL::_handleInvalidMemoryAccess( uc_engine * uc, uc_mem_type type, uint64_t address, int size, int64_t value, void * data )
+    {
+        Engine                                                 * engine;
+        std::vector< std::function< void( uint64_t, size_t ) > > handlers;
+        
+        ( void )uc;
+        ( void )type;
+        ( void )value;
+        
+        engine = static_cast< Engine * >( data );
+        
+        if( engine == nullptr )
+        {
+            throw std::runtime_error( "Fatal internal error: unknown engine" );
+        }
+        
+        {
+            std::lock_guard< std::recursive_mutex > l( engine->impl->_rmtx );
+            
+            handlers = engine->impl->_invalidMemoryHandlers;
+        }
+        
+        for( const auto & f: handlers )
+        {
+            f( address, numeric_cast< size_t >( size ) );
+        }
+    }
+    
+    void Engine::IMPL::_handleValidMemoryAccess( uc_engine * uc, uc_mem_type type, uint64_t address, int size, int64_t value, void * data )
+    {
+        Engine                                                 * engine;
+        std::vector< std::function< void( uint64_t, size_t ) > > handlers;
+        
+        ( void )uc;
+        ( void )type;
+        ( void )value;
+        
+        engine = static_cast< Engine * >( data );
+        
+        if( engine == nullptr )
+        {
+            throw std::runtime_error( "Fatal internal error: unknown engine" );
+        }
+        
+        {
+            std::lock_guard< std::recursive_mutex > l( engine->impl->_rmtx );
+            
+            handlers = engine->impl->_validMemoryHandlers;
+        }
+        
+        for( const auto & f: handlers )
+        {
+            f( address, numeric_cast< size_t >( size ) );
         }
     }
     
