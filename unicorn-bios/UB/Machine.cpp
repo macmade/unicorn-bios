@@ -114,8 +114,10 @@ namespace UB
         {
             this->impl->_engine.stop();
         }
-        
-        this->impl->_engine.waitUntilFinished();
+        else
+        {
+            this->impl->_engine.waitUntilFinished();
+        }
     }
     
     bool Machine::breakOnInterrupt( void ) const
