@@ -355,6 +355,8 @@ namespace UB
                         this->_waitEnterKeyPress();
                     }
                     
+                    this->_waitEnterKeyPress = {};
+                    
                     this->_screen->stop();
                 }
                 else if( key == 'm' )

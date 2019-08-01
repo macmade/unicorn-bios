@@ -269,8 +269,7 @@ namespace UB
                 {
                     this->_ui.waitForUserResume();
                 }
-                
-                if( std::find( this->_breakpoints.begin(), this->_breakpoints.end(), address ) != this->_breakpoints.end() )
+                else if( std::find( this->_breakpoints.begin(), this->_breakpoints.end(), address ) != this->_breakpoints.end() )
                 {
                     this->_ui.debug() << "[ BREAK ]> Address " << String::toHex( address ) << std::endl;
                     
