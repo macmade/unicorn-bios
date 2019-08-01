@@ -73,7 +73,7 @@ namespace UB
             size_t                        _memoryBytesPerLine;
             size_t                        _memoryLines;
             std::optional< std::string >  _memoryAddressPrompt;
-            std::function< void( void ) > _waitEnterKeyPress;
+            std::function< void( int ) >  _waitEnterOrSpaceKeyPress;
             mutable std::recursive_mutex  _rmtx;
     };
     
@@ -188,7 +188,7 @@ namespace UB
         }
     }
     
-    void UI::waitForUserResume( void )
+    int UI::waitForUserResume( void )
     {
         bool                        keyPressed( false );
         std::condition_variable_any cv;
@@ -197,20 +197,23 @@ namespace UB
         {
             std::cout << "Emulation paused - Press any key to continue..." << std::endl;
             
-            getchar();
+            return getchar();
         }
         else
         {
+            int pressed( 0 );
+            
             {
                 std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
                 std::string                             s;
                 
-                this->impl->_status            = "Emulation paused - Press [ENTER] to continue...";
-                this->impl->_waitEnterKeyPress =
-                [ & ]
+                this->impl->_status                   = "Emulation paused - Press [ENTER] or [SPACE] to continue...";
+                this->impl->_waitEnterOrSpaceKeyPress =
+                [ & ]( int key )
                 {
                     std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
                     
+                    pressed    = key;
                     keyPressed = true;
                     
                     this->impl->_status = ( this->impl->_engine.running() ) ? "Emulation running..." : "Emulation stopped";
@@ -230,6 +233,8 @@ namespace UB
                         return keyPressed;
                     }
                 );
+                
+                return pressed;
             }
         }
     }
@@ -350,12 +355,12 @@ namespace UB
             {
                 if( key == 'q' )
                 {
-                    if( this->_waitEnterKeyPress != nullptr )
+                    if( this->_waitEnterOrSpaceKeyPress != nullptr )
                     {
-                        this->_waitEnterKeyPress();
+                        this->_waitEnterOrSpaceKeyPress( key );
                     }
                     
-                    this->_waitEnterKeyPress = {};
+                    this->_waitEnterOrSpaceKeyPress = {};
                     
                     this->_screen->stop();
                 }
@@ -381,16 +386,16 @@ namespace UB
                     
                     this->_memoryAddressPrompt = {};
                 }
-                else if( ( key == 10 || key == 13 ) )
+                else if( key == 10 || key == 13 || key == 0x20 )
                 {
                     std::lock_guard< std::recursive_mutex > l( this->_rmtx );
                     
-                    if( this->_waitEnterKeyPress != nullptr )
+                    if( this->_waitEnterOrSpaceKeyPress != nullptr )
                     {
-                        this->_waitEnterKeyPress();
+                        this->_waitEnterOrSpaceKeyPress( key );
                     }
                     
-                    this->_waitEnterKeyPress = {};
+                    this->_waitEnterOrSpaceKeyPress = {};
                 }
                 else if( key == 127 && this->_memoryAddressPrompt.has_value() )
                 {

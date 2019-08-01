@@ -55,7 +55,7 @@ namespace UB
             void mode( Mode mode );
             
             void run( void );
-            void waitForUserResume( void );
+            int  waitForUserResume( void );
             
             StringStream & output( void );
             StringStream & debug( void );

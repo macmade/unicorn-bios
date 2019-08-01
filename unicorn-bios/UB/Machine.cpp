@@ -45,6 +45,7 @@ namespace UB
             static size_t memorySizeOrDefault( size_t memory );
             
             void _setup( const Machine & machine );
+            void _break( const std::string & message = "" );
             
             size_t                  _memory;
             FAT::Image              _fat;
@@ -56,6 +57,7 @@ namespace UB
             std::atomic< bool >     _trap;
             std::atomic< bool >     _debugVideo;
             std::atomic< bool >     _singleStep;
+            std::atomic< bool >     _singleStepOnce;
             std::vector< uint64_t > _breakpoints;
     };
 
@@ -206,7 +208,8 @@ namespace UB
         _breakOnInterruptReturn( false ),
         _trap(                   false ),
         _debugVideo(             false ),
-        _singleStep(             false )
+        _singleStep(             false ),
+        _singleStepOnce(         false )
     {}
 
     Machine::IMPL::IMPL( const IMPL & o ):
@@ -219,7 +222,8 @@ namespace UB
         _breakOnInterruptReturn( o._breakOnInterruptReturn.load() ),
         _trap(                   o._trap.load() ),
         _debugVideo(             o._debugVideo.load() ),
-        _singleStep(             o._singleStep.load() )
+        _singleStep(             o._singleStep.load() ),
+        _singleStepOnce(         o._singleStepOnce.load() )
     {}
 
     Machine::IMPL::~IMPL( void )
@@ -269,9 +273,9 @@ namespace UB
                 
                 ( void )instruction;
                 
-                if( this->_singleStep )
+                if( this->_singleStep || this->_singleStepOnce )
                 {
-                    this->_ui.waitForUserResume();
+                    this->_break();
                 }
                 else
                 {
@@ -279,16 +283,7 @@ namespace UB
                     
                     if( std::find( this->_breakpoints.begin(), this->_breakpoints.end(), a ) != this->_breakpoints.end() )
                     {
-                        this->_ui.debug() << "[ BREAK ]> Address " << String::toHex( a ) << std::endl;
-                        
-                        if( this->_trap )
-                        {
-                            raise( SIGTRAP );
-                        }
-                        else
-                        {
-                            this->_ui.waitForUserResume();
-                        }
+                        this->_break( String::toHex( a ) );
                     }
                 }
             }
@@ -302,16 +297,7 @@ namespace UB
                 
                 if( this->_breakOnInterrupt )
                 {
-                    this->_ui.debug() << "[ BREAK ]> Interrupt " << String::toHex( i ) << std::endl;
-                    
-                    if( this->_trap )
-                    {
-                        raise( SIGTRAP );
-                    }
-                    else
-                    {
-                        this->_ui.waitForUserResume();
-                    }
+                    this->_break( "Interrupt " + String::toHex( i ) );
                 }
                 
                 switch( i )
@@ -334,20 +320,35 @@ namespace UB
                 
                 if( this->_breakOnInterruptReturn )
                 {
-                    this->_ui.debug() << "[ BREAK ]> Return from interrupt" << std::endl;
-                    
-                    if( this->_trap )
-                    {
-                        raise( SIGTRAP );
-                    }
-                    else
-                    {
-                        this->_ui.waitForUserResume();
-                    }
+                    this->_break( "Return from interrupt" );
                 }
                 
                 return ret;
             }
         );
+    }
+    
+    void Machine::IMPL::_break( const std::string & message )
+    {
+        if( message.length() > 0 )
+        {
+            this->_ui.debug() << "[ BREAK ]> " << message << std::endl;
+        }
+        
+        if( this->_trap )
+        {
+            raise( SIGTRAP );
+        }
+        else
+        {
+            if( this->_ui.waitForUserResume() == 0x20 )
+            {
+                this->_singleStepOnce = true;
+            }
+            else
+            {
+                this->_singleStepOnce = false;
+            }
+        }
     }
 }
