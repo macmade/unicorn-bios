@@ -35,6 +35,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <thread>
+#include <limits>
 
 namespace UB
 {
@@ -47,7 +48,7 @@ namespace UB
             
             static void _handleInterrupt(   uc_engine * uc, uint32_t i, void * data );
             static void _handleInstruction( uc_engine * uc, uint64_t address, uint32_t size, void * data );
-            static void _handleInvalidMemoryAccess( uc_engine * uc, uc_mem_type type, uint64_t address, int size, int64_t value, void * data );
+            static bool _handleInvalidMemoryAccess( uc_engine * uc, uc_mem_type type, uint64_t address, int size, int64_t value, void * data );
             static void _handleValidMemoryAccess( uc_engine * uc, uc_mem_type type, uint64_t address, int size, int64_t value, void * data );
             
             std::vector< uint8_t > _read( size_t address, size_t size );
@@ -115,22 +116,22 @@ namespace UB
         uc_hook h4;
         uc_err  e;
         
-        if( ( e = uc_hook_add( this->impl->_uc, &h1, UC_HOOK_INTR, reinterpret_cast< void * >( &IMPL::_handleInterrupt ), this, 1, 0 ) ) != UC_ERR_OK )
+        if( ( e = uc_hook_add( this->impl->_uc, &h1, UC_HOOK_INTR, reinterpret_cast< void * >( &IMPL::_handleInterrupt ), this, 0, std::numeric_limits< uint64_t >::max() ) ) != UC_ERR_OK )
         {
             throw std::runtime_error( uc_strerror( e ) );
         }
         
-        if( ( e = uc_hook_add( this->impl->_uc, &h2, UC_HOOK_CODE, reinterpret_cast< void * >( &IMPL::_handleInstruction ), this, 1, 0 ) ) != UC_ERR_OK )
+        if( ( e = uc_hook_add( this->impl->_uc, &h2, UC_HOOK_CODE, reinterpret_cast< void * >( &IMPL::_handleInstruction ), this, 0, std::numeric_limits< uint64_t >::max() ) ) != UC_ERR_OK )
         {
             throw std::runtime_error( uc_strerror( e ) );
         }
         
-        if( ( e = uc_hook_add( this->impl->_uc, &h3, UC_HOOK_MEM_INVALID, reinterpret_cast< void * >( &IMPL::_handleInvalidMemoryAccess ), this, 1, 0 ) ) != UC_ERR_OK )
+        if( ( e = uc_hook_add( this->impl->_uc, &h3, UC_HOOK_MEM_INVALID, reinterpret_cast< void * >( &IMPL::_handleInvalidMemoryAccess ), this, 0, std::numeric_limits< uint64_t >::max() ) ) != UC_ERR_OK )
         {
             throw std::runtime_error( uc_strerror( e ) );
         }
         
-        if( ( e = uc_hook_add( this->impl->_uc, &h4, UC_HOOK_MEM_VALID, reinterpret_cast< void * >( &IMPL::_handleValidMemoryAccess ), this, 1, 0 ) ) != UC_ERR_OK )
+        if( ( e = uc_hook_add( this->impl->_uc, &h4, UC_HOOK_MEM_VALID, reinterpret_cast< void * >( &IMPL::_handleValidMemoryAccess ), this, 0, std::numeric_limits< uint64_t >::max() ) ) != UC_ERR_OK )
         {
             throw std::runtime_error( uc_strerror( e ) );
         }
@@ -766,7 +767,7 @@ namespace UB
         }
     }
     
-    void Engine::IMPL::_handleInvalidMemoryAccess( uc_engine * uc, uc_mem_type type, uint64_t address, int size, int64_t value, void * data )
+    bool Engine::IMPL::_handleInvalidMemoryAccess( uc_engine * uc, uc_mem_type type, uint64_t address, int size, int64_t value, void * data )
     {
         Engine                                                 * engine;
         std::vector< std::function< void( uint64_t, size_t ) > > handlers;
@@ -792,6 +793,8 @@ namespace UB
         {
             f( address, numeric_cast< size_t >( size ) );
         }
+        
+        return false;
     }
     
     void Engine::IMPL::_handleValidMemoryAccess( uc_engine * uc, uc_mem_type type, uint64_t address, int size, int64_t value, void * data )
