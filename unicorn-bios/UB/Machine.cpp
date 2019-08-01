@@ -265,23 +265,30 @@ namespace UB
         (
             [ & ]( uint64_t address, const std::vector< uint8_t > & instruction )
             {
+                ( void )address;
+                
                 ( void )instruction;
                 
                 if( this->_singleStep )
                 {
                     this->_ui.waitForUserResume();
                 }
-                else if( std::find( this->_breakpoints.begin(), this->_breakpoints.end(), address ) != this->_breakpoints.end() )
+                else
                 {
-                    this->_ui.debug() << "[ BREAK ]> Address " << String::toHex( address ) << std::endl;
+                    uint64_t a( Engine::getAddress( this->_engine.cs(), this->_engine.ip() ) );
                     
-                    if( this->_trap )
+                    if( std::find( this->_breakpoints.begin(), this->_breakpoints.end(), a ) != this->_breakpoints.end() )
                     {
-                        raise( SIGTRAP );
-                    }
-                    else
-                    {
-                        this->_ui.waitForUserResume();
+                        this->_ui.debug() << "[ BREAK ]> Address " << String::toHex( a ) << std::endl;
+                        
+                        if( this->_trap )
+                        {
+                            raise( SIGTRAP );
+                        }
+                        else
+                        {
+                            this->_ui.waitForUserResume();
+                        }
                     }
                 }
             }
