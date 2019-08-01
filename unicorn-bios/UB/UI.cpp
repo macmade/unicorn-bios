@@ -193,38 +193,47 @@ namespace UB
         bool                        keyPressed( false );
         std::condition_variable_any cv;
         
+        if( this->mode() == Mode::Standard )
         {
-            std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
-            std::string                             s;
+            std::cout << "Emulation paused - Press any key to continue..." << std::endl;
             
-            this->impl->_status = "Emulation paused - Press [ENTER] to continue...";
-            
-            this->impl->_waitEnterKeyPress.push_back
-            (
-                [ & ]
-                {
-                    std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
-                    
-                    keyPressed = true;
-                    
-                    this->impl->_status = ( this->impl->_engine.running() ) ? "Emulation running..." : "Emulation stopped";
-                    
-                    cv.notify_all();
-                }
-            );
+            getchar();
         }
-        
+        else
         {
-            std::unique_lock< std::recursive_mutex > l( this->impl->_rmtx );
+            {
+                std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+                std::string                             s;
+                
+                this->impl->_status = "Emulation paused - Press [ENTER] to continue...";
+                
+                this->impl->_waitEnterKeyPress.push_back
+                (
+                    [ & ]
+                    {
+                        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+                        
+                        keyPressed = true;
+                        
+                        this->impl->_status = ( this->impl->_engine.running() ) ? "Emulation running..." : "Emulation stopped";
+                        
+                        cv.notify_all();
+                    }
+                );
+            }
             
-            cv.wait
-            (
-                l,
-                [ & ]( void ) -> bool
-                {
-                    return keyPressed;
-                }
-            );
+            {
+                std::unique_lock< std::recursive_mutex > l( this->impl->_rmtx );
+                
+                cv.wait
+                (
+                    l,
+                    [ & ]( void ) -> bool
+                    {
+                        return keyPressed;
+                    }
+                );
+            }
         }
     }
     
