@@ -62,19 +62,19 @@ namespace UB
             void _memoryPageUp( void );
             void _memoryPageDown( void );
             
-            bool                                         _running;
-            Mode                                         _mode;
-            std::optional< Screen >                      _screen;
-            Engine                                     & _engine;
-            StringStream                                 _output;
-            StringStream                                 _debug;
-            std::string                                  _status;
-            size_t                                       _memoryOffset;
-            size_t                                       _memoryBytesPerLine;
-            size_t                                       _memoryLines;
-            std::optional< std::string >                 _memoryAddressPrompt;
-            std::vector< std::function< void( void ) > > _waitEnterKeyPress;
-            mutable std::recursive_mutex                 _rmtx;
+            bool                          _running;
+            Mode                          _mode;
+            std::optional< Screen >       _screen;
+            Engine                      & _engine;
+            StringStream                  _output;
+            StringStream                  _debug;
+            std::string                   _status;
+            size_t                        _memoryOffset;
+            size_t                        _memoryBytesPerLine;
+            size_t                        _memoryLines;
+            std::optional< std::string >  _memoryAddressPrompt;
+            std::function< void( void ) > _waitEnterKeyPress;
+            mutable std::recursive_mutex  _rmtx;
     };
     
     UI::UI( Engine & engine ):
@@ -205,21 +205,18 @@ namespace UB
                 std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
                 std::string                             s;
                 
-                this->impl->_status = "Emulation paused - Press [ENTER] to continue...";
-                
-                this->impl->_waitEnterKeyPress.push_back
-                (
-                    [ & ]
-                    {
-                        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
-                        
-                        keyPressed = true;
-                        
-                        this->impl->_status = ( this->impl->_engine.running() ) ? "Emulation running..." : "Emulation stopped";
-                        
-                        cv.notify_all();
-                    }
-                );
+                this->impl->_status            = "Emulation paused - Press [ENTER] to continue...";
+                this->impl->_waitEnterKeyPress =
+                [ & ]
+                {
+                    std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+                    
+                    keyPressed = true;
+                    
+                    this->impl->_status = ( this->impl->_engine.running() ) ? "Emulation running..." : "Emulation stopped";
+                    
+                    cv.notify_all();
+                };
             }
             
             {
@@ -353,6 +350,11 @@ namespace UB
             {
                 if( key == 'q' )
                 {
+                    if( this->_waitEnterKeyPress != nullptr )
+                    {
+                        this->_waitEnterKeyPress();
+                    }
+                    
                     this->_screen->stop();
                 }
                 else if( key == 'm' )
@@ -381,9 +383,9 @@ namespace UB
                 {
                     std::lock_guard< std::recursive_mutex > l( this->_rmtx );
                     
-                    for( const auto & f: this->_waitEnterKeyPress )
+                    if( this->_waitEnterKeyPress != nullptr )
                     {
-                        f();
+                        this->_waitEnterKeyPress();
                     }
                     
                     this->_waitEnterKeyPress = {};
