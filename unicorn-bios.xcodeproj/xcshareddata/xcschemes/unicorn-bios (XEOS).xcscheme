@@ -56,10 +56,6 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--break-iret"
-            isEnabled = "YES">
-         </CommandLineArgument>
-         <CommandLineArgument
             argument = "--no-ui"
             isEnabled = "YES">
          </CommandLineArgument>
