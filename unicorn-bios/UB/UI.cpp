@@ -34,6 +34,8 @@
 #include <optional>
 #include <thread>
 #include <functional>
+#include <optional>
+#include <iostream>
 #include <condition_variable>
 
 namespace UB
@@ -46,7 +48,8 @@ namespace UB
             IMPL( const IMPL & o );
             IMPL( const IMPL & o, const std::lock_guard< std::recursive_mutex > & l );
             
-            void _setup( void );
+            void _setupEngine( void );
+            void _setupScreen( void );
             void _displayStatus( void );
             void _displayOutput( void );
             void _displayDebug( void );
@@ -60,7 +63,8 @@ namespace UB
             void _memoryPageDown( void );
             
             bool                                         _running;
-            Screen                                       _screen;
+            Mode                                         _mode;
+            std::optional< Screen >                      _screen;
             Engine                                     & _engine;
             StringStream                                 _output;
             StringStream                                 _debug;
@@ -98,8 +102,29 @@ namespace UB
         return *( this );
     }
     
+    UI::Mode UI::mode( void ) const
+    {
+        std::lock_guard< std::recursive_mutex >( this->impl->_rmtx );
+        
+        return this->impl->_mode;
+    }
+    
+    void UI::mode( Mode mode )
+    {
+        std::lock_guard< std::recursive_mutex >( this->impl->_rmtx );
+        
+        if( this->impl->_running )
+        {
+            throw std::runtime_error( "Cannot change the UI mode while UI is running" );
+        }
+        
+        this->impl->_mode = mode;
+    }
+    
     void UI::run( void )
     {
+        Mode mode;
+        
         {
             std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
             
@@ -109,6 +134,20 @@ namespace UB
             }
             
             this->impl->_running = true;
+            mode                 = this->impl->_mode;
+            
+            this->impl->_output = {};
+            this->impl->_debug  = {};
+            
+            if( mode == Mode::Interactive )
+            {
+                this->impl->_setupScreen();
+            }
+            else
+            {
+                this->impl->_output.redirect( std::cout );
+                this->impl->_debug.redirect(  std::cerr );
+            }
         }
         
         {
@@ -118,7 +157,10 @@ namespace UB
             (
                 [ & ]
                 {
-                    this->impl->_screen.start();
+                    if( mode == Mode::Interactive )
+                    {
+                        this->impl->_screen->start();
+                    }
                     
                     {
                         std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
@@ -216,13 +258,14 @@ namespace UB
     
     UI::IMPL::IMPL( Engine & engine ):
         _running(            false ),
+        _mode(               Mode::Interactive ),
         _engine(             engine ),
         _status(             "Emulation not running" ),
         _memoryOffset(       0x7C00 ),
         _memoryBytesPerLine( 0 ),
         _memoryLines(        0 )
     {
-        this->_setup();
+        this->_setupEngine();
     }
     
     UI::IMPL::IMPL( const IMPL & o ):
@@ -231,6 +274,7 @@ namespace UB
     
     UI::IMPL::IMPL( const IMPL & o, const std::lock_guard< std::recursive_mutex > & l ):
         _running(            false ),
+        _mode(               o._mode ),
         _screen(             o._screen ),
         _engine(             o._engine ),
         _output(             o._output.string() ),
@@ -242,10 +286,10 @@ namespace UB
     {
         ( void )l;
         
-        this->_setup();
+        this->_setupEngine();
     }
     
-    void UI::IMPL::_setup( void )
+    void UI::IMPL::_setupEngine( void )
     {
         this->_engine.onStart
         (
@@ -266,15 +310,20 @@ namespace UB
                 this->_status = "Emulation stopped";
             }
         );
+    }
+    
+    void UI::IMPL::_setupScreen( void )
+    {
+        this->_screen = Screen();
         
-        this->_screen.onUpdate
+        this->_screen->onUpdate
         (
             [ & ]( void )
             {
-                if( this->_screen.width() < 120 || this->_screen.height() < 30 )
+                if( this->_screen->width() < 120 || this->_screen->height() < 30 )
                 {
-                    this->_screen.clear();
-                    this->_screen.print( "Screen too small..." );
+                    this->_screen->clear();
+                    this->_screen->print( "Screen too small..." );
                     
                     return;
                 }
@@ -289,13 +338,13 @@ namespace UB
             }
         );
         
-        this->_screen.onKeyPress
+        this->_screen->onKeyPress
         (
             [ & ]( int key )
             {
                 if( key == 'q' )
                 {
-                    this->_screen.stop();
+                    this->_screen->stop();
                 }
                 else if( key == 'm' )
                 {
@@ -373,8 +422,8 @@ namespace UB
     void UI::IMPL::_displayStatus( void )
     {
         size_t x(      0 );
-        size_t y(      this->_screen.height() - 3 );
-        size_t width(  this->_screen.width() );
+        size_t y(      this->_screen->height() - 3 );
+        size_t width(  this->_screen->width() );
         size_t height( 3 );
         Window win( x, y, width, height );
         
@@ -386,7 +435,7 @@ namespace UB
             win.print( this->_status );
         }
         
-        this->_screen.refresh();
+        this->_screen->refresh();
         win.move( 0, 0 );
         win.refresh();
     }
@@ -394,9 +443,9 @@ namespace UB
     void UI::IMPL::_displayOutput( void )
     {
         size_t x(      0 );
-        size_t y(      20 + ( ( this->_screen.height() - 20 ) / 2 ) );
-        size_t width(  this->_screen.width() / 2 );
-        size_t height( ( ( this->_screen.height() - 20 ) / 2 ) - 2 );
+        size_t y(      20 + ( ( this->_screen->height() - 20 ) / 2 ) );
+        size_t width(  this->_screen->width() / 2 );
+        size_t height( ( ( this->_screen->height() - 20 ) / 2 ) - 2 );
         Window win( x, y, width, height );
         
         win.box();
@@ -448,17 +497,17 @@ namespace UB
             }
         }
         
-        this->_screen.refresh();
+        this->_screen->refresh();
         win.move( 0, 0 );
         win.refresh();
     }
     
     void UI::IMPL::_displayDebug( void )
     {
-        size_t x(      this->_screen.width() / 2 );
-        size_t y(      20 + ( ( this->_screen.height() - 20 ) / 2 ) );
-        size_t width(  this->_screen.width() / 2 );
-        size_t height( ( ( this->_screen.height() - 20 ) / 2 ) - 2 );
+        size_t x(      this->_screen->width() / 2 );
+        size_t y(      20 + ( ( this->_screen->height() - 20 ) / 2 ) );
+        size_t width(  this->_screen->width() / 2 );
+        size_t height( ( ( this->_screen->height() - 20 ) / 2 ) - 2 );
         Window win( x, y, width, height );
         
         win.box();
@@ -491,7 +540,7 @@ namespace UB
             }
         }
         
-        this->_screen.refresh();
+        this->_screen->refresh();
         win.move( 0, 0 );
         win.refresh();
     }
@@ -580,7 +629,7 @@ namespace UB
             win.print( "        " + String::toBinary( eflags32 ) );
         }
         
-        this->_screen.refresh();
+        this->_screen->refresh();
         win.move( 0, 0 );
         win.refresh();
     }
@@ -621,7 +670,7 @@ namespace UB
         catch( ... )
         {}
         
-        this->_screen.refresh();
+        this->_screen->refresh();
         win.move( 0, 0 );
         win.refresh();
     }
@@ -630,7 +679,7 @@ namespace UB
     {
         size_t x(      54 + 56 );
         size_t y(      0 );
-        size_t width(  this->_screen.width() - x );
+        size_t width(  this->_screen->width() - x );
         size_t height( 20 );
         Window win( x, y, width, height );
         
@@ -662,7 +711,7 @@ namespace UB
         catch( ... )
         {}
         
-        this->_screen.refresh();
+        this->_screen->refresh();
         win.move( 0, 0 );
         win.refresh();
     }
@@ -671,8 +720,8 @@ namespace UB
     {
         size_t x(      0 );
         size_t y(      20 );
-        size_t width(  this->_screen.width() );
-        size_t height( ( this->_screen.height() - y ) / 2 );
+        size_t width(  this->_screen->width() );
+        size_t height( ( this->_screen->height() - y ) / 2 );
         Window win( x, y, width, height );
         
         win.box();
@@ -692,7 +741,7 @@ namespace UB
         }
         else
         {
-            size_t cols(  this->_screen.width()  - 4 );
+            size_t cols(  this->_screen->width()  - 4 );
             size_t lines( numeric_cast< size_t >( height ) - 4 );
             
             this->_memoryBytesPerLine = ( cols / 4 ) - 5;
@@ -740,7 +789,7 @@ namespace UB
             }
         }
         
-        this->_screen.refresh();
+        this->_screen->refresh();
         win.move( 0, 0 );
         win.refresh();
     }

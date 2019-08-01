@@ -49,7 +49,7 @@ namespace UB
             
             UI & ui( void ) const;
             
-            void run( void );
+            void run( UI::Mode mode );
             
             bool breakOnInterrupt( void )       const;
             bool breakOnInterruptReturn( void ) const;

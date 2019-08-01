@@ -49,6 +49,8 @@ namespace UB
             operator std::string()     const;
             std::string string( void ) const;
             
+            void redirect( std::ostream & os );
+            
             StringStream & operator <<( const std::string & s );
             StringStream & operator <<( short v );
             StringStream & operator <<( unsigned short v );

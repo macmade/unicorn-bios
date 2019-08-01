@@ -48,7 +48,15 @@ int main( int argc, const char * argv[] )
             machine.breakOnInterruptReturn( args.breakOnInterruptReturn() );
             machine.debugVideo( args.debugVideo() );
             machine.singleStep( args.singleStep() );
-            machine.run();
+            
+            if( args.noUI() )
+            {
+                machine.run( UB::UI::Mode::Standard );
+            }
+            else
+            {
+                machine.run( UB::UI::Mode::Interactive );
+            }
         }
         
         return EXIT_SUCCESS;
@@ -88,5 +96,7 @@ static void showHelp( void )
               << "    --debug-video:  Turns on debug output for video services."
               << std::endl
               << "    --single-step:  Breaks on every instruction."
+              << std::endl
+              << "    --no-ui:        Don't start the user interface (only output will be displayed to stdout)."
               << std::endl;
 }

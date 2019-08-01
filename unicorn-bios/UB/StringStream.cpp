@@ -25,6 +25,8 @@
 #include "StringStream.hpp"
 #include <mutex>
 #include <sstream>
+#include <vector>
+#include <functional>
 
 namespace UB
 {
@@ -38,8 +40,9 @@ namespace UB
             IMPL( const IMPL & o, const std::lock_guard< std::recursive_mutex > & l );
             ~IMPL( void );
             
-            mutable std::recursive_mutex _rmtx;
-            std::stringstream            _ss;
+            mutable std::recursive_mutex                          _rmtx;
+            std::stringstream                                     _ss;
+            std::vector< std::reference_wrapper< std::ostream > > _redirects;
     };
 
     StringStream::StringStream( void ):
@@ -79,12 +82,24 @@ namespace UB
         
         return this->impl->_ss.str();
     }
+            
+    void StringStream::redirect( std::ostream & os )
+    {
+        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+        
+        return this->impl->_redirects.push_back( os );
+    }
 
     StringStream & StringStream::operator <<( const std::string & s )
     {
         std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
         
         this->impl->_ss << s;
+        
+        for( const auto & os: this->impl->_redirects )
+        {
+            os.get() << s;
+        }
         
         return *( this );
     }
@@ -95,6 +110,11 @@ namespace UB
         
         this->impl->_ss << v;
         
+        for( const auto & os: this->impl->_redirects )
+        {
+            os.get() << v;
+        }
+        
         return *( this );
     }
 
@@ -103,6 +123,11 @@ namespace UB
         std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
         
         this->impl->_ss << v;
+        
+        for( const auto & os: this->impl->_redirects )
+        {
+            os.get() << v;
+        }
         
         return *( this );
     }
@@ -113,6 +138,11 @@ namespace UB
         
         this->impl->_ss << v;
         
+        for( const auto & os: this->impl->_redirects )
+        {
+            os.get() << v;
+        }
+        
         return *( this );
     }
 
@@ -121,6 +151,11 @@ namespace UB
         std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
         
         this->impl->_ss << v;
+        
+        for( const auto & os: this->impl->_redirects )
+        {
+            os.get() << v;
+        }
         
         return *( this );
     }
@@ -131,6 +166,11 @@ namespace UB
         
         this->impl->_ss << v;
         
+        for( const auto & os: this->impl->_redirects )
+        {
+            os.get() << v;
+        }
+        
         return *( this );
     }
 
@@ -139,6 +179,11 @@ namespace UB
         std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
         
         this->impl->_ss << v;
+        
+        for( const auto & os: this->impl->_redirects )
+        {
+            os.get() << v;
+        }
         
         return *( this );
     }
@@ -149,6 +194,11 @@ namespace UB
         
         this->impl->_ss << v;
         
+        for( const auto & os: this->impl->_redirects )
+        {
+            os.get() << v;
+        }
+        
         return *( this );
     }
 
@@ -157,6 +207,11 @@ namespace UB
         std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
         
         this->impl->_ss << v;
+        
+        for( const auto & os: this->impl->_redirects )
+        {
+            os.get() << v;
+        }
         
         return *( this );
     }
@@ -167,6 +222,11 @@ namespace UB
         
         this->impl->_ss << v;
         
+        for( const auto & os: this->impl->_redirects )
+        {
+            os.get() << v;
+        }
+        
         return *( this );
     }
 
@@ -175,6 +235,11 @@ namespace UB
         std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
         
         this->impl->_ss << v;
+        
+        for( const auto & os: this->impl->_redirects )
+        {
+            os.get() << v;
+        }
         
         return *( this );
     }
@@ -185,6 +250,11 @@ namespace UB
         
         this->impl->_ss << v;
         
+        for( const auto & os: this->impl->_redirects )
+        {
+            os.get() << v;
+        }
+        
         return *( this );
     }
     
@@ -194,6 +264,11 @@ namespace UB
         
         f( this->impl->_ss );
         
+        for( const auto & os: this->impl->_redirects )
+        {
+            f( os.get() );
+        }
+        
         return *( this );
     }
     
@@ -202,6 +277,11 @@ namespace UB
         std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
         
         f( this->impl->_ss );
+        
+        for( const auto & os: this->impl->_redirects )
+        {
+            f( os.get() );
+        }
         
         return *( this );
     }

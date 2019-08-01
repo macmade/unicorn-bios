@@ -38,12 +38,21 @@ namespace UB
     {
         public:
             
+            enum class Mode
+            {
+                Standard,
+                Interactive
+            };
+            
             UI( Engine & engine );
             UI( const UI & o );
             UI( UI && o ) noexcept;
             ~UI( void );
             
             UI & operator =( UI o );
+            
+            Mode mode( void ) const;
+            void mode( Mode mode );
             
             void run( void );
             void waitForUserResume( void );

@@ -55,6 +55,10 @@
             argument = "/Users/macmade/Documents/Macmade/GitHub/XEOS/build/boot.img"
             isEnabled = "YES">
          </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--no-ui"
+            isEnabled = "YES">
+         </CommandLineArgument>
       </CommandLineArguments>
    </LaunchAction>
    <ProfileAction

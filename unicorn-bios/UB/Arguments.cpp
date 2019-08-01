@@ -40,6 +40,7 @@ namespace UB
             bool        _breakOnInterruptReturn;
             bool        _debugVideo;
             bool        _singleStep;
+            bool        _noUI;
             size_t      _memory;
             std::string _bootImage;
     };
@@ -91,6 +92,11 @@ namespace UB
         return this->impl->_singleStep;
     }
     
+    bool Arguments::noUI( void ) const
+    {
+        return this->impl->_noUI;
+    }
+    
     size_t Arguments::memory( void ) const
     {
         return this->impl->_memory;
@@ -114,6 +120,7 @@ namespace UB
         _breakOnInterruptReturn( false ),
         _debugVideo(             false ),
         _singleStep(             false ),
+        _noUI(                   false ),
         _memory(                 0 )
     {
         if( argc < 1 )
@@ -145,6 +152,10 @@ namespace UB
             {
                 this->_singleStep = true;
             }
+            else if( arg == "--no-ui" )
+            {
+                this->_noUI = true;
+            }
             else if( arg == "--memory" || arg == "-m" )
             {
                 if( ++i < argc )
@@ -170,6 +181,7 @@ namespace UB
         _breakOnInterruptReturn(  o._breakOnInterruptReturn ),
         _debugVideo(              o._debugVideo ),
         _singleStep(              o._singleStep ),
+        _noUI(                    o._noUI ),
         _memory(                  o._memory ),
         _bootImage(               o._bootImage )
     {}

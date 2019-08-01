@@ -96,15 +96,16 @@ namespace UB
         return this->impl->_ui;
     }
     
-    void Machine::run( void )
+    void Machine::run( UI::Mode mode )
     {
         if( this->impl->_engine.start( 0x7C00 ) == false )
         {
             throw std::runtime_error( "Cannot start engine" );
         }
         
+        this->impl->_ui.mode( mode );
         this->impl->_ui.run();
-        this->impl->_engine.stop();
+        this->impl->_engine.waitUntilFinished();
     }
     
     bool Machine::breakOnInterrupt( void ) const
