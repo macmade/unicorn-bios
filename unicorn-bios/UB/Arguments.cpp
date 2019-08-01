@@ -38,6 +38,7 @@ namespace UB
             bool        _showHelp;
             bool        _breakOnInterrupt;
             bool        _breakOnInterruptReturn;
+            bool        _trap;
             bool        _debugVideo;
             bool        _singleStep;
             bool        _noUI;
@@ -82,6 +83,11 @@ namespace UB
         return this->impl->_breakOnInterruptReturn;
     }
     
+    bool Arguments::trap( void ) const
+    {
+        return this->impl->_trap;
+    }
+    
     bool Arguments::debugVideo( void ) const
     {
         return this->impl->_debugVideo;
@@ -118,6 +124,7 @@ namespace UB
         _showHelp(               false ),
         _breakOnInterrupt(       false ),
         _breakOnInterruptReturn( false ),
+        _trap(                   false ),
         _debugVideo(             false ),
         _singleStep(             false ),
         _noUI(                   false ),
@@ -143,6 +150,10 @@ namespace UB
             else if( arg == "--break-iret" )
             {
                 this->_breakOnInterruptReturn = true;
+            }
+            else if( arg == "--trap" )
+            {
+                this->_trap = true;
             }
             else if( arg == "--debug-video" )
             {
@@ -179,6 +190,7 @@ namespace UB
         _showHelp(                o._showHelp ),
         _breakOnInterrupt(        o._breakOnInterrupt ),
         _breakOnInterruptReturn(  o._breakOnInterruptReturn ),
+        _trap(                    o._trap ),
         _debugVideo(              o._debugVideo ),
         _singleStep(              o._singleStep ),
         _noUI(                    o._noUI ),

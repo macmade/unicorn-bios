@@ -29,6 +29,7 @@
 #include "UB/String.hpp"
 #include <sstream>
 #include <atomic>
+#include <csignal>
 
 namespace UB
 {
@@ -51,6 +52,7 @@ namespace UB
             BIOS::MemoryMap     _memoryMap;
             std::atomic< bool > _breakOnInterrupt;
             std::atomic< bool > _breakOnInterruptReturn;
+            std::atomic< bool > _trap;
             std::atomic< bool > _debugVideo;
             std::atomic< bool > _singleStep;
     };
@@ -118,6 +120,11 @@ namespace UB
         return this->impl->_breakOnInterruptReturn;
     }
     
+    bool Machine::trap( void ) const
+    {
+        return this->impl->_trap;
+    }
+    
     bool Machine::debugVideo( void ) const
     {
         return this->impl->_debugVideo;
@@ -136,6 +143,11 @@ namespace UB
     void Machine::breakOnInterruptReturn( bool value )
     {
         this->impl->_breakOnInterruptReturn = value;
+    }
+    
+    void Machine::trap( bool value )
+    {
+        this->impl->_trap = value;
     }
     
     void Machine::debugVideo( bool value )
@@ -163,6 +175,7 @@ namespace UB
         _memoryMap(              memorySizeOrDefault( memory ) ),
         _breakOnInterrupt(       false ),
         _breakOnInterruptReturn( false ),
+        _trap(                   false ),
         _debugVideo(             false ),
         _singleStep(             false )
     {}
@@ -175,6 +188,7 @@ namespace UB
         _memoryMap(              o._memoryMap ),
         _breakOnInterrupt(       o._breakOnInterrupt.load() ),
         _breakOnInterruptReturn( o._breakOnInterruptReturn.load() ),
+        _trap(                   o._trap.load() ),
         _debugVideo(             o._debugVideo.load() ),
         _singleStep(             o._singleStep.load() )
     {}
@@ -241,7 +255,15 @@ namespace UB
                 {
                     this->_ui.debug() << "[ BREAK ]> Interrupt " << String::toHex( i ) << std::endl;
                     
-                    this->_ui.waitForUserResume();
+                    
+                    if( this->_trap )
+                    {
+                        raise( SIGTRAP );
+                    }
+                    else
+                    {
+                        this->_ui.waitForUserResume();
+                    }
                 }
                 
                 switch( i )
@@ -266,7 +288,14 @@ namespace UB
                 {
                     this->_ui.debug() << "[ BREAK ]> Return from interrupt" << std::endl;
                     
-                    this->_ui.waitForUserResume();
+                    if( this->_trap )
+                    {
+                        raise( SIGTRAP );
+                    }
+                    else
+                    {
+                        this->_ui.waitForUserResume();
+                    }
                 }
                 
                 return ret;

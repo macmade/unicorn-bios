@@ -53,11 +53,13 @@ namespace UB
             
             bool breakOnInterrupt( void )       const;
             bool breakOnInterruptReturn( void ) const;
+            bool trap( void )                   const;
             bool debugVideo( void )             const;
             bool singleStep( void )             const;
             
             void breakOnInterrupt( bool value );
             void breakOnInterruptReturn( bool value );
+            void trap( bool value );
             void debugVideo( bool value );
             void singleStep( bool value );
             

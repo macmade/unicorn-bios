@@ -29,6 +29,7 @@ Basic BIOS emulator for Unicorn Engine.
                         (in megabytes). Defaults to 64MB, minimum 2MB.
         --break-int:    Breaks on interrupt calls.
         --break-iret:   Breaks on interrupt returns.
+        --trap:         Raises a trap when breaking.
         --debug-video:  Turns on debug output for video services.
         --single-step:  Breaks on every instruction.
         --no-ui:        Don't start the user interface (only output will be displayed to stdout).

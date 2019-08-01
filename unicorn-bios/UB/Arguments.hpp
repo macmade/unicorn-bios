@@ -45,6 +45,7 @@ namespace UB
             bool        showHelp( void )               const;
             bool        breakOnInterrupt( void )       const;
             bool        breakOnInterruptReturn( void ) const;
+            bool        trap( void )                   const;
             bool        debugVideo( void )             const;
             bool        singleStep( void )             const;
             bool        noUI( void )                   const;
