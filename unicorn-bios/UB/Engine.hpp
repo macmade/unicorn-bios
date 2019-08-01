@@ -127,9 +127,10 @@ namespace UB
             void onStop(                const std::function< void( void ) > f );
             void onInterrupt(           const std::function< bool( uint32_t ) > handler );
             void onException(           const std::function< bool( const std::exception & ) > handler );
-            void onInstruction(         const std::function< void( uint64_t, uint32_t ) > handler );
             void onInvalidMemoryAccess( const std::function< void( uint64_t, size_t ) > handler );
             void onValidMemoryAccess(   const std::function< void( uint64_t, size_t ) > handler );
+            void beforeInstruction(     const std::function< void( const std::vector< uint8_t > & ) > handler );
+            void afterInstruction(      const std::function< void( const std::vector< uint8_t > & ) > handler );
             
             std::vector< uint8_t > read( size_t address, size_t size );
             void                   write( size_t address, const std::vector< uint8_t > & bytes );

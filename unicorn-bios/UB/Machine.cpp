@@ -217,12 +217,11 @@ namespace UB
             }
         );
         
-        this->_engine.onInstruction
+        this->_engine.beforeInstruction
         (
-            [ & ]( uint64_t address, uint32_t size )
+            [ & ]( const std::vector< uint8_t > & instruction )
             {
-                ( void )address;
-                ( void )size;
+                ( void )instruction;
                 
                 if( this->_singleStep )
                 {

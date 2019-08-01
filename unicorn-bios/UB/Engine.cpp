@@ -53,18 +53,20 @@ namespace UB
             std::vector< uint8_t > _read( size_t address, size_t size );
             void                   _write( size_t address, const uint8_t * bytes, size_t size );
             
-            size_t                                                         _memory;
-            std::vector< std::function< void( void ) > >                   _onStart;
-            std::vector< std::function< void( void ) > >                   _onStop;
-            std::vector< std::function< bool( uint32_t ) > >               _interruptHandlers;
-            std::vector< std::function< bool( const std::exception & ) > > _exceptionHandlers;
-            std::vector< std::function< void( uint64_t, uint32_t ) > >     _instructionHandlers;
-            std::vector< std::function< void( uint64_t, size_t ) > >       _invalidMemoryHandlers;
-            std::vector< std::function< void( uint64_t, size_t ) > >       _validMemoryHandlers;
-            uc_engine                                                    * _uc;
-            bool                                                           _running;
-            mutable std::recursive_mutex                                   _rmtx;
-            std::condition_variable_any                                    _cv;
+            size_t                                                                 _memory;
+            std::vector< std::function< void( void ) > >                           _onStart;
+            std::vector< std::function< void( void ) > >                           _onStop;
+            std::vector< std::function< bool( uint32_t ) > >                       _interruptHandlers;
+            std::vector< std::function< bool( const std::exception & ) > >         _exceptionHandlers;
+            std::vector< std::function< void( uint64_t, size_t ) > >               _invalidMemoryHandlers;
+            std::vector< std::function< void( uint64_t, size_t ) > >               _validMemoryHandlers;
+            std::vector< std::function< void( const std::vector< uint8_t > & ) > > _beforeInstructionHandlers;
+            std::vector< std::function< void( const std::vector< uint8_t > & ) > > _afterInstructionHandlers;
+            std::vector< uint8_t >                                                 _lastInstruction;
+            uc_engine                                                            * _uc;
+            bool                                                                   _running;
+            mutable std::recursive_mutex                                           _rmtx;
+            std::condition_variable_any                                            _cv;
             
             template< typename _T_ >
             _T_ _readRegister( int reg ) const
@@ -511,13 +513,6 @@ namespace UB
         this->impl->_exceptionHandlers.push_back( handler );
     }
     
-    void Engine::onInstruction( const std::function< void( uint64_t, uint32_t ) > handler )
-    {
-        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
-        
-        this->impl->_instructionHandlers.push_back( handler );
-    }
-    
     void Engine::onInvalidMemoryAccess( const std::function< void( uint64_t, size_t ) > handler )
     {
         std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
@@ -530,6 +525,20 @@ namespace UB
         std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
         
         this->impl->_validMemoryHandlers.push_back( handler );
+    }
+    
+    void Engine::beforeInstruction( const std::function< void( const std::vector< uint8_t > & ) > handler )
+    {
+        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+        
+        this->impl->_beforeInstructionHandlers.push_back( handler );
+    }
+    
+    void Engine::afterInstruction( const std::function< void( const std::vector< uint8_t > & ) > handler )
+    {
+        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+        
+        this->impl->_afterInstructionHandlers.push_back( handler );
     }
     
     std::vector< uint8_t > Engine::read( size_t address, size_t size )
@@ -712,8 +721,11 @@ namespace UB
     
     void Engine::IMPL::_handleInstruction( uc_engine * uc, uint64_t address, uint32_t size, void * data )
     {
-        Engine                                                   * engine;
-        std::vector< std::function< void( uint64_t, uint32_t ) > > handlers;
+        Engine                                                               * engine;
+        std::vector< std::function< void( const std::vector< uint8_t > & ) > > before;
+        std::vector< std::function< void( const std::vector< uint8_t > & ) > > after;
+        std::vector< uint8_t >                                                 last;
+        std::vector< uint8_t >                                                 current;
         
         ( void )uc;
         
@@ -727,12 +739,30 @@ namespace UB
         {
             std::lock_guard< std::recursive_mutex > l( engine->impl->_rmtx );
             
-            handlers = engine->impl->_instructionHandlers;
+            before  = engine->impl->_beforeInstructionHandlers;
+            after   = engine->impl->_afterInstructionHandlers;
+            last    = engine->impl->_lastInstruction;
+            current = engine->read( address, size );
+            
+            if( current.size() == 0 )
+            {
+                throw std::runtime_error( "Fatal internal error: cannot read current instruction" );
+            }
+            
+            engine->impl->_lastInstruction = current;
         }
         
-        for( const auto & f: handlers )
+        if( last.size() > 0 )
         {
-            f( address, size );
+            for( const auto & f: after )
+            {
+                f( last );
+            }
+        }
+        
+        for( const auto & f: before )
+        {
+            f( current );
         }
     }
     
