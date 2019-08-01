@@ -24,7 +24,6 @@
 
 #include "UB/Arguments.hpp"
 #include "UB/Casts.hpp"
-#include <vector>
 
 namespace UB
 {
@@ -35,15 +34,16 @@ namespace UB
             IMPL( int argc, const char * argv[] );
             IMPL( const IMPL & o );
             
-            bool        _showHelp;
-            bool        _breakOnInterrupt;
-            bool        _breakOnInterruptReturn;
-            bool        _trap;
-            bool        _debugVideo;
-            bool        _singleStep;
-            bool        _noUI;
-            size_t      _memory;
-            std::string _bootImage;
+            bool                    _showHelp;
+            bool                    _breakOnInterrupt;
+            bool                    _breakOnInterruptReturn;
+            bool                    _trap;
+            bool                    _debugVideo;
+            bool                    _singleStep;
+            bool                    _noUI;
+            size_t                  _memory;
+            std::string             _bootImage;
+            std::vector< uint64_t > _breakpoints;
     };
     
     Arguments::Arguments( int argc, const char * argv[] ):
@@ -113,6 +113,11 @@ namespace UB
         return this->impl->_bootImage;
     }
     
+    std::vector< uint64_t > Arguments::breakpoints( void ) const
+    {
+        return this->impl->_breakpoints;
+    }
+    
     void swap( Arguments & o1, Arguments & o2 )
     {
         using std::swap;
@@ -179,6 +184,18 @@ namespace UB
                     {}
                 }
             }
+            else if( arg == "--break" || arg == "-b" )
+            {
+                if( ++i < argc )
+                {
+                    try
+                    {
+                        this->_breakpoints.push_back( static_cast< uint64_t >( std::strtoull( argv[ i ], 0, 16 ) ) );
+                    }
+                    catch( ... )
+                    {}
+                }
+            }
             else if( this->_bootImage.length() == 0 )
             {
                 this->_bootImage = arg;
@@ -195,6 +212,7 @@ namespace UB
         _singleStep(              o._singleStep ),
         _noUI(                    o._noUI ),
         _memory(                  o._memory ),
-        _bootImage(               o._bootImage )
+        _bootImage(               o._bootImage ),
+        _breakpoints(             o._breakpoints )
     {}
 }

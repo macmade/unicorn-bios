@@ -129,8 +129,8 @@ namespace UB
             void onException(           const std::function< bool( const std::exception & ) > handler );
             void onInvalidMemoryAccess( const std::function< void( uint64_t, size_t ) > handler );
             void onValidMemoryAccess(   const std::function< void( uint64_t, size_t ) > handler );
-            void beforeInstruction(     const std::function< void( const std::vector< uint8_t > & ) > handler );
-            void afterInstruction(      const std::function< void( const std::vector< uint8_t > & ) > handler );
+            void beforeInstruction(     const std::function< void( uint64_t, const std::vector< uint8_t > & ) > handler );
+            void afterInstruction(      const std::function< void( uint64_t, const std::vector< uint8_t > & ) > handler );
             
             std::vector< uint8_t > read( size_t address, size_t size );
             void                   write( size_t address, const std::vector< uint8_t > & bytes );

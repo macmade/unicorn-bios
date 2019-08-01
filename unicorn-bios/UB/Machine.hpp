@@ -63,6 +63,9 @@ namespace UB
             void debugVideo( bool value );
             void singleStep( bool value );
             
+            void addBreakpoint(    uint64_t address );
+            void removeBreakpoint( uint64_t address );
+            
             friend void swap( Machine & o1, Machine & o2 );
             
         private:

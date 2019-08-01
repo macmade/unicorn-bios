@@ -14,7 +14,7 @@ unicorn-bios
 About
 -----
 
-Basic BIOS emulator for Unicorn Engine.
+Basic BIOS emulator/debugger for Unicorn Engine.
 
 ![Screenshot](Assets/Screen.png "Screenshot")
 
@@ -27,6 +27,7 @@ Basic BIOS emulator for Unicorn Engine.
         --help   / -h:  Displays help.
         --memory / -m:  The amount of memory to allocate for the virtual machine
                         (in megabytes). Defaults to 64MB, minimum 2MB.
+        --break / -b    Breaks on a specific address.
         --break-int:    Breaks on interrupt calls.
         --break-iret:   Breaks on interrupt returns.
         --trap:         Raises a trap when breaking.

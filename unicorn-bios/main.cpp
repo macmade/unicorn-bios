@@ -50,6 +50,11 @@ int main( int argc, const char * argv[] )
             machine.debugVideo( args.debugVideo() );
             machine.singleStep( args.singleStep() );
             
+            for( auto bp: args.breakpoints() )
+            {
+                machine.addBreakpoint( bp );
+            }
+            
             if( args.noUI() )
             {
                 machine.run( UB::UI::Mode::Standard );
@@ -89,6 +94,8 @@ static void showHelp( void )
               << "    --memory / -m:  The amount of memory to allocate for the virtual machine"
               << std::endl
               << "                    (in megabytes). Defaults to 64MB, minimum 2MB."
+              << std::endl
+              << "    --break / -b    Breaks on a specific address."
               << std::endl
               << "    --break-int:    Breaks on interrupt calls."
               << std::endl

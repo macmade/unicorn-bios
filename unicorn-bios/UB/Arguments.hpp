@@ -28,6 +28,7 @@
 #include <memory>
 #include <algorithm>
 #include <string>
+#include <vector>
 
 namespace UB
 {
@@ -42,15 +43,16 @@ namespace UB
             
             Arguments & operator =( Arguments o );
             
-            bool        showHelp( void )               const;
-            bool        breakOnInterrupt( void )       const;
-            bool        breakOnInterruptReturn( void ) const;
-            bool        trap( void )                   const;
-            bool        debugVideo( void )             const;
-            bool        singleStep( void )             const;
-            bool        noUI( void )                   const;
-            size_t      memory( void )                 const;
-            std::string bootImage( void )              const;
+            bool                    showHelp( void )               const;
+            bool                    breakOnInterrupt( void )       const;
+            bool                    breakOnInterruptReturn( void ) const;
+            bool                    trap( void )                   const;
+            bool                    debugVideo( void )             const;
+            bool                    singleStep( void )             const;
+            bool                    noUI( void )                   const;
+            size_t                  memory( void )                 const;
+            std::string             bootImage( void )              const;
+            std::vector< uint64_t > breakpoints( void )            const;
             
             friend void swap( Arguments & o1, Arguments & o2 );
             

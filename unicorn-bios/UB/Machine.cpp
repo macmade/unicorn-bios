@@ -30,6 +30,7 @@
 #include <sstream>
 #include <atomic>
 #include <csignal>
+#include <vector>
 
 namespace UB
 {
@@ -45,16 +46,17 @@ namespace UB
             
             void _setup( const Machine & machine );
             
-            size_t              _memory;
-            FAT::Image          _fat;
-            Engine              _engine;
-            UI                  _ui;
-            BIOS::MemoryMap     _memoryMap;
-            std::atomic< bool > _breakOnInterrupt;
-            std::atomic< bool > _breakOnInterruptReturn;
-            std::atomic< bool > _trap;
-            std::atomic< bool > _debugVideo;
-            std::atomic< bool > _singleStep;
+            size_t                  _memory;
+            FAT::Image              _fat;
+            Engine                  _engine;
+            UI                      _ui;
+            BIOS::MemoryMap         _memoryMap;
+            std::atomic< bool >     _breakOnInterrupt;
+            std::atomic< bool >     _breakOnInterruptReturn;
+            std::atomic< bool >     _trap;
+            std::atomic< bool >     _debugVideo;
+            std::atomic< bool >     _singleStep;
+            std::vector< uint64_t > _breakpoints;
     };
 
     Machine::Machine( size_t memory, const FAT::Image & fat ):
@@ -166,6 +168,25 @@ namespace UB
         this->impl->_singleStep = value;
     }
     
+    void Machine::addBreakpoint( uint64_t address )
+    {
+        this->impl->_breakpoints.push_back( address );
+    }
+    
+    void Machine::removeBreakpoint( uint64_t address )
+    {
+        this->impl->_breakpoints.erase
+        (
+            std::remove
+            (
+                this->impl->_breakpoints.begin(),
+                this->impl->_breakpoints.end(),
+                address
+            ),
+            this->impl->_breakpoints.end()
+        );
+    }
+    
     void swap( Machine & o1, Machine & o2 )
     {
         using std::swap;
@@ -240,13 +261,27 @@ namespace UB
         
         this->_engine.beforeInstruction
         (
-            [ & ]( const std::vector< uint8_t > & instruction )
+            [ & ]( uint64_t address, const std::vector< uint8_t > & instruction )
             {
                 ( void )instruction;
                 
                 if( this->_singleStep )
                 {
                     this->_ui.waitForUserResume();
+                }
+                
+                if( std::find( this->_breakpoints.begin(), this->_breakpoints.end(), address ) != this->_breakpoints.end() )
+                {
+                    this->_ui.debug() << "[ BREAK ]> Address " << String::toHex( address ) << std::endl;
+                    
+                    if( this->_trap )
+                    {
+                        raise( SIGTRAP );
+                    }
+                    else
+                    {
+                        this->_ui.waitForUserResume();
+                    }
                 }
             }
         );
@@ -260,7 +295,6 @@ namespace UB
                 if( this->_breakOnInterrupt )
                 {
                     this->_ui.debug() << "[ BREAK ]> Interrupt " << String::toHex( i ) << std::endl;
-                    
                     
                     if( this->_trap )
                     {
