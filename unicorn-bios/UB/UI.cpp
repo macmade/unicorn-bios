@@ -195,7 +195,7 @@ namespace UB
         
         if( this->mode() == Mode::Standard )
         {
-            std::cout << "Emulation paused - Press any key to continue..." << std::endl;
+            std::cout << "Emulation paused - Press [ENTER] to continue..." << std::endl;
             
             return getchar();
         }
@@ -355,13 +355,6 @@ namespace UB
             {
                 if( key == 'q' )
                 {
-                    if( this->_waitEnterOrSpaceKeyPress != nullptr )
-                    {
-                        this->_waitEnterOrSpaceKeyPress( key );
-                    }
-                    
-                    this->_waitEnterOrSpaceKeyPress = {};
-                    
                     this->_screen->stop();
                 }
                 else if( key == 'm' )
