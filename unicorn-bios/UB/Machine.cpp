@@ -32,6 +32,7 @@
 #include <atomic>
 #include <csignal>
 #include <vector>
+#include <iostream>
 
 namespace UB
 {
@@ -342,6 +343,42 @@ namespace UB
                 }
                 
                 return ret;
+            }
+        );
+        
+        this->_engine.onValidMemoryAccess
+        (
+            [ & ]( uint64_t address, size_t size )
+            {
+                if( this->_engine.running() == false )
+                {
+                    return;
+                }
+                
+                for( const auto & entry: this->_memoryMap.entries() )
+                {
+                    uint64_t end( address + size );
+                    
+                    if( entry.type() == BIOS::MemoryMap::Entry::Type::Usable )
+                    {
+                        continue;
+                    }
+                    
+                    if( ( address >= entry.base() && address <= entry.end() ) || ( end >= entry.base() && end <= entry.end() ) )
+                    {
+                        throw std::runtime_error( "Access to invalid memory at address " + String::toHex( address ) );
+                    }
+                }
+            }
+        );
+        
+        this->_engine.onInvalidMemoryAccess
+        (
+            [ & ]( uint64_t address, size_t size )
+            {
+                ( void )size;
+                
+                throw std::runtime_error( "Access to invalid memory at address " + String::toHex( address ) );
             }
         );
     }
