@@ -56,20 +56,21 @@ namespace UB
             
             size_t                       _memory;
             uint64_t                     _lastInstructionAddress;
+            Registers                    _lastInstructionRegisters;
             std::vector< uint8_t >       _lastInstruction;
             uc_engine                  * _uc;
             bool                         _running;
             mutable std::recursive_mutex _rmtx;
             std::condition_variable_any  _cv;
             
-            std::vector< std::function< void( void ) > >                                     _onStart;
-            std::vector< std::function< void( void ) > >                                     _onStop;
-            std::vector< std::function< bool( uint32_t ) > >                                 _interruptHandlers;
-            std::vector< std::function< bool( const std::exception & ) > >                   _exceptionHandlers;
-            std::vector< std::function< void( uint64_t, size_t ) > >                         _invalidMemoryHandlers;
-            std::vector< std::function< void( uint64_t, size_t ) > >                         _validMemoryHandlers;
-            std::vector< std::function< void( uint64_t, const std::vector< uint8_t > & ) > > _beforeInstructionHandlers;
-            std::vector< std::function< void( uint64_t, const std::vector< uint8_t > & ) > > _afterInstructionHandlers;
+            std::vector< std::function< void( void ) > >                                                        _onStart;
+            std::vector< std::function< void( void ) > >                                                        _onStop;
+            std::vector< std::function< bool( uint32_t ) > >                                                    _interruptHandlers;
+            std::vector< std::function< bool( const std::exception & ) > >                                      _exceptionHandlers;
+            std::vector< std::function< void( uint64_t, size_t ) > >                                            _invalidMemoryHandlers;
+            std::vector< std::function< void( uint64_t, size_t ) > >                                            _validMemoryHandlers;
+            std::vector< std::function< void( uint64_t, const std::vector< uint8_t > & ) > >                    _beforeInstructionHandlers;
+            std::vector< std::function< void( uint64_t, const Registers &, const std::vector< uint8_t > & ) > > _afterInstructionHandlers;
             
             template< typename _T_ >
             _T_ _readRegister( int reg ) const
@@ -481,6 +482,11 @@ namespace UB
         this->impl->_writeRegister( UC_X86_REG_EFLAGS, value );
     }
     
+    Registers Engine::registers( void ) const
+    {
+        return *( this );
+    }
+    
     bool Engine::running( void ) const
     {
         std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
@@ -537,7 +543,7 @@ namespace UB
         this->impl->_beforeInstructionHandlers.push_back( handler );
     }
     
-    void Engine::afterInstruction( const std::function< void( uint64_t, const std::vector< uint8_t > & ) > handler )
+    void Engine::afterInstruction( const std::function< void( uint64_t, const Registers &, const std::vector< uint8_t > & ) > handler )
     {
         std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
         
@@ -727,10 +733,11 @@ namespace UB
         Engine               * engine;
         std::vector< uint8_t > last;
         uint64_t               lastAddress;
+        Registers              lastRegisters;
         std::vector< uint8_t > current;
         
         std::vector< std::function< void( uint64_t, const std::vector< uint8_t > & ) > > before;
-        std::vector< std::function< void( uint64_t, const std::vector< uint8_t > & ) > > after;
+        std::vector< std::function< void( uint64_t, const Registers &, const std::vector< uint8_t > & ) > > after;
         
         ( void )uc;
         
@@ -744,26 +751,28 @@ namespace UB
         {
             std::lock_guard< std::recursive_mutex > l( engine->impl->_rmtx );
             
-            before      = engine->impl->_beforeInstructionHandlers;
-            after       = engine->impl->_afterInstructionHandlers;
-            last        = engine->impl->_lastInstruction;
-            lastAddress = engine->impl->_lastInstructionAddress;
-            current     = engine->read( address, size );
+            before        = engine->impl->_beforeInstructionHandlers;
+            after         = engine->impl->_afterInstructionHandlers;
+            last          = engine->impl->_lastInstruction;
+            lastAddress   = engine->impl->_lastInstructionAddress;
+            lastRegisters = engine->impl->_lastInstructionRegisters;
+            current       = engine->read( address, size );
             
             if( current.size() == 0 )
             {
                 throw std::runtime_error( "Fatal internal error: cannot read current instruction" );
             }
             
-            engine->impl->_lastInstruction        = current;
-            engine->impl->_lastInstructionAddress = address;
+            engine->impl->_lastInstruction          = current;
+            engine->impl->_lastInstructionAddress   = address;
+            engine->impl->_lastInstructionRegisters = engine->registers();
         }
         
         if( last.size() > 0 )
         {
             for( const auto & f: after )
             {
-                f( lastAddress, last );
+                f( lastAddress, lastRegisters, last );
             }
         }
         

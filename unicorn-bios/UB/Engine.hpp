@@ -30,6 +30,7 @@
 #include <cstdint>
 #include <vector>
 #include <functional>
+#include "UB/Registers.hpp"
 
 namespace UB
 {
@@ -121,6 +122,8 @@ namespace UB
             void eip( uint32_t value );
             void eflags( uint32_t value );
             
+            Registers registers( void ) const;
+            
             bool running( void ) const;
             
             void onStart(               const std::function< void( void ) > f );
@@ -130,7 +133,7 @@ namespace UB
             void onInvalidMemoryAccess( const std::function< void( uint64_t, size_t ) > handler );
             void onValidMemoryAccess(   const std::function< void( uint64_t, size_t ) > handler );
             void beforeInstruction(     const std::function< void( uint64_t, const std::vector< uint8_t > & ) > handler );
-            void afterInstruction(      const std::function< void( uint64_t, const std::vector< uint8_t > & ) > handler );
+            void afterInstruction(      const std::function< void( uint64_t, const Registers &, const std::vector< uint8_t > & ) > handler );
             
             std::vector< uint8_t > read( size_t address, size_t size );
             void                   write( size_t address, const std::vector< uint8_t > & bytes );

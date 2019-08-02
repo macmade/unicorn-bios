@@ -27,6 +27,7 @@
 #include "UB/Interrupts.hpp"
 #include "UB/FAT/MBR.hpp"
 #include "UB/String.hpp"
+#include "UB/CPU/Functions.hpp"
 #include <sstream>
 #include <atomic>
 #include <csignal>
@@ -270,7 +271,6 @@ namespace UB
             [ & ]( uint64_t address, const std::vector< uint8_t > & instruction )
             {
                 ( void )address;
-                
                 ( void )instruction;
                 
                 if( this->_singleStep || this->_singleStepOnce )
@@ -285,6 +285,24 @@ namespace UB
                     {
                         this->_break( String::toHex( a ) );
                     }
+                }
+            }
+        );
+        
+        this->_engine.afterInstruction
+        (
+            [ & ]( uint64_t address, const Registers & registers, const std::vector< uint8_t > & instruction )
+            {
+                ( void )address;
+                
+                if
+                (
+                       instruction.size() == 2
+                    && instruction[ 0 ]   == 0x0F
+                    && instruction[ 1 ]   == 0xA2
+                )
+                {
+                    CPU::cpuid( this->_engine, registers );
                 }
             }
         );

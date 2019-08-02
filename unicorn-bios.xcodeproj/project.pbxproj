@@ -15,6 +15,8 @@
 		055928CC22F0ED00003878B6 /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055928CA22F0ED00003878B6 /* Window.cpp */; };
 		055928F222F216EF003878B6 /* MemoryMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055928F022F216EF003878B6 /* MemoryMap.cpp */; };
 		055928F422F21CCC003878B6 /* MemoryMap-Entry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055928F322F21CCC003878B6 /* MemoryMap-Entry.cpp */; };
+		05798F0722F473E6008F9DB1 /* Functions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05798F0622F473E5008F9DB1 /* Functions.cpp */; };
+		05798F0A22F473F4008F9DB1 /* Registers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05798F0922F473F4008F9DB1 /* Registers.cpp */; };
 		058182F622E8CC1F008D1BFF /* String.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 058182F422E8CC1F008D1BFF /* String.cpp */; };
 		0581833B22E8EC63008D1BFF /* Video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0581833922E8EC63008D1BFF /* Video.cpp */; };
 		0581833E22E8EE88008D1BFF /* Disk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0581833C22E8EE88008D1BFF /* Disk.cpp */; };
@@ -61,6 +63,10 @@
 		055928F022F216EF003878B6 /* MemoryMap.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MemoryMap.cpp; sourceTree = "<group>"; };
 		055928F122F216EF003878B6 /* MemoryMap.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MemoryMap.hpp; sourceTree = "<group>"; };
 		055928F322F21CCC003878B6 /* MemoryMap-Entry.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "MemoryMap-Entry.cpp"; sourceTree = "<group>"; };
+		05798F0522F473E5008F9DB1 /* Functions.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Functions.hpp; sourceTree = "<group>"; };
+		05798F0622F473E5008F9DB1 /* Functions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Functions.cpp; sourceTree = "<group>"; };
+		05798F0822F473F4008F9DB1 /* Registers.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Registers.hpp; sourceTree = "<group>"; };
+		05798F0922F473F4008F9DB1 /* Registers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Registers.cpp; sourceTree = "<group>"; };
 		058182F422E8CC1F008D1BFF /* String.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = String.cpp; sourceTree = "<group>"; };
 		058182F522E8CC1F008D1BFF /* String.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = String.hpp; sourceTree = "<group>"; };
 		0581831D22E8DC5C008D1BFF /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -149,20 +155,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		05798F0422F473E5008F9DB1 /* CPU */ = {
+			isa = PBXGroup;
+			children = (
+				05798F0622F473E5008F9DB1 /* Functions.cpp */,
+				05798F0522F473E5008F9DB1 /* Functions.hpp */,
+			);
+			path = CPU;
+			sourceTree = "<group>";
+		};
 		0581833822E8EC51008D1BFF /* BIOS */ = {
 			isa = PBXGroup;
 			children = (
-				0581833922E8EC63008D1BFF /* Video.cpp */,
-				0581833A22E8EC63008D1BFF /* Video.hpp */,
 				0581833C22E8EE88008D1BFF /* Disk.cpp */,
 				0581833D22E8EE88008D1BFF /* Disk.hpp */,
 				0581833F22E8EF49008D1BFF /* Keyboard.cpp */,
 				0581834022E8EF49008D1BFF /* Keyboard.hpp */,
+				055928F322F21CCC003878B6 /* MemoryMap-Entry.cpp */,
+				055928F022F216EF003878B6 /* MemoryMap.cpp */,
+				055928F122F216EF003878B6 /* MemoryMap.hpp */,
 				055928C722F0E759003878B6 /* SystemServices.cpp */,
 				055928C822F0E759003878B6 /* SystemServices.hpp */,
-				055928F022F216EF003878B6 /* MemoryMap.cpp */,
-				055928F322F21CCC003878B6 /* MemoryMap-Entry.cpp */,
-				055928F122F216EF003878B6 /* MemoryMap.hpp */,
+				0581833922E8EC63008D1BFF /* Video.cpp */,
+				0581833A22E8EC63008D1BFF /* Video.hpp */,
 			);
 			path = BIOS;
 			sourceTree = "<group>";
@@ -319,8 +334,6 @@
 		05B2818422E78B7400110404 /* UB */ = {
 			isa = PBXGroup;
 			children = (
-				0581833822E8EC51008D1BFF /* BIOS */,
-				05B2818C22E7ABFF00110404 /* FAT */,
 				05B2818922E7AA5300110404 /* Arguments.cpp */,
 				05B2818822E7AA5300110404 /* Arguments.hpp */,
 				05B2819322E7AF1A00110404 /* BinaryDataStream.cpp */,
@@ -329,21 +342,26 @@
 				05B2819522E7AF1A00110404 /* BinaryFileStream.hpp */,
 				05B2819622E7AF1A00110404 /* BinaryStream.cpp */,
 				05B2819822E7AF1A00110404 /* BinaryStream.hpp */,
+				0581833822E8EC51008D1BFF /* BIOS */,
 				0559286922EB3048003878B6 /* Capstone.cpp */,
 				0559286A22EB3048003878B6 /* Capstone.hpp */,
 				05B2818B22E7AAA600110404 /* Casts.hpp */,
-				05B2818522E78B7400110404 /* Engine.hpp */,
+				05798F0422F473E5008F9DB1 /* CPU */,
 				05B2818622E78B7400110404 /* Engine.cpp */,
+				05B2818522E78B7400110404 /* Engine.hpp */,
+				05B2818C22E7ABFF00110404 /* FAT */,
 				053F365D22E892C5003BD8AC /* Interrupts.cpp */,
 				053F365E22E892C5003BD8AC /* Interrupts.hpp */,
-				0559286D22EEF488003878B6 /* StringStream.cpp */,
-				0559286E22EEF488003878B6 /* StringStream.hpp */,
 				058D772722E8B7F100FA58A4 /* Machine.cpp */,
 				058D772822E8B7F100FA58A4 /* Machine.hpp */,
+				05798F0922F473F4008F9DB1 /* Registers.cpp */,
+				05798F0822F473F4008F9DB1 /* Registers.hpp */,
 				0581834222E9ACFF008D1BFF /* Screen.cpp */,
 				0581834322E9ACFF008D1BFF /* Screen.hpp */,
 				058182F422E8CC1F008D1BFF /* String.cpp */,
 				058182F522E8CC1F008D1BFF /* String.hpp */,
+				0559286D22EEF488003878B6 /* StringStream.cpp */,
+				0559286E22EEF488003878B6 /* StringStream.hpp */,
 				0581834522E9AD06008D1BFF /* UI.cpp */,
 				0581834622E9AD06008D1BFF /* UI.hpp */,
 				055928CA22F0ED00003878B6 /* Window.cpp */,
@@ -427,6 +445,7 @@
 				05B2813322E77AC700110404 /* main.cpp in Sources */,
 				053F365F22E892C5003BD8AC /* Interrupts.cpp in Sources */,
 				05B2818F22E7AC1300110404 /* Image.cpp in Sources */,
+				05798F0A22F473F4008F9DB1 /* Registers.cpp in Sources */,
 				058D772922E8B7F100FA58A4 /* Machine.cpp in Sources */,
 				0581834722E9AD06008D1BFF /* UI.cpp in Sources */,
 				0559286B22EB3048003878B6 /* Capstone.cpp in Sources */,
@@ -437,6 +456,7 @@
 				05B2819B22E7AF1A00110404 /* BinaryStream.cpp in Sources */,
 				0581833B22E8EC63008D1BFF /* Video.cpp in Sources */,
 				05B2819922E7AF1A00110404 /* BinaryDataStream.cpp in Sources */,
+				05798F0722F473E6008F9DB1 /* Functions.cpp in Sources */,
 				05B2819A22E7AF1A00110404 /* BinaryFileStream.cpp in Sources */,
 				05B2818A22E7AA5300110404 /* Arguments.cpp in Sources */,
 				055928F422F21CCC003878B6 /* MemoryMap-Entry.cpp in Sources */,
