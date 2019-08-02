@@ -656,7 +656,7 @@ namespace UB
     {
         size_t x(      54 );
         size_t y(      0 );
-        size_t width(  40 );
+        size_t width(  30 );
         size_t height( 20 );
         Window win( x, y, width, height );
         
@@ -733,7 +733,7 @@ namespace UB
     
     void UI::IMPL::_displayInstructions( void )
     {
-        size_t x(      54 + 40 );
+        size_t x(      54 + 30 );
         size_t y(      0 );
         size_t width(  56 );
         size_t height( 20 );
@@ -779,7 +779,7 @@ namespace UB
     
     void UI::IMPL::_displayDisassembly( void )
     {
-        size_t x( 54 + 40 + 56 );
+        size_t x( 54 + 30 + 56 );
         
         if( this->_screen->width() < x + 50 )
         {
