@@ -36,7 +36,7 @@ namespace UB
             {
                 engine.ebx( 0x43494E55 );
                 engine.edx( 0x2D4E524F );
-                engine.ecx( 0x534F4942 ); 
+                engine.ecx( 0x534F4942 );
             }
             else if( eax == 0x80000000 )
             {

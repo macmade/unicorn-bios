@@ -55,8 +55,10 @@ namespace UB
             uint16_t _bp;
             uint16_t _cs;
             uint16_t _ds;
-            uint16_t _es;
             uint16_t _ss;
+            uint16_t _es;
+            uint16_t _fs;
+            uint16_t _gs;
             uint16_t _ip;
             uint32_t _eax;
             uint32_t _ebx;
@@ -191,14 +193,24 @@ namespace UB
         return this->impl->_ds;
     }
     
+    uint16_t Registers::ss( void ) const
+    {
+        return this->impl->_ss;
+    }
+    
     uint16_t Registers::es( void ) const
     {
         return this->impl->_es;
     }
     
-    uint16_t Registers::ss( void ) const
+    uint16_t Registers::fs( void ) const
     {
-        return this->impl->_ss;
+        return this->impl->_fs;
+    }
+    
+    uint16_t Registers::gs( void ) const
+    {
+        return this->impl->_gs;
     }
     
     uint16_t Registers::ip( void ) const
@@ -283,8 +295,10 @@ namespace UB
         _bp(     0 ),
         _cs(     0 ),
         _ds(     0 ),
-        _es(     0 ),
         _ss(     0 ),
+        _es(     0 ),
+        _fs(     0 ),
+        _gs(     0 ),
         _ip(     0 ),
         _eax(    0 ),
         _ebx(    0 ),
@@ -318,8 +332,10 @@ namespace UB
         _bp(     engine.bp() ),
         _cs(     engine.cs() ),
         _ds(     engine.ds() ),
-        _es(     engine.es() ),
         _ss(     engine.ss() ),
+        _es(     engine.es() ),
+        _fs(     engine.fs() ),
+        _gs(     engine.gs() ),
         _ip(     engine.ip() ),
         _eax(    engine.eax() ),
         _ebx(    engine.ebx() ),
@@ -353,8 +369,10 @@ namespace UB
         _bp(     o._bp ),
         _cs(     o._cs ),
         _ds(     o._ds ),
-        _es(     o._es ),
         _ss(     o._ss ),
+        _es(     o._es ),
+        _fs(     o._fs ),
+        _gs(     o._gs ),
         _ip(     o._ip ),
         _eax(    o._eax ),
         _ebx(    o._ebx ),

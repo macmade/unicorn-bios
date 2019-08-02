@@ -66,8 +66,10 @@ namespace UB
             uint16_t bp( void ) const;
             uint16_t cs( void ) const;
             uint16_t ds( void ) const;
-            uint16_t es( void ) const;
             uint16_t ss( void ) const;
+            uint16_t es( void ) const;
+            uint16_t fs( void ) const;
+            uint16_t gs( void ) const;
             uint16_t ip( void ) const;
             
             uint32_t eax( void )    const;

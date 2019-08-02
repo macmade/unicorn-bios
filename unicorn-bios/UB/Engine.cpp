@@ -245,14 +245,24 @@ namespace UB
         return this->impl->_readRegister< uint16_t >( UC_X86_REG_DS );
     }
     
+    uint16_t Engine::ss( void ) const
+    {
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_SS );
+    }
+    
     uint16_t Engine::es( void ) const
     {
         return this->impl->_readRegister< uint16_t >( UC_X86_REG_ES );
     }
     
-    uint16_t Engine::ss( void ) const
+    uint16_t Engine::fs( void ) const
     {
-        return this->impl->_readRegister< uint16_t >( UC_X86_REG_SS );
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_FS );
+    }
+    
+    uint16_t Engine::gs( void ) const
+    {
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_GS );
     }
     
     uint16_t Engine::ip( void ) const
@@ -417,14 +427,24 @@ namespace UB
         this->impl->_writeRegister( UC_X86_REG_DS, value );
     }
     
+    void Engine::ss( uint16_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_SS, value );
+    }
+    
     void Engine::es( uint16_t value )
     {
         this->impl->_writeRegister( UC_X86_REG_ES, value );
     }
     
-    void Engine::ss( uint16_t value )
+    void Engine::fs( uint16_t value )
     {
-        this->impl->_writeRegister( UC_X86_REG_SS, value );
+        this->impl->_writeRegister( UC_X86_REG_FS, value );
+    }
+    
+    void Engine::gs( uint16_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_GS, value );
     }
     
     void Engine::ip( uint16_t value )

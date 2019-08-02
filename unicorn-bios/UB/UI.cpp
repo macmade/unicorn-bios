@@ -456,9 +456,9 @@ namespace UB
     void UI::IMPL::_displayOutput( void )
     {
         size_t x(      0 );
-        size_t y(      20 + ( ( this->_screen->height() - 20 ) / 2 ) );
+        size_t y(      22 + ( ( this->_screen->height() - 22 ) / 2 ) );
         size_t width(  this->_screen->width() / 2 );
-        size_t height( ( ( this->_screen->height() - 20 ) / 2 ) - 2 );
+        size_t height( ( ( this->_screen->height() - 22 ) / 2 ) - 2 );
         Window win( x, y, width, height );
         
         win.box();
@@ -518,9 +518,9 @@ namespace UB
     void UI::IMPL::_displayDebug( void )
     {
         size_t x(      this->_screen->width() / 2 );
-        size_t y(      20 + ( ( this->_screen->height() - 20 ) / 2 ) );
+        size_t y(      22 + ( ( this->_screen->height() - 22 ) / 2 ) );
         size_t width(  this->_screen->width() / 2 );
-        size_t height( ( ( this->_screen->height() - 20 ) / 2 ) - 2 );
+        size_t height( ( ( this->_screen->height() - 22 ) / 2 ) - 2 );
         Window win( x, y, width, height );
         
         win.box();
@@ -563,7 +563,7 @@ namespace UB
         size_t x(      0 );
         size_t y(      0 );
         size_t width(  54 );
-        size_t height( 20 );
+        size_t height( 22 );
         Window win( x, y, width, height );
         
         if( this->_screen->width() < x + width )
@@ -598,8 +598,10 @@ namespace UB
             std::string bp( String::toHex( this->_engine.bp() ) );
             std::string cs( String::toHex( this->_engine.cs() ) );
             std::string ds( String::toHex( this->_engine.ds() ) );
-            std::string es( String::toHex( this->_engine.es() ) );
             std::string ss( String::toHex( this->_engine.ss() ) );
+            std::string es( String::toHex( this->_engine.es() ) );
+            std::string fs( String::toHex( this->_engine.fs() ) );
+            std::string gs( String::toHex( this->_engine.gs() ) );
             std::string ip( String::toHex( this->_engine.ip() ) );
             std::string eax( String::toHex( this->_engine.eax() ) );
             std::string ebx( String::toHex( this->_engine.ebx() ) );
@@ -618,7 +620,7 @@ namespace UB
             win.move( 2, y++ );
             win.print( "EBX: " + ebx + " | BX: " + bx + " | BH: " + bh + " | BL: " + bl );
             win.move( 2, y++ );
-            win.print( "EcX: " + ecx + " | CX: " + cx + " | CH: " + ch + " | CL: " + cl );
+            win.print( "ECX: " + ecx + " | CX: " + cx + " | CH: " + ch + " | CL: " + cl );
             win.move( 2, y++ );
             win.print( "EDX: " + edx + " | DX: " + dx + " | DH: " + dh + " | DL: " + dl );
             win.move( 1, y++ );
@@ -627,6 +629,8 @@ namespace UB
             win.print( "ESI: " + esi + " | SI: " + si );
             win.move( 2, y++ );
             win.print( "EDI: " + edi + " | DI: " + di );
+            win.move( 1, y++ );
+            win.addHorizontalLine( width - 2 );
             win.move( 2, y++ );
             win.print( "EBP: " + ebp + " | BP: " + bp );
             win.move( 2, y++ );
@@ -634,7 +638,9 @@ namespace UB
             win.move( 1, y++ );
             win.addHorizontalLine( width - 2 );
             win.move( 2, y++ );
-            win.print( "CS: " + cs + " | DS: " + ds + " | ES: " + es + " | SS: " + ss );
+            win.print( "CS: " + cs + " | DS: " + ds + " | SS: " + ss );
+            win.move( 2, y++ );
+            win.print( "ES: " + es + " | FS: " + fs + " | GS: " + gs );
             win.move( 1, y++ );
             win.addHorizontalLine( width - 2 );
             win.move( 2, y++ );
@@ -657,7 +663,7 @@ namespace UB
         size_t x(      54 );
         size_t y(      0 );
         size_t width(  30 );
-        size_t height( 20 );
+        size_t height( 22 );
         Window win( x, y, width, height );
         
         if( this->_screen->width() < x + width )
@@ -736,7 +742,7 @@ namespace UB
         size_t x(      54 + 30 );
         size_t y(      0 );
         size_t width(  56 );
-        size_t height( 20 );
+        size_t height( 22 );
         Window win( x, y, width, height );
         
         if( this->_screen->width() < x + width )
@@ -789,7 +795,7 @@ namespace UB
         {
             size_t y(      0 );
             size_t width(  this->_screen->width() - x );
-            size_t height( 20 );
+            size_t height( 22 );
             Window win( x, y, width, height );
             
             win.box();
@@ -829,7 +835,7 @@ namespace UB
     void UI::IMPL::_displayMemory( void )
     {
         size_t x(      0 );
-        size_t y(      20 );
+        size_t y(      22 );
         size_t width(  this->_screen->width() );
         size_t height( ( this->_screen->height() - y ) / 2 );
         Window win( x, y, width, height );
