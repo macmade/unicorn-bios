@@ -836,6 +836,11 @@ namespace UB
         uc_err                                  e;
         std::lock_guard< std::recursive_mutex > l( this->_rmtx );
         
+        if( size == 0 )
+        {
+            return {};
+        }
+        
         if( address + size >= this->_memory )
         {
             throw std::runtime_error( "Cannot read from address " + String::toHex( address ) + " - Not enough memory allocated" );
@@ -857,6 +862,11 @@ namespace UB
     {
         uc_err                                  e;
         std::lock_guard< std::recursive_mutex > l( this->_rmtx );
+        
+        if( size == 0 )
+        {
+            return;
+        }
         
         if( address >= this->_memory )
         {
