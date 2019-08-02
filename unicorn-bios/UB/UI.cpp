@@ -54,6 +54,7 @@ namespace UB
             void _displayOutput( void );
             void _displayDebug( void );
             void _displayRegisters( void );
+            void _displayFlags( void );
             void _displayStack( void );
             void _displayInstructions( void );
             void _displayDisassembly( void );
@@ -341,6 +342,7 @@ namespace UB
                 }
                 
                 this->_displayRegisters();
+                this->_displayFlags();
                 this->_displayStack();
                 this->_displayInstructions();
                 this->_displayDisassembly();
@@ -456,9 +458,9 @@ namespace UB
     void UI::IMPL::_displayOutput( void )
     {
         size_t x(      0 );
-        size_t y(      22 + ( ( this->_screen->height() - 22 ) / 2 ) );
+        size_t y(      21 + ( ( this->_screen->height() - 21 ) / 2 ) );
         size_t width(  this->_screen->width() / 2 );
-        size_t height( ( ( this->_screen->height() - 22 ) / 2 ) - 2 );
+        size_t height( ( ( this->_screen->height() - 21 ) / 2 ) - 2 );
         Window win( x, y, width, height );
         
         win.box();
@@ -518,9 +520,9 @@ namespace UB
     void UI::IMPL::_displayDebug( void )
     {
         size_t x(      this->_screen->width() / 2 );
-        size_t y(      22 + ( ( this->_screen->height() - 22 ) / 2 ) );
+        size_t y(      21 + ( ( this->_screen->height() - 21 ) / 2 ) );
         size_t width(  this->_screen->width() / 2 );
-        size_t height( ( ( this->_screen->height() - 22 ) / 2 ) - 2 );
+        size_t height( ( ( this->_screen->height() - 21 ) / 2 ) - 2 );
         Window win( x, y, width, height );
         
         win.box();
@@ -563,7 +565,7 @@ namespace UB
         size_t x(      0 );
         size_t y(      0 );
         size_t width(  54 );
-        size_t height( 22 );
+        size_t height( 21 );
         Window win( x, y, width, height );
         
         if( this->_screen->width() < x + width )
@@ -648,9 +650,66 @@ namespace UB
             win.move( 1, y++ );
             win.addHorizontalLine( width - 2 );
             win.move( 2, y++ );
-            win.print( "EFlags: " + eflags );
+            win.print( "EFLAGS: " + eflags );
+            win.move( 1, y++ );
+        }
+        
+        this->_screen->refresh();
+        win.move( 0, 0 );
+        win.refresh();
+    }
+    
+    void UI::IMPL::_displayFlags( void )
+    {
+        size_t x(      54 );
+        size_t y(      0 );
+        size_t width(  36 );
+        size_t height( 21 );
+        Window win( x, y, width, height );
+        
+        if( this->_screen->width() < x + width )
+        {
+            return;
+        }
+        
+        win.box();
+        win.move( 2, 1 );
+        win.print( "CPU Flags:" );
+        win.move( 1, 2 );
+        win.addHorizontalLine( width - 2 );
+        
+        y = 3;
+        
+        {
+            uint32_t                                      eflags( this->_engine.eflags() );
+            std::vector< std::pair< std::string, bool > > flags;
+            
+            flags.push_back( { "Carry:                       ", ( eflags & ( 1 <<  0 ) ) != 0 } );
+            flags.push_back( { "Parity:                      ", ( eflags & ( 1 <<  2 ) ) != 0 } );
+            flags.push_back( { "Adjust:                      ", ( eflags & ( 1 <<  4 ) ) != 0 } );
+            flags.push_back( { "Zero:                        ", ( eflags & ( 1 <<  6 ) ) != 0 } );
+            flags.push_back( { "Sign:                        ", ( eflags & ( 1 <<  7 ) ) != 0 } );
+            flags.push_back( { "Trap:                        ", ( eflags & ( 1 <<  8 ) ) != 0 } );
+            flags.push_back( { "Interrupt enable:            ", ( eflags & ( 1 <<  9 ) ) != 0 } );
+            flags.push_back( { "Direction:                   ", ( eflags & ( 1 << 10 ) ) != 0 } );
+            flags.push_back( { "Overflow:                    ", ( eflags & ( 1 << 11 ) ) != 0 } );
+            flags.push_back( { "Resume:                      ", ( eflags & ( 1 << 16 ) ) != 0 } );
+            flags.push_back( { "Virtual 8086:                ", ( eflags & ( 1 << 17 ) ) != 0 } );
+            flags.push_back( { "Alignment check:             ", ( eflags & ( 1 << 18 ) ) != 0 } );
+            flags.push_back( { "Virtual interrupt:           ", ( eflags & ( 1 << 19 ) ) != 0 } );
+            flags.push_back( { "Virtual interrupt pending:   ", ( eflags & ( 1 << 20 ) ) != 0 } );
+            flags.push_back( { "CPUID:                       ", ( eflags & ( 1 << 21 ) ) != 0 } );
+            
+            for( const auto & p: flags )
+            {
+                win.move( 2, y++ );
+                win.print( p.first + ( ( p.second ) ? "Yes" : " No" ) );
+            }
+            
+            win.move( 1, y++ );
+            win.addHorizontalLine( width - 2 );
             win.move( 2, y++ );
-            win.print( "        " + String::toBinary( eflags32 ) );
+            win.print( String::toBinary( eflags ) );
         }
         
         this->_screen->refresh();
@@ -660,10 +719,10 @@ namespace UB
     
     void UI::IMPL::_displayStack( void )
     {
-        size_t x(      54 );
+        size_t x(      54 + 36 );
         size_t y(      0 );
         size_t width(  30 );
-        size_t height( 22 );
+        size_t height( 21 );
         Window win( x, y, width, height );
         
         if( this->_screen->width() < x + width )
@@ -739,10 +798,10 @@ namespace UB
     
     void UI::IMPL::_displayInstructions( void )
     {
-        size_t x(      54 + 30 );
+        size_t x(      54 + 36 + 30 );
         size_t y(      0 );
         size_t width(  56 );
-        size_t height( 22 );
+        size_t height( 21 );
         Window win( x, y, width, height );
         
         if( this->_screen->width() < x + width )
@@ -785,7 +844,7 @@ namespace UB
     
     void UI::IMPL::_displayDisassembly( void )
     {
-        size_t x( 54 + 30 + 56 );
+        size_t x( 54 + 36 + 30 + 56 );
         
         if( this->_screen->width() < x + 50 )
         {
@@ -795,7 +854,7 @@ namespace UB
         {
             size_t y(      0 );
             size_t width(  this->_screen->width() - x );
-            size_t height( 22 );
+            size_t height( 21 );
             Window win( x, y, width, height );
             
             win.box();
@@ -835,7 +894,7 @@ namespace UB
     void UI::IMPL::_displayMemory( void )
     {
         size_t x(      0 );
-        size_t y(      22 );
+        size_t y(      21 );
         size_t width(  this->_screen->width() );
         size_t height( ( this->_screen->height() - y ) / 2 );
         Window win( x, y, width, height );
