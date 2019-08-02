@@ -133,7 +133,7 @@ namespace UB
             throw std::runtime_error( uc_strerror( e ) );
         }
         
-        if( ( e = uc_hook_add( this->impl->_uc, &h4, UC_HOOK_MEM_VALID, reinterpret_cast< void * >( &IMPL::_handleValidMemoryAccess ), this, 0, std::numeric_limits< uint64_t >::max() ) ) != UC_ERR_OK )
+        if( ( e = uc_hook_add( this->impl->_uc, &h4, UC_HOOK_MEM_WRITE + UC_HOOK_MEM_FETCH, reinterpret_cast< void * >( &IMPL::_handleValidMemoryAccess ), this, 0, std::numeric_limits< uint64_t >::max() ) ) != UC_ERR_OK )
         {
             throw std::runtime_error( uc_strerror( e ) );
         }
