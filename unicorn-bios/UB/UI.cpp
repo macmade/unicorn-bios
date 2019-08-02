@@ -54,6 +54,7 @@ namespace UB
             void _displayOutput( void );
             void _displayDebug( void );
             void _displayRegisters( void );
+            void _displayStack( void );
             void _displayInstructions( void );
             void _displayDisassembly( void );
             void _displayMemory( void );
@@ -331,7 +332,7 @@ namespace UB
         (
             [ & ]( void )
             {
-                if( this->_screen->width() < 120 || this->_screen->height() < 30 )
+                if( this->_screen->width() < 50 || this->_screen->height() < 30 )
                 {
                     this->_screen->clear();
                     this->_screen->print( "Screen too small..." );
@@ -340,6 +341,7 @@ namespace UB
                 }
                 
                 this->_displayRegisters();
+                this->_displayStack();
                 this->_displayInstructions();
                 this->_displayDisassembly();
                 this->_displayMemory();
@@ -564,6 +566,11 @@ namespace UB
         size_t height( 20 );
         Window win( x, y, width, height );
         
+        if( this->_screen->width() < x + width )
+        {
+            return;
+        }
+        
         win.box();
         win.move( 2, 1 );
         win.print( "CPU Registers:" );
@@ -645,13 +652,97 @@ namespace UB
         win.refresh();
     }
     
-    void UI::IMPL::_displayInstructions( void )
+    void UI::IMPL::_displayStack( void )
     {
         size_t x(      54 );
+        size_t y(      0 );
+        size_t width(  40 );
+        size_t height( 20 );
+        Window win( x, y, width, height );
+        
+        if( this->_screen->width() < x + width )
+        {
+            return;
+        }
+        
+        win.box();
+        win.move( 2, 1 );
+        win.print( "Stack Frame:" );
+        win.move( 1, 2 );
+        win.addHorizontalLine( width - 2 );
+        
+        y = 3;
+        
+        {
+            uint16_t ss( this->_engine.ss() );
+            uint64_t bp( Engine::getAddress( ss, this->_engine.bp() ) );
+            uint64_t sp( Engine::getAddress( ss, this->_engine.sp() ) );
+            
+            std::vector< std::pair< uint64_t, uint16_t > > frame;
+            
+            while( sp + 1 < bp )
+            {
+                std::vector< uint8_t > data( this->_engine.read( sp, 2 ) );
+                uint16_t               i( 0 );
+                
+                if( data.size() != 2 )
+                {
+                    break;
+                }
+                
+                i   = data[ 0 ];
+                i <<= 8;
+                i  |= data[ 1 ];
+                
+                frame.push_back( { sp, i } );
+                
+                sp += 2;
+            }
+            
+            if( frame.size() == 0 )
+            {
+                for( size_t i = y; i < height - 1; i++ )
+                {
+                    win.move( 2, y++ );
+                    
+                    for( size_t j = 2; j < width - 2; j++ )
+                    {
+                        win.print( "." );
+                    }
+                }
+            }
+            else
+            {
+                for( auto p: frame )
+                {
+                    if( y == height - 1 )
+                    {
+                        break;
+                    }
+                    
+                    win.move( 2, y++ );
+                    win.print( String::toHex( p.first ) + ": " + String::toHex( p.second ) );
+                }
+            }
+        }
+        
+        this->_screen->refresh();
+        win.move( 0, 0 );
+        win.refresh();
+    }
+    
+    void UI::IMPL::_displayInstructions( void )
+    {
+        size_t x(      54 + 40 );
         size_t y(      0 );
         size_t width(  56 );
         size_t height( 20 );
         Window win( x, y, width, height );
+        
+        if( this->_screen->width() < x + width )
+        {
+            return;
+        }
         
         win.box();
         win.move( 2, 1 );
@@ -688,43 +779,51 @@ namespace UB
     
     void UI::IMPL::_displayDisassembly( void )
     {
-        size_t x(      54 + 56 );
-        size_t y(      0 );
-        size_t width(  this->_screen->width() - x );
-        size_t height( 20 );
-        Window win( x, y, width, height );
+        size_t x( 54 + 40 + 56 );
         
-        win.box();
-        win.move( 2, 1 );
-        win.print( "Disassembly:" );
-        win.move( 1, 2 );
-        win.addHorizontalLine( width - 2 );
-        
-        y = 3;
-        
-        try
+        if( this->_screen->width() < x + 50 )
         {
-            uint64_t                   ip( Engine::getAddress( this->_engine.cs(), this->_engine.ip() ) );
-            std::vector< uint8_t >     bytes( this->_engine.read( ip, 512 ) );
-            std::vector< std::string > instructions( Capstone::disassemble( bytes, ip ) );
-            
-            for( const auto & s: instructions )
-            {
-                if( y == height - 1 )
-                {
-                    break;
-                }
-                
-                win.move( 2, y++ );
-                win.print( s );
-            }
+            return;
         }
-        catch( ... )
-        {}
         
-        this->_screen->refresh();
-        win.move( 0, 0 );
-        win.refresh();
+        {
+            size_t y(      0 );
+            size_t width(  this->_screen->width() - x );
+            size_t height( 20 );
+            Window win( x, y, width, height );
+            
+            win.box();
+            win.move( 2, 1 );
+            win.print( "Disassembly:" );
+            win.move( 1, 2 );
+            win.addHorizontalLine( width - 2 );
+            
+            y = 3;
+            
+            try
+            {
+                uint64_t                   ip( Engine::getAddress( this->_engine.cs(), this->_engine.ip() ) );
+                std::vector< uint8_t >     bytes( this->_engine.read( ip, 512 ) );
+                std::vector< std::string > instructions( Capstone::disassemble( bytes, ip ) );
+                
+                for( const auto & s: instructions )
+                {
+                    if( y == height - 1 )
+                    {
+                        break;
+                    }
+                    
+                    win.move( 2, y++ );
+                    win.print( s );
+                }
+            }
+            catch( ... )
+            {}
+            
+            this->_screen->refresh();
+            win.move( 0, 0 );
+            win.refresh();
+        }
     }
     
     void UI::IMPL::_displayMemory( void )
