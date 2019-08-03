@@ -985,9 +985,9 @@ namespace UB
         if( this->_memoryAddressPrompt.has_value() )
         {
             win.move( 2, 3 );
-            win.print( Color::cyan(), "Enter a memory address:" );
+            win.print( Color::yellow(), "Enter a memory address:" );
             win.move( 2, 4 );
-            win.print( this->_memoryAddressPrompt.value() );
+            win.print( Color::cyan(), this->_memoryAddressPrompt.value() );
         }
         else
         {
