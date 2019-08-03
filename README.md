@@ -14,7 +14,8 @@ unicorn-bios
 About
 -----
 
-Basic BIOS emulator/debugger for Unicorn Engine.
+Basic BIOS emulator/debugger for Unicorn Engine.  
+Written to debug the [XEOS Operating System](https://github.com/macmade/XEOS) boot sequence.
 
 ![Screenshot](Assets/Screen.png "Screenshot")
 
