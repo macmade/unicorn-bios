@@ -112,15 +112,7 @@ namespace UB
         
         this->impl->_ui.mode( mode );
         this->impl->_ui.run();
-        
-        if( mode == UI::Mode::Interactive )
-        {
-            this->impl->_engine.stop();
-        }
-        else
-        {
-            this->impl->_engine.waitUntilFinished();
-        }
+        this->impl->_engine.stop();
     }
     
     bool Machine::breakOnInterrupt( void ) const

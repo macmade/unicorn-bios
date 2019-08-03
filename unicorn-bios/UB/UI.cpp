@@ -30,6 +30,7 @@
 #include "UB/Casts.hpp"
 #include "UB/Capstone.hpp"
 #include "UB/Window.hpp"
+#include "UB/Signal.hpp"
 #include <mutex>
 #include <optional>
 #include <thread>
@@ -158,9 +159,35 @@ namespace UB
             (
                 [ & ]
                 {
+                    std::atomic< bool > exit( false );
+                    
+                    Signal::handle
+                    (
+                        SIGINT,
+                        [ & ]( int sig )
+                        {
+                            if( sig == SIGINT )
+                            {
+                                exit = true;
+                            }
+                            
+                            if( mode == Mode::Interactive )
+                            {
+                                Screen::shared().stop();
+                            }
+                        }
+                    );
+                    
                     if( mode == Mode::Interactive )
                     {
                         Screen::shared().start();
+                    }
+                    else
+                    {
+                        while( exit == false )
+                        {
+                            std::this_thread::yield();
+                        }
                     }
                     
                     {

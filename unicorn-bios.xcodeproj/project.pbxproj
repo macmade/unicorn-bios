@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		050649B022F5B8AC001E48C1 /* Signal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050649AE22F5B8AC001E48C1 /* Signal.cpp */; };
 		053F365F22E892C5003BD8AC /* Interrupts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053F365D22E892C5003BD8AC /* Interrupts.cpp */; };
 		0559286B22EB3048003878B6 /* Capstone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0559286922EB3048003878B6 /* Capstone.cpp */; };
 		0559286F22EEF488003878B6 /* StringStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0559286D22EEF488003878B6 /* StringStream.cpp */; };
@@ -48,6 +49,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		050649AE22F5B8AC001E48C1 /* Signal.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Signal.cpp; sourceTree = "<group>"; };
+		050649AF22F5B8AC001E48C1 /* Signal.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Signal.hpp; sourceTree = "<group>"; };
 		053F365D22E892C5003BD8AC /* Interrupts.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Interrupts.cpp; sourceTree = "<group>"; };
 		053F365E22E892C5003BD8AC /* Interrupts.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Interrupts.hpp; sourceTree = "<group>"; };
 		0559286922EB3048003878B6 /* Capstone.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Capstone.cpp; sourceTree = "<group>"; };
@@ -362,6 +365,8 @@
 				058182F522E8CC1F008D1BFF /* String.hpp */,
 				0559286D22EEF488003878B6 /* StringStream.cpp */,
 				0559286E22EEF488003878B6 /* StringStream.hpp */,
+				050649AE22F5B8AC001E48C1 /* Signal.cpp */,
+				050649AF22F5B8AC001E48C1 /* Signal.hpp */,
 				0581834522E9AD06008D1BFF /* UI.cpp */,
 				0581834622E9AD06008D1BFF /* UI.hpp */,
 				055928CA22F0ED00003878B6 /* Window.cpp */,
@@ -461,6 +466,7 @@
 				05B2818A22E7AA5300110404 /* Arguments.cpp in Sources */,
 				055928F422F21CCC003878B6 /* MemoryMap-Entry.cpp in Sources */,
 				05B2819222E7AE8300110404 /* MBR.cpp in Sources */,
+				050649B022F5B8AC001E48C1 /* Signal.cpp in Sources */,
 				055928C922F0E759003878B6 /* SystemServices.cpp in Sources */,
 				0581833E22E8EE88008D1BFF /* Disk.cpp in Sources */,
 				058182F622E8CC1F008D1BFF /* String.cpp in Sources */,
