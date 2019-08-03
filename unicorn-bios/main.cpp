@@ -42,7 +42,16 @@ int main( int argc, const char * argv[] )
         }
         
         {
-            UB::Machine * machine( new UB::Machine( args.memory() * 1024 * 1024, args.bootImage() ) );
+            UB::Machine * machine;
+            
+            if( args.noUI() )
+            {
+                machine = new UB::Machine( args.memory() * 1024 * 1024, args.bootImage(), UB::UI::Mode::Standard );
+            }
+            else
+            {
+                machine = new UB::Machine( args.memory() * 1024 * 1024, args.bootImage(), UB::UI::Mode::Interactive );
+            }
             
             machine->breakOnInterrupt( args.breakOnInterrupt() );
             machine->breakOnInterruptReturn( args.breakOnInterruptReturn() );
@@ -55,14 +64,7 @@ int main( int argc, const char * argv[] )
                 machine->addBreakpoint( bp );
             }
             
-            if( args.noUI() )
-            {
-                machine->run( UB::UI::Mode::Standard );
-            }
-            else
-            {
-                machine->run( UB::UI::Mode::Interactive );
-            }
+            machine->run();
         }
         
         return EXIT_SUCCESS;

@@ -41,7 +41,7 @@ namespace UB
     {
         public:
             
-            IMPL( size_t memory, const FAT::Image & fat );
+            IMPL( size_t memory, const FAT::Image & fat, UI::Mode mode );
             IMPL( const IMPL & o );
             ~IMPL( void );
             
@@ -52,6 +52,7 @@ namespace UB
             
             size_t                  _memory;
             FAT::Image              _fat;
+            UI::Mode                _mode;
             Engine                  _engine;
             UI                      _ui;
             BIOS::MemoryMap         _memoryMap;
@@ -63,8 +64,8 @@ namespace UB
             std::vector< uint64_t > _breakpoints;
     };
 
-    Machine::Machine( size_t memory, const FAT::Image & fat ):
-        impl( std::make_unique< IMPL >( memory, fat ) )
+    Machine::Machine( size_t memory, const FAT::Image & fat, UI::Mode mode ):
+        impl( std::make_unique< IMPL >( memory, fat, mode ) )
     {
         this->impl->_setup( *( this ) );
     }
@@ -104,14 +105,14 @@ namespace UB
         return this->impl->_ui;
     }
     
-    void Machine::run( UI::Mode mode )
+    void Machine::run( void )
     {
         if( this->impl->_engine.start( 0x7C00 ) == false )
         {
             throw std::runtime_error( "Cannot start engine" );
         }
         
-        this->impl->_ui.mode( mode );
+        this->impl->_ui.mode( this->impl->_mode );
         this->impl->_ui.run();
         this->impl->_engine.stop();
     }
@@ -192,9 +193,10 @@ namespace UB
         swap( o1.impl, o2.impl );
     }
 
-    Machine::IMPL::IMPL( size_t memory, const FAT::Image & fat ):
+    Machine::IMPL::IMPL( size_t memory, const FAT::Image & fat, UI::Mode mode ):
         _memory(                 memorySizeOrDefault( memory ) ),
         _fat(                    fat ),
+        _mode(                   mode ),
         _engine(                 memorySizeOrDefault( memory ) ),
         _ui(                     this->_engine ),
         _memoryMap(              memorySizeOrDefault( memory ) ),
@@ -208,6 +210,7 @@ namespace UB
     Machine::IMPL::IMPL( const IMPL & o ):
         _memory(                 o._memory ),
         _fat(                    o._fat ),
+        _mode(                   o._mode ),
         _engine(                 o._memory ),
         _ui(                     this->_engine ),
         _memoryMap(              o._memoryMap ),
@@ -372,16 +375,19 @@ namespace UB
             }
         );
         
-        Screen::shared().onKeyPress
-        (
-            [ & ]( int key )
-            {
-                if( key == 0x20 )
+        if( this->_mode == UI::Mode::Interactive )
+        {
+            Screen::shared().onKeyPress
+            (
+                [ & ]( int key )
                 {
-                    this->_singleStep = true;
+                    if( key == 0x20 )
+                    {
+                        this->_singleStep = true;
+                    }
                 }
-            }
-        );
+            );
+        }
     }
     
     void Machine::IMPL::_break( const std::string & message )

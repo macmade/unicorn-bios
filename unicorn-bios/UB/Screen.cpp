@@ -76,6 +76,17 @@ namespace UB
             this->impl->_colors = true;
             
             ::start_color();
+            ::use_default_colors();
+            
+            ::init_pair( 1, -1,  -1 );
+            ::init_pair( 2, COLOR_BLACK,   -1 );
+            ::init_pair( 3, COLOR_RED,     -1 );
+            ::init_pair( 4, COLOR_GREEN,   -1 );
+            ::init_pair( 5, COLOR_YELLOW,  -1 );
+            ::init_pair( 6, COLOR_BLUE,    -1 );
+            ::init_pair( 7, COLOR_MAGENTA, -1 );
+            ::init_pair( 8, COLOR_CYAN,    -1 );
+            ::init_pair( 9, COLOR_WHITE,   -1 );
         }
         
         this->clear();
@@ -137,6 +148,23 @@ namespace UB
         std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
         
         ::printw( s.c_str() );
+    }
+    
+    void Screen::print( const Color & color, const std::string & s )
+    {
+        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+    
+        if( ::has_colors() )
+        {
+            ::attrset( COLOR_PAIR( color.index() ) );
+        }
+        
+        ::printw( s.c_str() );
+
+        if( ::has_colors() )
+        {
+            ::attrset( COLOR_PAIR( Color::clear().index() ) );
+        }
     }
     
     void Screen::start( void )

@@ -91,9 +91,17 @@ namespace UB
     
     void Window::print( const Color & color, const std::string & s )
     {
-        ::wattrset( this->impl->_win, COLOR_PAIR( color.index() ) );
+        if( ::has_colors() )
+        {
+            ::wattrset( this->impl->_win, COLOR_PAIR( color.index() ) );
+        }
+        
         ::wprintw( this->impl->_win, s.c_str() );
-        ::wattrset( this->impl->_win, COLOR_PAIR( Color::clear().index() ) );
+        
+        if( ::has_colors() )
+        {
+            ::wattrset( this->impl->_win, COLOR_PAIR( Color::clear().index() ) );
+        }
     }
     
     void Window::print( const Color & color, const char * format, ... )
@@ -101,9 +109,19 @@ namespace UB
         va_list ap;
         
         va_start( ap, format );
-        ::wattrset( this->impl->_win, COLOR_PAIR( color.index() ) );
+        
+        if( ::has_colors() )
+        {
+            ::wattrset( this->impl->_win, COLOR_PAIR( color.index() ) );
+        }
+        
         ::vw_printw( this->impl->_win, format, ap );
-        ::wattrset( this->impl->_win, COLOR_PAIR( Color::clear().index() ) );
+        
+        if( ::has_colors() )
+        {
+            ::wattrset( this->impl->_win, COLOR_PAIR( Color::clear().index() ) );
+        }
+        
         va_end( ap );
     }
     

@@ -28,6 +28,7 @@
 #include <cstdlib>
 #include <functional>
 #include <memory>
+#include "UB/Color.hpp"
 
 namespace UB
 {
@@ -50,6 +51,7 @@ namespace UB
             void refresh( void )        const;
             
             void print( const std::string & s );
+            void print( const Color & color, const std::string & s );
             
             void start( void );
             void stop( void );

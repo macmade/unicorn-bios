@@ -120,34 +120,7 @@ namespace UB
     
     Color::IMPL::IMPL( int index ):
         _index( index )
-    {
-        static std::once_flag once;
-        
-        std::call_once
-        (
-            once,
-            []
-            {
-                if( ::has_colors() == false )
-                {
-                    return;
-                }
-                
-                ::start_color();
-                ::use_default_colors();
-                
-                ::init_pair( 1, -1,  -1 );
-                ::init_pair( 2, COLOR_BLACK,   -1 );
-                ::init_pair( 3, COLOR_RED,     -1 );
-                ::init_pair( 4, COLOR_GREEN,   -1 );
-                ::init_pair( 5, COLOR_YELLOW,  -1 );
-                ::init_pair( 6, COLOR_BLUE,    -1 );
-                ::init_pair( 7, COLOR_MAGENTA, -1 );
-                ::init_pair( 8, COLOR_CYAN,    -1 );
-                ::init_pair( 9, COLOR_WHITE,   -1 );
-            }
-        );
-    }
+    {}
 
     Color::IMPL::IMPL( const IMPL & o ):
         _index( o._index )

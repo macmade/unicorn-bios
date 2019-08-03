@@ -56,6 +56,7 @@ namespace UB
             void _displayOutput( void );
             void _displayDebug( void );
             void _displayRegisters( void );
+            void _displayRegisters( Window & window, const std::vector< std::pair< std::string, std::string > > & registers );
             void _displayFlags( void );
             void _displayStack( void );
             void _displayInstructions( void );
@@ -72,6 +73,7 @@ namespace UB
             StringStream                  _output;
             StringStream                  _debug;
             std::string                   _status;
+            Color                         _statusColor;
             size_t                        _memoryOffset;
             size_t                        _memoryBytesPerLine;
             size_t                        _memoryLines;
@@ -237,6 +239,7 @@ namespace UB
                 std::string                             s;
                 
                 this->impl->_status                   = "Emulation paused - Press [ENTER] or [SPACE] to continue...";
+                this->impl->_statusColor              = Color::yellow();
                 this->impl->_waitEnterOrSpaceKeyPress =
                 [ & ]( int key )
                 {
@@ -245,7 +248,16 @@ namespace UB
                     pressed    = key;
                     keyPressed = true;
                     
-                    this->impl->_status = ( this->impl->_engine.running() ) ? "Emulation running..." : "Emulation stopped";
+                    if( this->impl->_engine.running() )
+                    {
+                        this->impl->_status      = "Emulation running...";
+                        this->impl->_statusColor = Color::green();
+                    }
+                    else
+                    {
+                        this->impl->_status      = "Emulation stopped";
+                        this->impl->_statusColor = Color::red();
+                    }
                     
                     cv.notify_all();
                 };
@@ -301,6 +313,7 @@ namespace UB
         _mode(               Mode::Interactive ),
         _engine(             engine ),
         _status(             "Emulation not running" ),
+        _statusColor(        Color::red() ),
         _memoryOffset(       0x7C00 ),
         _memoryBytesPerLine( 0 ),
         _memoryLines(        0 )
@@ -319,6 +332,7 @@ namespace UB
         _output(             o._output.string() ),
         _debug(              o._debug.string() ),
         _status(             "Emulation not running" ),
+        _statusColor(        Color::red() ),
         _memoryOffset(       o._memoryOffset ),
         _memoryBytesPerLine( o._memoryBytesPerLine ),
         _memoryLines(        o._memoryLines )
@@ -336,7 +350,8 @@ namespace UB
             {
                 std::lock_guard< std::recursive_mutex > l( this->_rmtx );
                 
-                this->_status = "Emulation running...";
+                this->_status      = "Emulation running...";
+                this->_statusColor = Color::green();
             }
         );
         
@@ -346,7 +361,8 @@ namespace UB
             {
                 std::lock_guard< std::recursive_mutex > l( this->_rmtx );
                 
-                this->_status = "Emulation stopped";
+                this->_status      = "Emulation stopped";
+                this->_statusColor = Color::red();
             }
         );
     }
@@ -360,7 +376,7 @@ namespace UB
                 if( Screen::shared().width() < 50 || Screen::shared().height() < 30 )
                 {
                     Screen::shared().clear();
-                    Screen::shared().print( "Screen too small..." );
+                    Screen::shared().print( Color::red(), "Screen too small..." );
                     
                     return;
                 }
@@ -471,7 +487,7 @@ namespace UB
             
             win.box();
             win.move( 2, 1 );
-            win.print( this->_status );
+            win.print( this->_statusColor, this->_status );
         }
         
         Screen::shared().refresh();
@@ -489,7 +505,7 @@ namespace UB
         
         win.box();
         win.move( 2, 1 );
-        win.print( "Output:" );
+        win.print( Color::blue(), "Output:" );
         win.move( 1, 2 );
         win.addHorizontalLine( width - 2 );
         
@@ -551,7 +567,7 @@ namespace UB
         
         win.box();
         win.move( 2, 1 );
-        win.print( "Debug:" );
+        win.print( Color::blue(), "Debug:" );
         win.move( 1, 2 );
         win.addHorizontalLine( width - 2 );
         
@@ -599,7 +615,7 @@ namespace UB
         
         win.box();
         win.move( 2, 1 );
-        win.print( "CPU Registers:" );
+        win.print( Color::blue(), "CPU Registers:" );
         win.move( 1, 2 );
         win.addHorizontalLine( width - 2 );
         
@@ -641,46 +657,62 @@ namespace UB
             uint32_t    eflags32( this->_engine.eflags() );
             std::string eflags( String::toHex( eflags32 ) );
             
+            
             win.move( 2, y++ );
-            win.print( "EAX: " + eax + " | AX: " + ax + " | AH: " + ah + " | AL: " + al );
+            this->_displayRegisters( win, { { "EAX", eax }, { "AX", ax }, { "AH", ah }, { "AL", al } } );
             win.move( 2, y++ );
-            win.print( "EBX: " + ebx + " | BX: " + bx + " | BH: " + bh + " | BL: " + bl );
+            this->_displayRegisters( win, { { "EBX", ebx }, { "BX", bx }, { "BH", bh }, { "BL", bl } } );
             win.move( 2, y++ );
-            win.print( "ECX: " + ecx + " | CX: " + cx + " | CH: " + ch + " | CL: " + cl );
+            this->_displayRegisters( win, { { "ECX", ecx }, { "CX", cx }, { "CH", ch }, { "CL", cl } } );
             win.move( 2, y++ );
-            win.print( "EDX: " + edx + " | DX: " + dx + " | DH: " + dh + " | DL: " + dl );
+            this->_displayRegisters( win, { { "EDX", edx }, { "DX", dx }, { "DH", dh }, { "DL", dl } } );
             win.move( 1, y++ );
             win.addHorizontalLine( width - 2 );
             win.move( 2, y++ );
-            win.print( "ESI: " + esi + " | SI: " + si );
+            this->_displayRegisters( win, { { "ESI", esi }, { "SI", si } } );
             win.move( 2, y++ );
-            win.print( "EDI: " + edi + " | DI: " + di );
+            this->_displayRegisters( win, { { "EDI", edi }, { "DI", di } } );
             win.move( 1, y++ );
             win.addHorizontalLine( width - 2 );
             win.move( 2, y++ );
-            win.print( "EBP: " + ebp + " | BP: " + bp );
+            this->_displayRegisters( win, { { "EBP", ebp }, { "BP", bp } } );
             win.move( 2, y++ );
-            win.print( "ESP: " + esp + " | SP: " + sp );
+            this->_displayRegisters( win, { { "ESP", esp }, { "SP", sp } } );
             win.move( 1, y++ );
             win.addHorizontalLine( width - 2 );
             win.move( 2, y++ );
-            win.print( "CS: " + cs + " | DS: " + ds + " | SS: " + ss );
+            this->_displayRegisters( win, { { "CS", cs }, { "DS", ds }, { "SS", ss } } );
             win.move( 2, y++ );
-            win.print( "ES: " + es + " | FS: " + fs + " | GS: " + gs );
+            this->_displayRegisters( win, { { "ES", es }, { "FS", fs }, { "GS", gs } } );
             win.move( 1, y++ );
             win.addHorizontalLine( width - 2 );
             win.move( 2, y++ );
-            win.print( "EIP: " + eip + " | IP: " + ip );
+            this->_displayRegisters( win, { { "EIP", eip }, { "IP", ip } } );
             win.move( 1, y++ );
             win.addHorizontalLine( width - 2 );
             win.move( 2, y++ );
-            win.print( "EFLAGS: " + eflags );
+            this->_displayRegisters( win, { { "EFLAGS", eflags } } );
             win.move( 1, y++ );
         }
         
         Screen::shared().refresh();
         win.move( 0, 0 );
         win.refresh();
+    }
+    
+    void UI::IMPL::_displayRegisters( Window & window, const std::vector< std::pair< std::string, std::string > > & registers )
+    {
+        for( size_t i = 0; i < registers.size(); i++ )
+        {
+            window.print( Color::cyan(), registers[ i ].first );
+            window.print( ": " );
+            window.print( Color::yellow(), registers[ i ].second );
+            
+            if( i < registers.size() - 1 && registers.size() > 1 )
+            {
+                window.print( " | " );
+            }
+        }
     }
     
     void UI::IMPL::_displayFlags( void )
@@ -698,7 +730,7 @@ namespace UB
         
         win.box();
         win.move( 2, 1 );
-        win.print( "CPU Flags:" );
+        win.print( Color::blue(), "CPU Flags:" );
         win.move( 1, 2 );
         win.addHorizontalLine( width - 2 );
         
@@ -708,32 +740,45 @@ namespace UB
             uint32_t                                      eflags( this->_engine.eflags() );
             std::vector< std::pair< std::string, bool > > flags;
             
-            flags.push_back( { "Carry:                       ", ( eflags & ( 1 <<  0 ) ) != 0 } );
-            flags.push_back( { "Parity:                      ", ( eflags & ( 1 <<  2 ) ) != 0 } );
-            flags.push_back( { "Adjust:                      ", ( eflags & ( 1 <<  4 ) ) != 0 } );
-            flags.push_back( { "Zero:                        ", ( eflags & ( 1 <<  6 ) ) != 0 } );
-            flags.push_back( { "Sign:                        ", ( eflags & ( 1 <<  7 ) ) != 0 } );
-            flags.push_back( { "Trap:                        ", ( eflags & ( 1 <<  8 ) ) != 0 } );
-            flags.push_back( { "Interrupt enable:            ", ( eflags & ( 1 <<  9 ) ) != 0 } );
-            flags.push_back( { "Direction:                   ", ( eflags & ( 1 << 10 ) ) != 0 } );
-            flags.push_back( { "Overflow:                    ", ( eflags & ( 1 << 11 ) ) != 0 } );
-            flags.push_back( { "Resume:                      ", ( eflags & ( 1 << 16 ) ) != 0 } );
-            flags.push_back( { "Virtual 8086:                ", ( eflags & ( 1 << 17 ) ) != 0 } );
-            flags.push_back( { "Alignment check:             ", ( eflags & ( 1 << 18 ) ) != 0 } );
-            flags.push_back( { "Virtual interrupt:           ", ( eflags & ( 1 << 19 ) ) != 0 } );
-            flags.push_back( { "Virtual interrupt pending:   ", ( eflags & ( 1 << 20 ) ) != 0 } );
-            flags.push_back( { "CPUID:                       ", ( eflags & ( 1 << 21 ) ) != 0 } );
+            flags.push_back( { "Carry",                     ( eflags & ( 1 <<  0 ) ) != 0 } );
+            flags.push_back( { "Parity",                    ( eflags & ( 1 <<  2 ) ) != 0 } );
+            flags.push_back( { "Adjust",                    ( eflags & ( 1 <<  4 ) ) != 0 } );
+            flags.push_back( { "Zero",                      ( eflags & ( 1 <<  6 ) ) != 0 } );
+            flags.push_back( { "Sign",                      ( eflags & ( 1 <<  7 ) ) != 0 } );
+            flags.push_back( { "Trap",                      ( eflags & ( 1 <<  8 ) ) != 0 } );
+            flags.push_back( { "Interrupt enable",          ( eflags & ( 1 <<  9 ) ) != 0 } );
+            flags.push_back( { "Direction",                 ( eflags & ( 1 << 10 ) ) != 0 } );
+            flags.push_back( { "Overflow",                  ( eflags & ( 1 << 11 ) ) != 0 } );
+            flags.push_back( { "Resume",                    ( eflags & ( 1 << 16 ) ) != 0 } );
+            flags.push_back( { "Virtual 8086",              ( eflags & ( 1 << 17 ) ) != 0 } );
+            flags.push_back( { "Alignment check",           ( eflags & ( 1 << 18 ) ) != 0 } );
+            flags.push_back( { "Virtual interrupt",         ( eflags & ( 1 << 19 ) ) != 0 } );
+            flags.push_back( { "Virtual interrupt pending", ( eflags & ( 1 << 20 ) ) != 0 } );
+            flags.push_back( { "CPUID",                     ( eflags & ( 1 << 21 ) ) != 0 } );
             
             for( const auto & p: flags )
             {
-                win.move( 2, y++ );
-                win.print( p.first + ( ( p.second ) ? "Yes" : " No" ) );
+                win.move( 2, y );
+                win.print( Color::cyan(), p.first );
+                win.print( ":" );
+                win.move( 31, y );
+                
+                if( p.second )
+                {
+                    win.print( Color::green(), "Yes" );
+                }
+                else
+                {
+                    win.print( Color::red(), " No" );
+                }
+                
+                y++;
             }
             
             win.move( 1, y++ );
             win.addHorizontalLine( width - 2 );
             win.move( 2, y++ );
-            win.print( String::toBinary( eflags ) );
+            win.print( Color::yellow(), String::toBinary( eflags ) );
         }
         
         Screen::shared().refresh();
@@ -756,7 +801,7 @@ namespace UB
         
         win.box();
         win.move( 2, 1 );
-        win.print( "Stack Frame:" );
+        win.print( Color::blue(), "Stack Frame:" );
         win.move( 1, 2 );
         win.addHorizontalLine( width - 2 );
         
@@ -796,7 +841,7 @@ namespace UB
                     
                     for( size_t j = 2; j < width - 2; j++ )
                     {
-                        win.print( "." );
+                        win.print( Color::red(), "." );
                     }
                 }
             }
@@ -810,7 +855,9 @@ namespace UB
                     }
                     
                     win.move( 2, y++ );
-                    win.print( String::toHex( p.first ) + ": " + String::toHex( p.second ) );
+                    win.print( Color::cyan(), String::toHex( p.first ) );
+                    win.print( ": " );
+                    win.print( Color::yellow(), String::toHex( p.second ) );
                 }
             }
         }
@@ -835,7 +882,7 @@ namespace UB
         
         win.box();
         win.move( 2, 1 );
-        win.print( "Instructions:" );
+        win.print( Color::blue(), "Instructions:" );
         win.move( 1, 2 );
         win.addHorizontalLine( width - 2 );
         
@@ -855,9 +902,9 @@ namespace UB
                 }
                 
                 win.move( 2, y++ );
-                win.print( p.first );
+                win.print( Color::cyan(), p.first );
                 win.print( ": " );
-                win.print( p.second );
+                win.print( Color::yellow(), p.second );
             }
         }
         catch( ... )
@@ -885,7 +932,7 @@ namespace UB
             
             win.box();
             win.move( 2, 1 );
-            win.print( "Disassembly:" );
+            win.print( Color::blue(), "Disassembly:" );
             win.move( 1, 2 );
             win.addHorizontalLine( width - 2 );
             
@@ -905,9 +952,9 @@ namespace UB
                     }
                     
                     win.move( 2, y++ );
-                    win.print( p.first );
+                    win.print( Color::cyan(), p.first );
                     win.print( ": " );
-                    win.print( p.second );
+                    win.print( Color::yellow(), p.second );
                 }
             }
             catch( ... )
@@ -929,7 +976,7 @@ namespace UB
         
         win.box();
         win.move( 2, 1 );
-        win.print( "Memory:" );
+        win.print( Color::blue(), "Memory:" );
         win.move( 1, 2 );
         win.addHorizontalLine( width - 2 );
         
@@ -938,7 +985,7 @@ namespace UB
         if( this->_memoryAddressPrompt.has_value() )
         {
             win.move( 2, 3 );
-            win.print( "Enter a memory address:" );
+            win.print( Color::cyan(), "Enter a memory address:" );
             win.move( 2, 4 );
             win.print( this->_memoryAddressPrompt.value() );
         }
@@ -960,12 +1007,12 @@ namespace UB
                     if( i % this->_memoryBytesPerLine == 0 )
                     {
                         win.move( 2, y++ );
-                        win.print( "%016X: ", offset );
+                        win.print( Color::cyan(), "%016X: ", offset );
                         
                         offset += this->_memoryBytesPerLine;
                     }
                     
-                    win.print( "%02X ", numeric_cast< int >( mem[ i ] ) );
+                    win.print( Color::yellow(), "%02X ", numeric_cast< int >( mem[ i ] ) );
                 }
                 
                 y = 3;
@@ -984,10 +1031,12 @@ namespace UB
                     
                     if( isprint( c ) == false || isspace( c ) )
                     {
-                        c = '.';
+                        win.print( Color::blue(), "." );
                     }
-                    
-                    win.print( "%c", c );
+                    else
+                    {
+                        win.print( "%c", c );
+                    }
                 }
             }
         }

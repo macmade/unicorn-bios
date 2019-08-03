@@ -37,7 +37,7 @@ namespace UB
     {
         public:
             
-            Machine( size_t memory, const FAT::Image & fat );
+            Machine( size_t memory, const FAT::Image & fat, UI::Mode mode );
             Machine( const Machine & o );
             Machine( Machine && o ) noexcept;
             ~Machine( void );
@@ -49,7 +49,7 @@ namespace UB
             
             UI & ui( void ) const;
             
-            void run( UI::Mode mode );
+            void run( void );
             
             bool breakOnInterrupt( void )       const;
             bool breakOnInterruptReturn( void ) const;
