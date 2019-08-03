@@ -26,7 +26,16 @@
 #include "UB/String.hpp"
 #include <sstream>
 #include <iomanip>
-#include <capstone.h>
+
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdocumentation"
+#pragma clang diagnostic ignored "-Wnested-anon-types"
+#endif
+#include <capstone/capstone.h>
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 
 namespace UB
 {
