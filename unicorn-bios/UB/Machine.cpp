@@ -59,7 +59,6 @@ namespace UB
             std::atomic< bool >     _trap;
             std::atomic< bool >     _debugVideo;
             std::atomic< bool >     _singleStep;
-            std::atomic< bool >     _singleStepOnce;
             std::vector< uint64_t > _breakpoints;
     };
 
@@ -210,8 +209,7 @@ namespace UB
         _breakOnInterruptReturn( false ),
         _trap(                   false ),
         _debugVideo(             false ),
-        _singleStep(             false ),
-        _singleStepOnce(         false )
+        _singleStep(             false )
     {}
 
     Machine::IMPL::IMPL( const IMPL & o ):
@@ -224,8 +222,7 @@ namespace UB
         _breakOnInterruptReturn( o._breakOnInterruptReturn.load() ),
         _trap(                   o._trap.load() ),
         _debugVideo(             o._debugVideo.load() ),
-        _singleStep(             o._singleStep.load() ),
-        _singleStepOnce(         o._singleStepOnce.load() )
+        _singleStep(             o._singleStep.load() )
     {}
 
     Machine::IMPL::~IMPL( void )
@@ -274,7 +271,7 @@ namespace UB
                 ( void )address;
                 ( void )instruction;
                 
-                if( this->_singleStep || this->_singleStepOnce )
+                if( this->_singleStep )
                 {
                     this->_break();
                 }
@@ -398,11 +395,11 @@ namespace UB
         {
             if( this->_ui.waitForUserResume() == 0x20 )
             {
-                this->_singleStepOnce = true;
+                this->_singleStep = true;
             }
             else
             {
-                this->_singleStepOnce = false;
+                this->_singleStep = false;
             }
         }
     }
