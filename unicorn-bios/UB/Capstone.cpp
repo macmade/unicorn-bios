@@ -49,7 +49,7 @@ namespace UB
             
             std::vector< std::pair< std::string, std::string > > v;
             
-            if( cs_open( CS_ARCH_X86, CS_MODE_64, &handle ) != CS_ERR_OK )
+            if( cs_open( CS_ARCH_X86, CS_MODE_16, &handle ) != CS_ERR_OK )
             {
                 return {};
             }
@@ -88,7 +88,7 @@ namespace UB
             
             std::vector< std::pair< std::string, std::string > > v;
             
-            if( cs_open( CS_ARCH_X86, CS_MODE_64, &handle ) != CS_ERR_OK )
+            if( cs_open( CS_ARCH_X86, CS_MODE_16, &handle ) != CS_ERR_OK )
             {
                 return {};
             }
