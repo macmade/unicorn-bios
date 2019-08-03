@@ -273,11 +273,11 @@ namespace UB
                 }
                 else
                 {
-                    uint64_t a( Engine::getAddress( this->_engine.cs(), this->_engine.ip() ) );
+                    uint64_t ip( this->_engine.eip() );
                     
-                    if( std::find( this->_breakpoints.begin(), this->_breakpoints.end(), a ) != this->_breakpoints.end() )
+                    if( std::find( this->_breakpoints.begin(), this->_breakpoints.end(), ip ) != this->_breakpoints.end() )
                     {
-                        this->_break( String::toHex( a ) );
+                        this->_break( String::toHex( ip ) );
                     }
                 }
             }
@@ -377,6 +377,7 @@ namespace UB
         
         if( this->_mode == UI::Mode::Interactive )
         {
+            /*
             Screen::shared().onKeyPress
             (
                 [ & ]( int key )
@@ -387,6 +388,7 @@ namespace UB
                     }
                 }
             );
+            */
         }
     }
     

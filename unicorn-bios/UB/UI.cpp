@@ -890,7 +890,7 @@ namespace UB
         
         try
         {
-            uint64_t                                             ip( Engine::getAddress( this->_engine.cs(), this->_engine.ip() ) );
+            uint64_t                                             ip( this->_engine.eip() );
             std::vector< uint8_t >                               bytes( this->_engine.read( ip, 512 ) );
             std::vector< std::pair< std::string, std::string > > instructions( Capstone::instructions( bytes, ip ) );
             
@@ -940,7 +940,7 @@ namespace UB
             
             try
             {
-                uint64_t                                             ip( Engine::getAddress( this->_engine.cs(), this->_engine.ip() ) );
+                uint64_t                                             ip( this->_engine.eip() );
                 std::vector< uint8_t >                               bytes( this->_engine.read( ip, 512 ) );
                 std::vector< std::pair< std::string, std::string > > instructions( Capstone::disassemble( bytes, ip ) );
                 
