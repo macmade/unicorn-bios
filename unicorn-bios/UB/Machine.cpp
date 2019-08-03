@@ -377,7 +377,6 @@ namespace UB
         
         if( this->_mode == UI::Mode::Interactive )
         {
-            /*
             Screen::shared().onKeyPress
             (
                 [ & ]( int key )
@@ -388,7 +387,6 @@ namespace UB
                     }
                 }
             );
-            */
         }
     }
     
