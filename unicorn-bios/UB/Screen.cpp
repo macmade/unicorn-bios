@@ -32,6 +32,7 @@
 #include <vector>
 #include <poll.h>
 #include <condition_variable>
+#include <mutex>
 
 namespace UB
 {
@@ -41,6 +42,7 @@ namespace UB
             
             IMPL( void );
             IMPL( const IMPL & o );
+            ~IMPL( void );
             
             std::vector< std::function< void( void ) > > _onResize;
             std::vector< std::function< void( int ) > >  _onKeyPress;
@@ -51,6 +53,16 @@ namespace UB
             bool         _colors;
             bool         _running;
     };
+    
+    Screen & Screen::shared( void )
+    {
+        static Screen       * screen( nullptr );
+        static std::once_flag once;
+        
+        std::call_once( once, [ & ]{ screen = new Screen(); } );
+        
+        return *( screen );
+    }
     
     Screen::Screen( void ):
         impl( std::make_unique< IMPL >() )
@@ -76,28 +88,6 @@ namespace UB
         
         this->impl->_width  = s.ws_col;
         this->impl->_height = s.ws_row;
-    }
-    
-    Screen::Screen( const Screen & o ):
-        impl( std::make_unique< IMPL >( *( o.impl ) ) )
-    {}
-    
-    Screen::Screen( Screen && o ) noexcept:
-        impl( std::move( o.impl ) )
-    {}
-    
-    Screen::~Screen( void )
-    {
-        ::clrtoeol();
-        refresh();
-        ::endwin();
-    }
-    
-    Screen & Screen::operator =( Screen o )
-    {
-        swap( *( this ), o );
-        
-        return *( this );
     }
     
     std::size_t Screen::width( void ) const
@@ -214,13 +204,6 @@ namespace UB
         this->impl->_onUpdate.push_back( f );
     }
     
-    void swap( Screen & o1, Screen & o2 )
-    {
-        using std::swap;
-        
-        swap( o1.impl,  o2.impl );
-    }
-    
     Screen::IMPL::IMPL( void ):
         _width( 0 ),
         _height( 0 ),
@@ -234,4 +217,11 @@ namespace UB
         _colors( o._colors ),
         _running( o._running )
     {}
+    
+    Screen::IMPL::~IMPL( void )
+    {
+        ::clrtoeol();
+        ::refresh();
+        ::endwin();
+    }
 }

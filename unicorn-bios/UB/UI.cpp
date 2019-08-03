@@ -66,7 +66,6 @@ namespace UB
             
             bool                          _running;
             Mode                          _mode;
-            std::optional< Screen >       _screen;
             Engine                      & _engine;
             StringStream                  _output;
             StringStream                  _debug;
@@ -161,7 +160,7 @@ namespace UB
                 {
                     if( mode == Mode::Interactive )
                     {
-                        this->impl->_screen->start();
+                        Screen::shared().start();
                     }
                     
                     {
@@ -288,7 +287,6 @@ namespace UB
     UI::IMPL::IMPL( const IMPL & o, const std::lock_guard< std::recursive_mutex > & l ):
         _running(            false ),
         _mode(               o._mode ),
-        _screen(             o._screen ),
         _engine(             o._engine ),
         _output(             o._output.string() ),
         _debug(              o._debug.string() ),
@@ -327,16 +325,14 @@ namespace UB
     
     void UI::IMPL::_setupScreen( void )
     {
-        this->_screen = Screen();
-        
-        this->_screen->onUpdate
+        Screen::shared().onUpdate
         (
             [ & ]( void )
             {
-                if( this->_screen->width() < 50 || this->_screen->height() < 30 )
+                if( Screen::shared().width() < 50 || Screen::shared().height() < 30 )
                 {
-                    this->_screen->clear();
-                    this->_screen->print( "Screen too small..." );
+                    Screen::shared().clear();
+                    Screen::shared().print( "Screen too small..." );
                     
                     return;
                 }
@@ -353,13 +349,13 @@ namespace UB
             }
         );
         
-        this->_screen->onKeyPress
+        Screen::shared().onKeyPress
         (
             [ & ]( int key )
             {
                 if( key == 'q' )
                 {
-                    this->_screen->stop();
+                    Screen::shared().stop();
                 }
                 else if( key == 'm' )
                 {
@@ -437,8 +433,8 @@ namespace UB
     void UI::IMPL::_displayStatus( void )
     {
         size_t x(      0 );
-        size_t y(      this->_screen->height() - 3 );
-        size_t width(  this->_screen->width() );
+        size_t y(      Screen::shared().height() - 3 );
+        size_t width(  Screen::shared().width() );
         size_t height( 3 );
         Window win( x, y, width, height );
         
@@ -450,7 +446,7 @@ namespace UB
             win.print( this->_status );
         }
         
-        this->_screen->refresh();
+        Screen::shared().refresh();
         win.move( 0, 0 );
         win.refresh();
     }
@@ -458,9 +454,9 @@ namespace UB
     void UI::IMPL::_displayOutput( void )
     {
         size_t x(      0 );
-        size_t y(      21 + ( ( this->_screen->height() - 21 ) / 2 ) );
-        size_t width(  this->_screen->width() / 2 );
-        size_t height( ( ( this->_screen->height() - 21 ) / 2 ) - 2 );
+        size_t y(      21 + ( ( Screen::shared().height() - 21 ) / 2 ) );
+        size_t width(  Screen::shared().width() / 2 );
+        size_t height( ( ( Screen::shared().height() - 21 ) / 2 ) - 2 );
         Window win( x, y, width, height );
         
         win.box();
@@ -512,17 +508,17 @@ namespace UB
             }
         }
         
-        this->_screen->refresh();
+        Screen::shared().refresh();
         win.move( 0, 0 );
         win.refresh();
     }
     
     void UI::IMPL::_displayDebug( void )
     {
-        size_t x(      this->_screen->width() / 2 );
-        size_t y(      21 + ( ( this->_screen->height() - 21 ) / 2 ) );
-        size_t width(  this->_screen->width() / 2 );
-        size_t height( ( ( this->_screen->height() - 21 ) / 2 ) - 2 );
+        size_t x(      Screen::shared().width() / 2 );
+        size_t y(      21 + ( ( Screen::shared().height() - 21 ) / 2 ) );
+        size_t width(  Screen::shared().width() / 2 );
+        size_t height( ( ( Screen::shared().height() - 21 ) / 2 ) - 2 );
         Window win( x, y, width, height );
         
         win.box();
@@ -555,7 +551,7 @@ namespace UB
             }
         }
         
-        this->_screen->refresh();
+        Screen::shared().refresh();
         win.move( 0, 0 );
         win.refresh();
     }
@@ -568,7 +564,7 @@ namespace UB
         size_t height( 21 );
         Window win( x, y, width, height );
         
-        if( this->_screen->width() < x + width )
+        if( Screen::shared().width() < x + width )
         {
             return;
         }
@@ -654,7 +650,7 @@ namespace UB
             win.move( 1, y++ );
         }
         
-        this->_screen->refresh();
+        Screen::shared().refresh();
         win.move( 0, 0 );
         win.refresh();
     }
@@ -667,7 +663,7 @@ namespace UB
         size_t height( 21 );
         Window win( x, y, width, height );
         
-        if( this->_screen->width() < x + width )
+        if( Screen::shared().width() < x + width )
         {
             return;
         }
@@ -712,7 +708,7 @@ namespace UB
             win.print( String::toBinary( eflags ) );
         }
         
-        this->_screen->refresh();
+        Screen::shared().refresh();
         win.move( 0, 0 );
         win.refresh();
     }
@@ -725,7 +721,7 @@ namespace UB
         size_t height( 21 );
         Window win( x, y, width, height );
         
-        if( this->_screen->width() < x + width )
+        if( Screen::shared().width() < x + width )
         {
             return;
         }
@@ -791,7 +787,7 @@ namespace UB
             }
         }
         
-        this->_screen->refresh();
+        Screen::shared().refresh();
         win.move( 0, 0 );
         win.refresh();
     }
@@ -804,7 +800,7 @@ namespace UB
         size_t height( 21 );
         Window win( x, y, width, height );
         
-        if( this->_screen->width() < x + width )
+        if( Screen::shared().width() < x + width )
         {
             return;
         }
@@ -837,7 +833,7 @@ namespace UB
         catch( ... )
         {}
         
-        this->_screen->refresh();
+        Screen::shared().refresh();
         win.move( 0, 0 );
         win.refresh();
     }
@@ -846,14 +842,14 @@ namespace UB
     {
         size_t x( 54 + 36 + 30 + 56 );
         
-        if( this->_screen->width() < x + 50 )
+        if( Screen::shared().width() < x + 50 )
         {
             return;
         }
         
         {
             size_t y(      0 );
-            size_t width(  this->_screen->width() - x );
+            size_t width(  Screen::shared().width() - x );
             size_t height( 21 );
             Window win( x, y, width, height );
             
@@ -885,7 +881,7 @@ namespace UB
             catch( ... )
             {}
             
-            this->_screen->refresh();
+            Screen::shared().refresh();
             win.move( 0, 0 );
             win.refresh();
         }
@@ -895,8 +891,8 @@ namespace UB
     {
         size_t x(      0 );
         size_t y(      21 );
-        size_t width(  this->_screen->width() );
-        size_t height( ( this->_screen->height() - y ) / 2 );
+        size_t width(  Screen::shared().width() );
+        size_t height( ( Screen::shared().height() - y ) / 2 );
         Window win( x, y, width, height );
         
         win.box();
@@ -916,7 +912,7 @@ namespace UB
         }
         else
         {
-            size_t cols(  this->_screen->width()  - 4 );
+            size_t cols(  Screen::shared().width()  - 4 );
             size_t lines( numeric_cast< size_t >( height ) - 4 );
             
             this->_memoryBytesPerLine = ( cols / 4 ) - 5;
@@ -964,7 +960,7 @@ namespace UB
             }
         }
         
-        this->_screen->refresh();
+        Screen::shared().refresh();
         win.move( 0, 0 );
         win.refresh();
     }

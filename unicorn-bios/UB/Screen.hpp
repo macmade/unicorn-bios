@@ -35,12 +35,11 @@ namespace UB
     {
         public:
             
-            Screen( void );
-            Screen( const Screen & o );
-            Screen( Screen && o ) noexcept;
-            ~Screen( void );
+            static Screen & shared( void );
             
-            Screen & operator =( Screen o );
+            Screen( const Screen & o )      = delete;
+            Screen( Screen && o ) noexcept  = delete;
+            Screen & operator =( Screen o ) = delete;
             
             std::size_t width( void )  const;
             std::size_t height( void ) const;
@@ -59,9 +58,9 @@ namespace UB
             void onKeyPress( const std::function< void( int key ) > & f );
             void onUpdate( const std::function<   void( void ) > & f );
             
-            friend void swap( Screen & o1, Screen & o2 );
-            
         private:
+            
+            Screen( void );
             
             class IMPL;
             
