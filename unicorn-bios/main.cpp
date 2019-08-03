@@ -42,26 +42,26 @@ int main( int argc, const char * argv[] )
         }
         
         {
-            UB::Machine machine( args.memory() * 1024 * 1024, args.bootImage() );
+            UB::Machine * machine( new UB::Machine( args.memory() * 1024 * 1024, args.bootImage() ) );
             
-            machine.breakOnInterrupt( args.breakOnInterrupt() );
-            machine.breakOnInterruptReturn( args.breakOnInterruptReturn() );
-            machine.trap( args.trap() );
-            machine.debugVideo( args.debugVideo() );
-            machine.singleStep( args.singleStep() );
+            machine->breakOnInterrupt( args.breakOnInterrupt() );
+            machine->breakOnInterruptReturn( args.breakOnInterruptReturn() );
+            machine->trap( args.trap() );
+            machine->debugVideo( args.debugVideo() );
+            machine->singleStep( args.singleStep() );
             
             for( auto bp: args.breakpoints() )
             {
-                machine.addBreakpoint( bp );
+                machine->addBreakpoint( bp );
             }
             
             if( args.noUI() )
             {
-                machine.run( UB::UI::Mode::Standard );
+                machine->run( UB::UI::Mode::Standard );
             }
             else
             {
-                machine.run( UB::UI::Mode::Interactive );
+                machine->run( UB::UI::Mode::Interactive );
             }
         }
         

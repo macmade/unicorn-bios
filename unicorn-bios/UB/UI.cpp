@@ -38,6 +38,7 @@
 #include <optional>
 #include <iostream>
 #include <condition_variable>
+#include <csignal>
 
 namespace UB
 {
