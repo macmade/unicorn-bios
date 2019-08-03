@@ -591,7 +591,7 @@ namespace UB
             for( const auto & s: lines )
             {
                 win.move( 2, y++ );
-                win.print( s );
+                win.print( Color::magenta(), s );
             }
         }
         
