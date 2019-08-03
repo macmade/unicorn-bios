@@ -24,6 +24,7 @@
 
 #include "UB/Machine.hpp"
 #include "UB/Engine.hpp"
+#include "UB/Screen.hpp"
 #include "UB/Interrupts.hpp"
 #include "UB/FAT/MBR.hpp"
 #include "UB/String.hpp"
@@ -368,6 +369,17 @@ namespace UB
                 ( void )size;
                 
                 throw std::runtime_error( "Access to invalid memory at address " + String::toHex( address ) );
+            }
+        );
+        
+        Screen::shared().onKeyPress
+        (
+            [ & ]( int key )
+            {
+                if( key == 0x20 )
+                {
+                    this->_singleStep = true;
+                }
             }
         );
     }
