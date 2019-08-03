@@ -33,8 +33,8 @@ namespace UB
 {
     namespace Capstone
     {
-        std::vector< std::string > disassemble(  const std::vector< uint8_t > & data, uint64_t org );
-        std::vector< std::string > instructions( const std::vector< uint8_t > & data, uint64_t org );
+        std::vector< std::pair< std::string, std::string > > disassemble(  const std::vector< uint8_t > & data, uint64_t org );
+        std::vector< std::pair< std::string, std::string > > instructions( const std::vector< uint8_t > & data, uint64_t org );
     }
 }
 

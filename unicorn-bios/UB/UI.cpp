@@ -843,11 +843,11 @@ namespace UB
         
         try
         {
-            uint64_t                   ip( Engine::getAddress( this->_engine.cs(), this->_engine.ip() ) );
-            std::vector< uint8_t >     bytes( this->_engine.read( ip, 512 ) );
-            std::vector< std::string > instructions( Capstone::instructions( bytes, ip ) );
+            uint64_t                                             ip( Engine::getAddress( this->_engine.cs(), this->_engine.ip() ) );
+            std::vector< uint8_t >                               bytes( this->_engine.read( ip, 512 ) );
+            std::vector< std::pair< std::string, std::string > > instructions( Capstone::instructions( bytes, ip ) );
             
-            for( const auto & s: instructions )
+            for( const auto & p: instructions )
             {
                 if( y == height - 1 )
                 {
@@ -855,7 +855,9 @@ namespace UB
                 }
                 
                 win.move( 2, y++ );
-                win.print( s );
+                win.print( p.first );
+                win.print( ": " );
+                win.print( p.second );
             }
         }
         catch( ... )
@@ -891,11 +893,11 @@ namespace UB
             
             try
             {
-                uint64_t                   ip( Engine::getAddress( this->_engine.cs(), this->_engine.ip() ) );
-                std::vector< uint8_t >     bytes( this->_engine.read( ip, 512 ) );
-                std::vector< std::string > instructions( Capstone::disassemble( bytes, ip ) );
+                uint64_t                                             ip( Engine::getAddress( this->_engine.cs(), this->_engine.ip() ) );
+                std::vector< uint8_t >                               bytes( this->_engine.read( ip, 512 ) );
+                std::vector< std::pair< std::string, std::string > > instructions( Capstone::disassemble( bytes, ip ) );
                 
-                for( const auto & s: instructions )
+                for( const auto & p: instructions )
                 {
                     if( y == height - 1 )
                     {
@@ -903,7 +905,9 @@ namespace UB
                     }
                     
                     win.move( 2, y++ );
-                    win.print( s );
+                    win.print( p.first );
+                    win.print( ": " );
+                    win.print( p.second );
                 }
             }
             catch( ... )
