@@ -41,17 +41,17 @@ namespace UB
         public:
             
             IMPL( void );
-            IMPL( const IMPL & o );
             ~IMPL( void );
             
             std::vector< std::function< void( void ) > > _onResize;
             std::vector< std::function< void( int ) > >  _onKeyPress;
             std::vector< std::function< void( void ) > > _onUpdate;
             
-            std::size_t  _width;
-            std::size_t  _height;
-            bool         _colors;
-            bool         _running;
+            std::size_t          _width;
+            std::size_t          _height;
+            bool                 _colors;
+            bool                 _running;
+            std::recursive_mutex _rmtx;
     };
     
     Screen & Screen::shared( void )
@@ -92,87 +92,118 @@ namespace UB
     
     std::size_t Screen::width( void ) const
     {
+        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+        
         return this->impl->_width;
     }
     
     std::size_t Screen::height( void ) const
     {
+        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+        
         return this->impl->_height;
     }
     
     bool Screen::supportsColors( void ) const
     {
+        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+        
         return this->impl->_colors;
     }
     
     bool Screen::isRunning( void ) const
     {
+        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+        
         return this->impl->_running;
     }
     
     void Screen::clear( void ) const
     {
+        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+        
         ::clear();
     }
     
     void Screen::refresh( void ) const
     {
+        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+        
         ::refresh();
     }
     
     void Screen::print( const std::string & s )
     {
+        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+        
         ::printw( s.c_str() );
     }
     
     void Screen::start( void )
     {
-        if( this->impl->_running )
         {
-            return;
+            std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+            
+            if( this->impl->_running )
+            {
+                return;
+            }
+            
+            this->impl->_running = true;
         }
-        
-        this->impl->_running = true;
         
         while( this->impl->_running )
         {
-            struct winsize s;
+            struct winsize                               s;
+            std::vector< std::function< void( void ) > > onResize;
+            std::vector< std::function< void( int ) > >  onKeyPress;
+            std::vector< std::function< void( void ) > > onUpdate;
+            int                                          key( 0 );
             
             ::ioctl( STDOUT_FILENO, TIOCGWINSZ, &s );
             
-            if( s.ws_col != this->impl->_width || s.ws_row != this->impl->_height )
             {
-                this->impl->_width  = s.ws_col;
-                this->impl->_height = s.ws_row;
+                std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
                 
-                for( const auto & f: this->impl->_onResize )
+                onKeyPress = this->impl->_onKeyPress;
+                onUpdate   = this->impl->_onUpdate;
+                
+                if( s.ws_col != this->impl->_width || s.ws_row != this->impl->_height )
                 {
-                    f();
-                }
-            }
-            
-            {
-                static struct pollfd p;
-                int                  c;
-                
-                memset( &p, 0, sizeof( p ) );
-                
-                p.fd      = 0;
-                p.events  = POLLIN;
-                p.revents = 0;
-                
-                if( poll( &p, 1, 0 ) > 0 )
-                {
-                    c = getc( stdin );
+                    this->impl->_width  = s.ws_col;
+                    this->impl->_height = s.ws_row;
                     
-                    for( const auto & f: this->impl->_onKeyPress )
+                    onResize = this->impl->_onResize;
+                }
+                
+                {
+                    static struct pollfd p;
+                    
+                    memset( &p, 0, sizeof( p ) );
+                    
+                    p.fd      = 0;
+                    p.events  = POLLIN;
+                    p.revents = 0;
+                    
+                    if( poll( &p, 1, 0 ) > 0 )
                     {
-                        f( c );
+                        key        = getc( stdin );
+                        onKeyPress = this->impl->_onKeyPress;
                     }
                 }
             }
             
-            for( const auto & f: this->impl->_onUpdate )
+            for( const auto & f: onResize )
+            {
+                f();
+            }
+            
+            for( const auto & f: onKeyPress )
+            {
+                f( key );
+            }
+            
+            for( const auto & f: onUpdate )
             {
                 f();
             }
@@ -186,21 +217,29 @@ namespace UB
     
     void Screen::stop( void )
     {
+        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+        
         this->impl->_running = false;
     }
     
     void Screen::onResize( const std::function< void( void ) > & f )
     {
+        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+        
         this->impl->_onResize.push_back( f );
     }
     
     void Screen::onKeyPress( const std::function< void( int key ) > & f )
     {
+        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+        
         this->impl->_onKeyPress.push_back( f );
     }
     
     void Screen::onUpdate( const std::function< void( void ) > & f )
     {
+        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+        
         this->impl->_onUpdate.push_back( f );
     }
     
@@ -209,13 +248,6 @@ namespace UB
         _height( 0 ),
         _colors( false ),
         _running( false )
-    {}
-    
-    Screen::IMPL::IMPL( const IMPL & o ):
-        _width( o._width ),
-        _height( o._height ),
-        _colors( o._colors ),
-        _running( o._running )
     {}
     
     Screen::IMPL::~IMPL( void )
