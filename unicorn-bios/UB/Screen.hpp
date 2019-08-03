@@ -46,6 +46,7 @@ namespace UB
             std::size_t height( void ) const;
             
             bool supportsColors( void ) const;
+            void disableColors( void )  const;
             bool isRunning( void )      const;
             void clear( void )          const;
             void refresh( void )        const;

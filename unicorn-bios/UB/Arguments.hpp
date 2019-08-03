@@ -50,6 +50,7 @@ namespace UB
             bool                    debugVideo( void )             const;
             bool                    singleStep( void )             const;
             bool                    noUI( void )                   const;
+            bool                    noColors( void )               const;
             size_t                  memory( void )                 const;
             std::string             bootImage( void )              const;
             std::vector< uint64_t > breakpoints( void )            const;

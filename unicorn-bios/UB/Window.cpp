@@ -24,6 +24,7 @@
 
 #include "UB/Window.hpp"
 #include "UB/Casts.hpp"
+#include "UB/Screen.hpp"
 #include <ncurses.h>
 
 namespace UB
@@ -91,14 +92,14 @@ namespace UB
     
     void Window::print( const Color & color, const std::string & s )
     {
-        if( ::has_colors() )
+        if( Screen::shared().supportsColors() )
         {
             ::wattrset( this->impl->_win, COLOR_PAIR( color.index() ) );
         }
         
         ::wprintw( this->impl->_win, s.c_str() );
         
-        if( ::has_colors() )
+        if( Screen::shared().supportsColors() )
         {
             ::wattrset( this->impl->_win, COLOR_PAIR( Color::clear().index() ) );
         }
@@ -110,14 +111,14 @@ namespace UB
         
         va_start( ap, format );
         
-        if( ::has_colors() )
+        if( Screen::shared().supportsColors() )
         {
             ::wattrset( this->impl->_win, COLOR_PAIR( color.index() ) );
         }
         
         ::vw_printw( this->impl->_win, format, ap );
         
-        if( ::has_colors() )
+        if( Screen::shared().supportsColors() )
         {
             ::wattrset( this->impl->_win, COLOR_PAIR( Color::clear().index() ) );
         }

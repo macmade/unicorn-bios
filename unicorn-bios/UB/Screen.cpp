@@ -122,6 +122,13 @@ namespace UB
         return this->impl->_colors;
     }
     
+    void Screen::disableColors( void ) const
+    {
+        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+        
+        this->impl->_colors = false;
+    }
+    
     bool Screen::isRunning( void ) const
     {
         std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
@@ -154,14 +161,14 @@ namespace UB
     {
         std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
     
-        if( ::has_colors() )
+        if( this->supportsColors() )
         {
             ::attrset( COLOR_PAIR( color.index() ) );
         }
         
         ::printw( s.c_str() );
 
-        if( ::has_colors() )
+        if( this->supportsColors() )
         {
             ::attrset( COLOR_PAIR( Color::clear().index() ) );
         }

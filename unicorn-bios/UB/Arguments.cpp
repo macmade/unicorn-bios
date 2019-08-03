@@ -41,6 +41,7 @@ namespace UB
             bool                    _debugVideo;
             bool                    _singleStep;
             bool                    _noUI;
+            bool                    _noColors;
             size_t                  _memory;
             std::string             _bootImage;
             std::vector< uint64_t > _breakpoints;
@@ -103,6 +104,11 @@ namespace UB
         return this->impl->_noUI;
     }
     
+    bool Arguments::noColors( void ) const
+    {
+        return this->impl->_noColors;
+    }
+    
     size_t Arguments::memory( void ) const
     {
         return this->impl->_memory;
@@ -133,6 +139,7 @@ namespace UB
         _debugVideo(             false ),
         _singleStep(             false ),
         _noUI(                   false ),
+        _noColors(               false ),
         _memory(                 0 )
     {
         if( argc < 1 )
@@ -171,6 +178,10 @@ namespace UB
             else if( arg == "--no-ui" )
             {
                 this->_noUI = true;
+            }
+            else if( arg == "--no-colors" )
+            {
+                this->_noColors = true;
             }
             else if( arg == "--memory" || arg == "-m" )
             {
@@ -211,6 +222,7 @@ namespace UB
         _debugVideo(              o._debugVideo ),
         _singleStep(              o._singleStep ),
         _noUI(                    o._noUI ),
+        _noColors(                o._noColors ),
         _memory(                  o._memory ),
         _bootImage(               o._bootImage ),
         _breakpoints(             o._breakpoints )

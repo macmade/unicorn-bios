@@ -25,6 +25,7 @@
 #include <iostream>
 #include "UB/Arguments.hpp"
 #include "UB/Machine.hpp"
+#include "UB/Screen.hpp"
 
 static void showHelp( void );
 
@@ -63,6 +64,12 @@ int main( int argc, const char * argv[] )
             {
                 machine->addBreakpoint( bp );
             }
+            
+            if( args.noUI() == false && args.noColors() )
+            {
+               UB::Screen::shared().disableColors();
+            }
+            
             
             machine->run();
         }
@@ -109,6 +116,8 @@ static void showHelp( void )
               << std::endl
               << "    --single-step:  Breaks on every instruction."
               << std::endl
-              << "    --no-ui:        Don't start the user interface (only output will be displayed to stdout)."
+              << "    --no-ui:        Don't start the user interface (output will be displayed to stdout, debug info to stderr)."
+              << std::endl
+              << "    --no-colors:    Don't use colors."
               << std::endl;
 }

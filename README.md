@@ -34,7 +34,8 @@ Written to debug the [XEOS Operating System](https://github.com/macmade/XEOS) bo
         --trap:         Raises a trap when breaking.
         --debug-video:  Turns on debug output for video services.
         --single-step:  Breaks on every instruction.
-        --no-ui:        Don't start the user interface (only output will be displayed to stdout).
+        --no-ui:        Don't start the user interface (output will be displayed to stdout, debug info to stderr).
+        --no-colors:    Don't use colors.
 
 ### Installation:
 
