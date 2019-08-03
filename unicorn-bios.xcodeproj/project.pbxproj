@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		050649B022F5B8AC001E48C1 /* Signal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050649AE22F5B8AC001E48C1 /* Signal.cpp */; };
+		053B4B1822F5F60D002C6AB9 /* Color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053B4B1622F5F60D002C6AB9 /* Color.cpp */; };
 		053F365F22E892C5003BD8AC /* Interrupts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053F365D22E892C5003BD8AC /* Interrupts.cpp */; };
 		0559286B22EB3048003878B6 /* Capstone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0559286922EB3048003878B6 /* Capstone.cpp */; };
 		0559286F22EEF488003878B6 /* StringStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0559286D22EEF488003878B6 /* StringStream.cpp */; };
@@ -51,6 +52,8 @@
 /* Begin PBXFileReference section */
 		050649AE22F5B8AC001E48C1 /* Signal.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Signal.cpp; sourceTree = "<group>"; };
 		050649AF22F5B8AC001E48C1 /* Signal.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Signal.hpp; sourceTree = "<group>"; };
+		053B4B1622F5F60D002C6AB9 /* Color.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Color.cpp; sourceTree = "<group>"; };
+		053B4B1722F5F60D002C6AB9 /* Color.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Color.hpp; sourceTree = "<group>"; };
 		053F365D22E892C5003BD8AC /* Interrupts.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Interrupts.cpp; sourceTree = "<group>"; };
 		053F365E22E892C5003BD8AC /* Interrupts.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Interrupts.hpp; sourceTree = "<group>"; };
 		0559286922EB3048003878B6 /* Capstone.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Capstone.cpp; sourceTree = "<group>"; };
@@ -349,6 +352,8 @@
 				0559286922EB3048003878B6 /* Capstone.cpp */,
 				0559286A22EB3048003878B6 /* Capstone.hpp */,
 				05B2818B22E7AAA600110404 /* Casts.hpp */,
+				053B4B1622F5F60D002C6AB9 /* Color.cpp */,
+				053B4B1722F5F60D002C6AB9 /* Color.hpp */,
 				05798F0422F473E5008F9DB1 /* CPU */,
 				05B2818622E78B7400110404 /* Engine.cpp */,
 				05B2818522E78B7400110404 /* Engine.hpp */,
@@ -461,6 +466,7 @@
 				05B2819B22E7AF1A00110404 /* BinaryStream.cpp in Sources */,
 				0581833B22E8EC63008D1BFF /* Video.cpp in Sources */,
 				05B2819922E7AF1A00110404 /* BinaryDataStream.cpp in Sources */,
+				053B4B1822F5F60D002C6AB9 /* Color.cpp in Sources */,
 				05798F0722F473E6008F9DB1 /* Functions.cpp in Sources */,
 				05B2819A22E7AF1A00110404 /* BinaryFileStream.cpp in Sources */,
 				05B2818A22E7AA5300110404 /* Arguments.cpp in Sources */,

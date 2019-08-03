@@ -22,45 +22,45 @@
  * THE SOFTWARE.
  ******************************************************************************/
 
-#ifndef UB_WINDOW_HPP
-#define UB_WINDOW_HPP
+#ifndef UB_COLOR_HPP
+#define UB_COLOR_HPP
 
 #include <memory>
 #include <algorithm>
-#include <cstdlib>
-#include <string>
-#include "UB/Color.hpp"
 
 namespace UB
 {
-    class Window
+    class Color
     {
         public:
             
-            Window( size_t x, size_t y, size_t width, size_t height );
-            Window( const Window & o );
-            Window( Window && o ) noexcept;
-            ~Window( void );
+            static Color clear( void );
+            static Color black( void );
+            static Color red( void );
+            static Color green( void );
+            static Color yellow( void );
+            static Color blue( void );
+            static Color magenta( void );
+            static Color cyan( void );
+            static Color white( void );
             
-            Window & operator =( Window o );
+            Color( const Color & o );
+            Color( Color && o ) noexcept;
+            ~Color( void );
             
-            void refresh( void );
-            void move( size_t x, size_t y );
-            void print( const std::string & s );
-            void print( const char * format, ... );
-            void print( const Color & color, const std::string & s );
-            void print( const Color & color, const char * format, ... );
-            void box( void );
-            void addHorizontalLine( size_t width );
-            void addVerticalLine( size_t height );
+            Color & operator =( Color o );
             
-            friend void swap( Window & o1, Window & o2 );
+            int index( void ) const;
+            
+            friend void swap( Color & o1, Color & o2 );
             
         private:
+            
+            explicit Color( int index );
             
             class IMPL;
             std::unique_ptr< IMPL > impl;
     };
 }
 
-#endif /* UB_WINDOW_HPP */
+#endif /* UB_COLOR_HPP */
