@@ -55,8 +55,8 @@ namespace UB
             void                   _write( size_t address, const uint8_t * bytes, size_t size );
             
             size_t                       _memory;
+            Registers                    _registers;
             uint64_t                     _lastInstructionAddress;
-            Registers                    _lastInstructionRegisters;
             std::vector< uint8_t >       _lastInstruction;
             uc_engine                  * _uc;
             bool                         _running;
@@ -504,7 +504,9 @@ namespace UB
     
     Registers Engine::registers( void ) const
     {
-        return *( this );
+        std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
+        
+        return this->impl->_registers;
     }
     
     bool Engine::running( void ) const
@@ -775,7 +777,7 @@ namespace UB
             after         = engine->impl->_afterInstructionHandlers;
             last          = engine->impl->_lastInstruction;
             lastAddress   = engine->impl->_lastInstructionAddress;
-            lastRegisters = engine->impl->_lastInstructionRegisters;
+            lastRegisters = engine->impl->_registers;
             current       = engine->read( address, size );
             
             if( current.size() == 0 )
@@ -783,9 +785,9 @@ namespace UB
                 throw std::runtime_error( "Fatal internal error: cannot read current instruction" );
             }
             
-            engine->impl->_lastInstruction          = current;
-            engine->impl->_lastInstructionAddress   = address;
-            engine->impl->_lastInstructionRegisters = engine->registers();
+            engine->impl->_lastInstruction        = current;
+            engine->impl->_lastInstructionAddress = address;
+            engine->impl->_registers              = *( engine );
         }
         
         if( last.size() > 0 )

@@ -622,39 +622,40 @@ namespace UB
         y = 3;
         
         {
-            std::string ah( String::toHex( this->_engine.ah() ) );
-            std::string al( String::toHex( this->_engine.al() ) );
-            std::string bh( String::toHex( this->_engine.bh() ) );
-            std::string bl( String::toHex( this->_engine.bl() ) );
-            std::string ch( String::toHex( this->_engine.ch() ) );
-            std::string cl( String::toHex( this->_engine.cl() ) );
-            std::string dh( String::toHex( this->_engine.dh() ) );
-            std::string dl( String::toHex( this->_engine.dl() ) );
-            std::string ax( String::toHex( this->_engine.ax() ) );
-            std::string bx( String::toHex( this->_engine.bx() ) );
-            std::string cx( String::toHex( this->_engine.cx() ) );
-            std::string dx( String::toHex( this->_engine.dx() ) );
-            std::string si( String::toHex( this->_engine.si() ) );
-            std::string di( String::toHex( this->_engine.di() ) );
-            std::string sp( String::toHex( this->_engine.sp() ) );
-            std::string bp( String::toHex( this->_engine.bp() ) );
-            std::string cs( String::toHex( this->_engine.cs() ) );
-            std::string ds( String::toHex( this->_engine.ds() ) );
-            std::string ss( String::toHex( this->_engine.ss() ) );
-            std::string es( String::toHex( this->_engine.es() ) );
-            std::string fs( String::toHex( this->_engine.fs() ) );
-            std::string gs( String::toHex( this->_engine.gs() ) );
-            std::string ip( String::toHex( this->_engine.ip() ) );
-            std::string eax( String::toHex( this->_engine.eax() ) );
-            std::string ebx( String::toHex( this->_engine.ebx() ) );
-            std::string ecx( String::toHex( this->_engine.ecx() ) );
-            std::string edx( String::toHex( this->_engine.edx() ) );
-            std::string esi( String::toHex( this->_engine.esi() ) );
-            std::string edi( String::toHex( this->_engine.edi() ) );
-            std::string esp( String::toHex( this->_engine.esp() ) );
-            std::string ebp( String::toHex( this->_engine.ebp() ) );
-            std::string eip( String::toHex( this->_engine.eip() ) );
-            uint32_t    eflags32( this->_engine.eflags() );
+            Registers   reg( this->_engine.registers() );
+            std::string ah( String::toHex( reg.ah() ) );
+            std::string al( String::toHex( reg.al() ) );
+            std::string bh( String::toHex( reg.bh() ) );
+            std::string bl( String::toHex( reg.bl() ) );
+            std::string ch( String::toHex( reg.ch() ) );
+            std::string cl( String::toHex( reg.cl() ) );
+            std::string dh( String::toHex( reg.dh() ) );
+            std::string dl( String::toHex( reg.dl() ) );
+            std::string ax( String::toHex( reg.ax() ) );
+            std::string bx( String::toHex( reg.bx() ) );
+            std::string cx( String::toHex( reg.cx() ) );
+            std::string dx( String::toHex( reg.dx() ) );
+            std::string si( String::toHex( reg.si() ) );
+            std::string di( String::toHex( reg.di() ) );
+            std::string sp( String::toHex( reg.sp() ) );
+            std::string bp( String::toHex( reg.bp() ) );
+            std::string cs( String::toHex( reg.cs() ) );
+            std::string ds( String::toHex( reg.ds() ) );
+            std::string ss( String::toHex( reg.ss() ) );
+            std::string es( String::toHex( reg.es() ) );
+            std::string fs( String::toHex( reg.fs() ) );
+            std::string gs( String::toHex( reg.gs() ) );
+            std::string ip( String::toHex( reg.ip() ) );
+            std::string eax( String::toHex( reg.eax() ) );
+            std::string ebx( String::toHex( reg.ebx() ) );
+            std::string ecx( String::toHex( reg.ecx() ) );
+            std::string edx( String::toHex( reg.edx() ) );
+            std::string esi( String::toHex( reg.esi() ) );
+            std::string edi( String::toHex( reg.edi() ) );
+            std::string esp( String::toHex( reg.esp() ) );
+            std::string ebp( String::toHex( reg.ebp() ) );
+            std::string eip( String::toHex( reg.eip() ) );
+            uint32_t    eflags32( reg.eflags() );
             std::string eflags( String::toHex( eflags32 ) );
             
             
@@ -737,7 +738,7 @@ namespace UB
         y = 3;
         
         {
-            uint32_t                                      eflags( this->_engine.eflags() );
+            uint32_t                                      eflags( this->_engine.registers().eflags() );
             std::vector< std::pair< std::string, bool > > flags;
             
             flags.push_back( { "Carry",                     ( eflags & ( 1 <<  0 ) ) != 0 } );
@@ -808,9 +809,10 @@ namespace UB
         y = 3;
         
         {
-            uint16_t ss( this->_engine.ss() );
-            uint64_t bp( Engine::getAddress( ss, this->_engine.bp() ) );
-            uint64_t sp( Engine::getAddress( ss, this->_engine.sp() ) );
+            Registers reg( this->_engine.registers() );
+            uint16_t  ss( reg.ss() );
+            uint64_t  bp( Engine::getAddress( ss, reg.bp() ) );
+            uint64_t  sp( Engine::getAddress( ss, reg.sp() ) );
             
             std::vector< std::pair< uint64_t, uint16_t > > frame;
             
@@ -890,7 +892,7 @@ namespace UB
         
         try
         {
-            uint64_t                                             ip( this->_engine.eip() );
+            uint64_t                                             ip( this->_engine.registers().eip() );
             std::vector< uint8_t >                               bytes( this->_engine.read( ip, 512 ) );
             std::vector< std::pair< std::string, std::string > > instructions( Capstone::instructions( bytes, ip ) );
             
@@ -940,7 +942,7 @@ namespace UB
             
             try
             {
-                uint64_t                                             ip( this->_engine.eip() );
+                uint64_t                                             ip( this->_engine.registers().eip() );
                 std::vector< uint8_t >                               bytes( this->_engine.read( ip, 512 ) );
                 std::vector< std::pair< std::string, std::string > > instructions( Capstone::disassemble( bytes, ip ) );
                 
