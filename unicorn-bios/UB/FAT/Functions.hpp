@@ -32,7 +32,17 @@ namespace UB
     namespace FAT
     {
         class MBR;
-        
+
+        struct DAP
+        {
+            uint8_t  size;
+            uint8_t  zero;
+            uint16_t numberOfSectors;
+            uint16_t destinationOffset;
+            uint16_t destinationSegment;
+            uint64_t logicalBlockAddress;
+        };
+
         uint64_t chsToLBA( const MBR & mbr, uint8_t cylinder, uint8_t sector, uint8_t head );
     }
 }

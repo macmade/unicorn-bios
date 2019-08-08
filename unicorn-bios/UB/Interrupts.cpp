@@ -79,6 +79,8 @@ namespace UB
             {
                 case 0x00: return BIOS::Disk::reset( machine, engine );
                 case 0x02: return BIOS::Disk::readSectors( machine, engine );
+                case 0x41: return BIOS::Disk::checkExtensions( machine, engine );
+                case 0x42: return BIOS::Disk::extendedReadSectors( machine, engine );
                 default:   break;
             }
             
