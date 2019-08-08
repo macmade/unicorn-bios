@@ -34,6 +34,43 @@ namespace UB
     {
         namespace Video
         {
+            bool setVideoMode( const Machine & machine, Engine & engine )
+            {
+                uint8_t mode( engine.al() );
+
+                if ( machine.debugVideo() )
+                {
+                    machine.ui().debug() << "Setting video mode to: (" << String::toHex( mode ) << ")" << std::endl;
+
+                    switch ( mode )
+                    {
+                        case 0x03:
+                            machine.ui().debug() << "    - 80x25 16 color text (CGA, EGA, MCGA, VGA)" << std::endl;
+                            break;
+
+                        default:
+                            machine.ui().debug() << "    - Unknown mode " << std::endl;
+                    }
+                }
+
+                uint8_t maskedMode( mode & 0x7f );
+
+                if ( maskedMode > 7 )
+                {
+                    engine.al( 0x20 );
+                }
+                else if ( maskedMode == 6 )
+                {
+                    engine.al( 0x3f );
+                }
+                else
+                {
+                    engine.al( 0x30 );
+                }
+
+                return true;
+            }
+
             bool setCursorPosition( const Machine & machine, Engine & engine )
             {
                 if( machine.debugVideo() )
