@@ -141,6 +141,38 @@ namespace UB
                     
                     return false;
             }
+
+            bool enterLongMode( const Machine & machine, Engine & engine )
+            {
+                uint8_t mode( engine.bl() );
+
+                switch ( mode )
+                {
+                    case 0x1:
+                        machine.ui().debug() << "Entering 32-bit Protected Mode" << std::endl;
+                    break;
+
+                    case 0x2:
+                        machine.ui().debug() << "Entering 64-bit Long Mode" << std::endl;
+                    break;
+
+                    case 0x3:
+                        machine.ui().debug() << "Entering 32-bit Protected and 64-bit Long Mode" << std::endl;
+                    break;
+
+                    default:
+                        machine.ui().debug() << "BIOS::SystemsServices::enterLongMode: Unknown mode " << mode << std::endl;
+                        goto error;
+                }
+
+                engine.cf( false );
+                return true;
+
+                error:
+
+                    engine.cf( true );
+                    return false;
+            }
         }
     }
 }

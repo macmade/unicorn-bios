@@ -100,6 +100,7 @@ namespace UB
             switch( engine.ax() )
             {
                 case 0xE820: return BIOS::SystemServices::getMemoryMap( machine, engine );
+                case 0xEC00: return BIOS::SystemServices::enterLongMode( machine, engine );
                 default:     break;
             }
             
