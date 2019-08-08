@@ -166,7 +166,12 @@ namespace UB
     {
         this->impl->_singleStep = value;
     }
-    
+
+    void Machine::breakHere( const std::string & message ) const
+    {
+        this->impl->_break( message );
+    }
+
     void Machine::addBreakpoint( uint64_t address )
     {
         this->impl->_breakpoints.push_back( address );
