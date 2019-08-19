@@ -94,32 +94,45 @@ namespace UB
                                          << " -> "
                                          << String::toHex( destination + bytes.size() )
                                          << std::endl;
-
+                    
                     engine.cf( false );
                     engine.ah( 0 );
                     engine.al( sectors );
-
+                    
                     return true;
                 }
-
+                
                 error:
-
+                    
                     engine.cf( true );
                     engine.ah( 1 );
                     engine.al( 0 );
-
+                    
                     return true;
             }
-
-            bool checkExtensions( const Machine & machine, Engine & engine ) {
+            
+            bool checkExtensions( const Machine & machine, Engine & engine )
+            {
                 machine.ui().debug() << "Checking if INT13h extensions are supported" << std::endl;
-
+                
+                engine.bx( 0xAA55 );
+                
+                if( engine.bx() != 0x55AA )
+                {
+                    engine.cf( true );
+                    engine.ah( 1 );
+                    engine.cx( 0 );
+                    
+                    return true;
+                }
+                
                 engine.cf( false );
                 engine.ah( 0 );
-
+                engine.cx( 7 );
+                
                 return true;
             }
-
+            
             bool extendedReadSectors( const Machine & machine, Engine & engine )
             {
                 uint8_t    driveNumber( engine.dl() );
