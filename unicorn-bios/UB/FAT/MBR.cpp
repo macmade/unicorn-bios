@@ -181,6 +181,37 @@ namespace UB
             return this->impl->_bootSignature;
         }
         
+        bool MBR::isValid( void ) const
+        {
+            if
+            (
+                   this->impl->_bytesPerSector != 512
+                && this->impl->_bytesPerSector != 1024
+                && this->impl->_bytesPerSector != 2048
+                && this->impl->_bytesPerSector != 4096
+            )
+            {
+                return false;
+            }
+            
+            if
+            (
+                   this->impl->_sectorsPerCluster != 1
+                && this->impl->_sectorsPerCluster != 2
+                && this->impl->_sectorsPerCluster != 4
+                && this->impl->_sectorsPerCluster != 8
+                && this->impl->_sectorsPerCluster != 16
+                && this->impl->_sectorsPerCluster != 32
+                && this->impl->_sectorsPerCluster != 64
+                && this->impl->_sectorsPerCluster != 128
+            )
+            {
+                return false;
+            }
+            
+            return true;
+        }
+        
         void swap( MBR & o1, MBR & o2 )
         {
             using std::swap;

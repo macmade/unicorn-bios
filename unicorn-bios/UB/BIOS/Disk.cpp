@@ -137,9 +137,9 @@ namespace UB
                 uint64_t destination     = Engine::getAddress( dap->destinationSegment, dap->destinationOffset );
                 uint64_t numberOfSectors = numeric_cast< uint64_t >( dap->numberOfSectors );
 
-                // Bytes per sector hardcoded to 512 below because mbr.bytesPerSector() returns a non-sensical value
-                uint64_t offset = dap->logicalBlockAddress * 512;
-                uint64_t size   = numberOfSectors * 512;
+                uint64_t bytesPerSector = ( mbr.isValid() ) ? mbr.bytesPerSector() : 512;
+                uint64_t offset         = dap->logicalBlockAddress * bytesPerSector;
+                uint64_t size           = numberOfSectors * bytesPerSector;
 
                 if( driveNumber != 0x00 )
                 {

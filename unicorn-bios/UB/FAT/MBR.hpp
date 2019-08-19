@@ -67,6 +67,8 @@ namespace UB
                 uint32_t volumeSerialNumber( void )    const;
                 uint16_t bootSignature( void )         const;
                 
+                bool isValid( void ) const;
+                
                 friend void swap( MBR & o1, MBR & o2 );
                 
                 friend std::ostream & operator <<( std::ostream & os, const MBR & o );
