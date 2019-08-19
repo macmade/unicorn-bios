@@ -62,7 +62,8 @@ namespace UB
             void trap( bool value );
             void debugVideo( bool value );
             void singleStep( bool value );
-            
+
+            void breakHere(        const std::string & message ) const;
             void addBreakpoint(    uint64_t address );
             void removeBreakpoint( uint64_t address );
             

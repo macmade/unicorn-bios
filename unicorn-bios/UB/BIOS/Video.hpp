@@ -34,6 +34,7 @@ namespace UB
     {
         namespace Video
         {
+            bool setVideoMode( const Machine & machine, Engine & engine );
             bool setCursorPosition( const Machine & machine, Engine & engine );
             bool ttyOutput( const Machine & machine, Engine & engine );
             bool palette( const Machine & machine, Engine & engine );

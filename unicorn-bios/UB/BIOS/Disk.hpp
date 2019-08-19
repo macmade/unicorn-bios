@@ -36,6 +36,8 @@ namespace UB
         {
             bool reset( const Machine & machine, Engine & engine );
             bool readSectors( const Machine & machine, Engine & engine );
+            bool checkExtensions( const Machine & machine, Engine & engine );
+            bool extendedReadSectors( const Machine & machine, Engine & engine );
         }
     }
 }

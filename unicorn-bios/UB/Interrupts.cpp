@@ -46,6 +46,7 @@ namespace UB
         {
             switch( engine.ah() )
             {
+                case 0x00: return BIOS::Video::setVideoMode( machine, engine );
                 case 0x02: return BIOS::Video::setCursorPosition( machine, engine );
                 case 0x09: return BIOS::Video::writeCharacterAndAttributeAtCursor( machine, engine );
                 case 0x0A: return BIOS::Video::writeCharacterOnlyAtCursor( machine, engine );
@@ -88,6 +89,8 @@ namespace UB
             {
                 case 0x00: return BIOS::Disk::reset( machine, engine );
                 case 0x02: return BIOS::Disk::readSectors( machine, engine );
+                case 0x41: return BIOS::Disk::checkExtensions( machine, engine );
+                case 0x42: return BIOS::Disk::extendedReadSectors( machine, engine );
                 default:   break;
             }
             
@@ -107,6 +110,7 @@ namespace UB
             switch( engine.ax() )
             {
                 case 0xE820: return BIOS::SystemServices::getMemoryMap( machine, engine );
+                case 0xEC00: return BIOS::SystemServices::enterLongMode( machine, engine );
                 default:     break;
             }
             

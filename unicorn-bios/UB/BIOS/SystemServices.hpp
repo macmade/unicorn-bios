@@ -34,7 +34,8 @@ namespace UB
     {
         namespace SystemServices
         {
-            bool getMemoryMap( const Machine & machine, Engine & engine );
+            bool getMemoryMap(  const Machine & machine, Engine & engine );
+            bool enterLongMode( const Machine & machine, Engine & engine );
         }
     }
 }
