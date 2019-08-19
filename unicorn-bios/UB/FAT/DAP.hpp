@@ -22,19 +22,47 @@
  * THE SOFTWARE.
  ******************************************************************************/
 
-#ifndef UB_FAT_FUNCTIONS_HPP
-#define UB_FAT_FUNCTIONS_HPP
+#ifndef UB_FAT_DAP_HPP
+#define UB_FAT_DAP_HPP
 
-#include <cstdint>
+#include <memory>
+#include <algorithm>
 
 namespace UB
 {
+    class BinaryStream;
+    
     namespace FAT
     {
-        class MBR;
-        
-        uint64_t chsToLBA( const MBR & mbr, uint8_t cylinder, uint8_t sector, uint8_t head );
+        class DAP
+        {
+            public:
+                
+                static size_t DataSize( void );
+                
+                DAP( void );
+                DAP( BinaryStream & stream );
+                DAP( const DAP & o );
+                DAP( DAP && o ) noexcept;
+                ~DAP( void );
+                
+                DAP & operator =( DAP o );
+                
+                uint8_t  size( void )                const;
+                uint8_t  zero( void )                const;
+                uint16_t numberOfSectors( void )     const;
+                uint16_t destinationOffset( void )   const;
+                uint16_t destinationSegment( void )  const;
+                uint64_t logicalBlockAddress( void ) const;
+                
+                friend void swap( DAP & o1, DAP & o2 );
+                
+            private:
+                
+                class IMPL;
+                std::unique_ptr< IMPL > impl;
+        };
     }
 }
 
-#endif /* UB_FAT_FUNCTIONS_HPP */
+#endif /* UB_FAT_DAP_HPP */

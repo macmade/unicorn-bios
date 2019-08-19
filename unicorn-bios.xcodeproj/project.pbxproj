@@ -18,6 +18,7 @@
 		055928CC22F0ED00003878B6 /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055928CA22F0ED00003878B6 /* Window.cpp */; };
 		055928F222F216EF003878B6 /* MemoryMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055928F022F216EF003878B6 /* MemoryMap.cpp */; };
 		055928F422F21CCC003878B6 /* MemoryMap-Entry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055928F322F21CCC003878B6 /* MemoryMap-Entry.cpp */; };
+		056F143B230B0E2F00C18CA2 /* DAP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056F1439230B0E2F00C18CA2 /* DAP.cpp */; };
 		05798F0722F473E6008F9DB1 /* Functions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05798F0622F473E5008F9DB1 /* Functions.cpp */; };
 		05798F0A22F473F4008F9DB1 /* Registers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05798F0922F473F4008F9DB1 /* Registers.cpp */; };
 		058182F622E8CC1F008D1BFF /* String.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 058182F422E8CC1F008D1BFF /* String.cpp */; };
@@ -72,6 +73,8 @@
 		055928F022F216EF003878B6 /* MemoryMap.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MemoryMap.cpp; sourceTree = "<group>"; };
 		055928F122F216EF003878B6 /* MemoryMap.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MemoryMap.hpp; sourceTree = "<group>"; };
 		055928F322F21CCC003878B6 /* MemoryMap-Entry.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "MemoryMap-Entry.cpp"; sourceTree = "<group>"; };
+		056F1439230B0E2F00C18CA2 /* DAP.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DAP.cpp; sourceTree = "<group>"; };
+		056F143A230B0E2F00C18CA2 /* DAP.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DAP.hpp; sourceTree = "<group>"; };
 		05798F0522F473E5008F9DB1 /* Functions.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Functions.hpp; sourceTree = "<group>"; };
 		05798F0622F473E5008F9DB1 /* Functions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Functions.cpp; sourceTree = "<group>"; };
 		05798F0822F473F4008F9DB1 /* Registers.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Registers.hpp; sourceTree = "<group>"; };
@@ -394,6 +397,8 @@
 				05B2818E22E7AC1300110404 /* Image.hpp */,
 				05B2819022E7AE8300110404 /* MBR.cpp */,
 				05B2819122E7AE8300110404 /* MBR.hpp */,
+				056F1439230B0E2F00C18CA2 /* DAP.cpp */,
+				056F143A230B0E2F00C18CA2 /* DAP.hpp */,
 			);
 			path = FAT;
 			sourceTree = "<group>";
@@ -482,6 +487,7 @@
 				055928C922F0E759003878B6 /* SystemServices.cpp in Sources */,
 				0581833E22E8EE88008D1BFF /* Disk.cpp in Sources */,
 				058182F622E8CC1F008D1BFF /* String.cpp in Sources */,
+				056F143B230B0E2F00C18CA2 /* DAP.cpp in Sources */,
 				05B2818722E78B7400110404 /* Engine.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -28,6 +28,8 @@
 #include "UB/String.hpp"
 #include "UB/Casts.hpp"
 #include "UB/FAT/Functions.hpp"
+#include "UB/FAT/DAP.hpp"
+#include "UB/BinaryDataStream.hpp"
 
 namespace UB
 {
@@ -125,20 +127,18 @@ namespace UB
             
             bool extendedReadSectors( const Machine & machine, Engine & engine )
             {
-                uint8_t    driveNumber( engine.dl() );
-                uint64_t   dapAddress(  Engine::getAddress( engine.ds(), engine.si() ) );
-                FAT::Image image(       machine.bootImage() );
-                FAT::MBR   mbr(         image.mbr() );
-
-                std::vector< uint8_t > dapBytes ( engine.read( dapAddress, sizeof( struct FAT::DAP ) ) );
-
-                const struct FAT::DAP * dap = reinterpret_cast< const struct FAT::DAP * >( dapBytes.data() );
-
-                uint64_t destination     = Engine::getAddress( dap->destinationSegment, dap->destinationOffset );
-                uint64_t numberOfSectors = numeric_cast< uint64_t >( dap->numberOfSectors );
+                uint8_t          driveNumber( engine.dl() );
+                uint64_t         dapAddress(  Engine::getAddress( engine.ds(), engine.si() ) );
+                FAT::Image       image(       machine.bootImage() );
+                FAT::MBR         mbr(         image.mbr() );
+                BinaryDataStream dapData(     engine.read( dapAddress, FAT::DAP::DataSize() ) );
+                FAT::DAP         dap(         dapData );
+                
+                uint64_t destination     = Engine::getAddress( dap.destinationSegment(), dap.destinationOffset() );
+                uint64_t numberOfSectors = numeric_cast< uint64_t >( dap.numberOfSectors() );
 
                 uint64_t bytesPerSector = ( mbr.isValid() ) ? mbr.bytesPerSector() : 512;
-                uint64_t offset         = dap->logicalBlockAddress * bytesPerSector;
+                uint64_t offset         = dap.logicalBlockAddress() * bytesPerSector;
                 uint64_t size           = numberOfSectors * bytesPerSector;
 
                 if( driveNumber != 0x00 )
@@ -158,13 +158,13 @@ namespace UB
                                      /* << "        - Destination segment: " << String::toHex( dap->destinationSegment )  << std::endl */
                                      /* << "        - Destination offset:  " << String::toHex( dap->destinationOffset )   << std::endl */
                                      /* << "        - LBA:                 " << String::toHex( dap->logicalBlockAddress ) << std::endl */
-                                     << "    - LBA:         " << String::toHex( dap->logicalBlockAddress )
+                                     << "    - LBA:         " << String::toHex( dap.logicalBlockAddress() )
                                      << std::endl
                                      << "    - Offset:      " << String::toHex( offset )
                                      << std::endl
                                      << "    - Size:        " << size
                                      << std::endl
-                                     << "    - Destination: " << String::toHex( destination ) << " (" << String::toHex( dap->destinationSegment ) << ":" << String::toHex( dap->destinationOffset ) << ")"
+                                     << "    - Destination: " << String::toHex( destination ) << " (" << String::toHex( dap.destinationSegment() ) << ":" << String::toHex( dap.destinationOffset() ) << ")"
                                      << std::endl;
 
                 {
