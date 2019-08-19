@@ -23,6 +23,7 @@
  ******************************************************************************/
 
 #include "UB/BIOS/Video.hpp"
+#include "UB/BIOS/VESAInfo.hpp"
 #include "UB/Machine.hpp"
 #include "UB/Engine.hpp"
 #include "UB/String.hpp"
@@ -122,6 +123,22 @@ namespace UB
                                          << "    - Times: "<< std::to_string( static_cast< unsigned int >( engine.cx() ) )
                                          << std::endl;
                 }
+                
+                return true;
+            }
+            
+            bool getVBEControllerInfo( const Machine & machine, Engine & engine )
+            {
+                uint64_t               destination( Engine::getAddress( engine.es(), engine.di() ) );
+                VESAInfo               vesa;
+                std::vector< uint8_t > data( vesa.data() );
+                
+                machine.ui().debug() << "Getting VBE controller info: "
+                                     << std::endl
+                                     << "    - Destination: " << String::toHex( destination ) << " (" << String::toHex( engine.es() ) << ":" << String::toHex( engine.di() ) << ")"
+                                     << std::endl;
+                
+                engine.write( destination, data );
                 
                 return true;
             }

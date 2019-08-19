@@ -22,26 +22,64 @@
  * THE SOFTWARE.
  ******************************************************************************/
 
-#ifndef UB_BIOS_VIDEO_HPP
-#define UB_BIOS_VIDEO_HPP
+#include "UB/BIOS/VESAInfo.hpp"
 
 namespace UB
 {
-    class Machine;
-    class Engine;
-    
     namespace BIOS
     {
-        namespace Video
+        class VESAInfo::IMPL
         {
-            bool setCursorPosition( const Machine & machine, Engine & engine );
-            bool ttyOutput( const Machine & machine, Engine & engine );
-            bool palette( const Machine & machine, Engine & engine );
-            bool writeCharacterAndAttributeAtCursor( const Machine & machine, Engine & engine );
-            bool writeCharacterOnlyAtCursor( const Machine & machine, Engine & engine );
-            bool getVBEControllerInfo( const Machine & machine, Engine & engine );
+            public:
+                
+                IMPL( void );
+                IMPL( const IMPL & o );
+                ~IMPL( void );
+        };
+
+        VESAInfo::VESAInfo( void ):
+            impl( std::make_unique< IMPL >() )
+        {}
+
+        VESAInfo::VESAInfo( const VESAInfo & o ):
+            impl( std::make_unique< IMPL >( *( o.impl ) ) )
+        {}
+
+        VESAInfo::VESAInfo( VESAInfo && o ) noexcept:
+            impl( std::move( o.impl ) )
+        {}
+
+        VESAInfo::~VESAInfo( void )
+        {}
+
+        VESAInfo & VESAInfo::operator =( VESAInfo o )
+        {
+            swap( *( this ), o );
+            
+            return *( this );
         }
+        
+        std::vector< uint8_t > VESAInfo::data( void ) const
+        {
+            return {};
+        }
+
+        void swap( VESAInfo & o1, VESAInfo & o2 )
+        {
+            using std::swap;
+            
+            swap( o1.impl, o2.impl );
+        }
+
+        VESAInfo::IMPL::IMPL( void )
+        {}
+
+        VESAInfo::IMPL::IMPL( const IMPL & o )
+        {
+            ( void )o;
+        }
+
+        VESAInfo::IMPL::~IMPL( void )
+        {}
     }
 }
-
-#endif /* UB_BIOS_VIDEO_HPP */

@@ -22,26 +22,39 @@
  * THE SOFTWARE.
  ******************************************************************************/
 
-#ifndef UB_BIOS_VIDEO_HPP
-#define UB_BIOS_VIDEO_HPP
+#ifndef UB_BIOS_VESA_INFO_HPP
+#define UB_BIOS_VESA_INFO_HPP
+
+#include <memory>
+#include <algorithm>
+#include <vector>
+#include <cstdint>
 
 namespace UB
 {
-    class Machine;
-    class Engine;
-    
     namespace BIOS
     {
-        namespace Video
+        class VESAInfo
         {
-            bool setCursorPosition( const Machine & machine, Engine & engine );
-            bool ttyOutput( const Machine & machine, Engine & engine );
-            bool palette( const Machine & machine, Engine & engine );
-            bool writeCharacterAndAttributeAtCursor( const Machine & machine, Engine & engine );
-            bool writeCharacterOnlyAtCursor( const Machine & machine, Engine & engine );
-            bool getVBEControllerInfo( const Machine & machine, Engine & engine );
-        }
+            public:
+                
+                VESAInfo( void );
+                VESAInfo( const VESAInfo & o );
+                VESAInfo( VESAInfo && o ) noexcept;
+                ~VESAInfo( void );
+                
+                VESAInfo & operator =( VESAInfo o );
+                
+                std::vector< uint8_t > data( void ) const;
+                
+                friend void swap( VESAInfo & o1, VESAInfo & o2 );
+                
+            private:
+                
+                class IMPL;
+                std::unique_ptr< IMPL > impl;
+        };
     }
 }
 
-#endif /* UB_BIOS_VIDEO_HPP */
+#endif /* UB_BIOS_VESA_INFO_HPP */

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		050649B022F5B8AC001E48C1 /* Signal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050649AE22F5B8AC001E48C1 /* Signal.cpp */; };
 		053B4B1822F5F60D002C6AB9 /* Color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053B4B1622F5F60D002C6AB9 /* Color.cpp */; };
+		053B4B4622FB0635002C6AB9 /* VESAInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053B4B4422FB0635002C6AB9 /* VESAInfo.cpp */; };
 		053F365F22E892C5003BD8AC /* Interrupts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053F365D22E892C5003BD8AC /* Interrupts.cpp */; };
 		0559286B22EB3048003878B6 /* Capstone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0559286922EB3048003878B6 /* Capstone.cpp */; };
 		0559286F22EEF488003878B6 /* StringStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0559286D22EEF488003878B6 /* StringStream.cpp */; };
@@ -54,6 +55,8 @@
 		050649AF22F5B8AC001E48C1 /* Signal.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Signal.hpp; sourceTree = "<group>"; };
 		053B4B1622F5F60D002C6AB9 /* Color.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Color.cpp; sourceTree = "<group>"; };
 		053B4B1722F5F60D002C6AB9 /* Color.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Color.hpp; sourceTree = "<group>"; };
+		053B4B4422FB0635002C6AB9 /* VESAInfo.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VESAInfo.cpp; sourceTree = "<group>"; };
+		053B4B4522FB0635002C6AB9 /* VESAInfo.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VESAInfo.hpp; sourceTree = "<group>"; };
 		053F365D22E892C5003BD8AC /* Interrupts.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Interrupts.cpp; sourceTree = "<group>"; };
 		053F365E22E892C5003BD8AC /* Interrupts.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Interrupts.hpp; sourceTree = "<group>"; };
 		0559286922EB3048003878B6 /* Capstone.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Capstone.cpp; sourceTree = "<group>"; };
@@ -184,6 +187,8 @@
 				055928C822F0E759003878B6 /* SystemServices.hpp */,
 				0581833922E8EC63008D1BFF /* Video.cpp */,
 				0581833A22E8EC63008D1BFF /* Video.hpp */,
+				053B4B4422FB0635002C6AB9 /* VESAInfo.cpp */,
+				053B4B4522FB0635002C6AB9 /* VESAInfo.hpp */,
 			);
 			path = BIOS;
 			sourceTree = "<group>";
@@ -454,6 +459,7 @@
 				055928F222F216EF003878B6 /* MemoryMap.cpp in Sources */,
 				05B2813322E77AC700110404 /* main.cpp in Sources */,
 				053F365F22E892C5003BD8AC /* Interrupts.cpp in Sources */,
+				053B4B4622FB0635002C6AB9 /* VESAInfo.cpp in Sources */,
 				05B2818F22E7AC1300110404 /* Image.cpp in Sources */,
 				05798F0A22F473F4008F9DB1 /* Registers.cpp in Sources */,
 				058D772922E8B7F100FA58A4 /* Machine.cpp in Sources */,

@@ -51,7 +51,16 @@ namespace UB
                 case 0x0A: return BIOS::Video::writeCharacterOnlyAtCursor( machine, engine );
                 case 0x0E: return BIOS::Video::ttyOutput( machine, engine );
                 case 0x10: return BIOS::Video::palette( machine, engine );
-                default:   break;
+                
+                case 0x4F:
+                    
+                    switch( engine.al() )
+                    {
+                        case 0x00: return BIOS::Video::getVBEControllerInfo( machine, engine );
+                        default:   break;
+                    }
+                    
+                default: break;
             }
             
             return false;
