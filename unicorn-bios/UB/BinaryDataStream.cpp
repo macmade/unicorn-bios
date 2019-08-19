@@ -69,7 +69,7 @@ namespace UB
         return *( this );
     }
     
-    void BinaryDataStream::Read( uint8_t * buf, size_t size )
+    void BinaryDataStream::read( uint8_t * buf, size_t size )
     {
         if( size > this->impl->_data.size() - this->impl->_pos )
         {
@@ -81,7 +81,7 @@ namespace UB
         this->impl->_pos += size;
     }
     
-    void BinaryDataStream::Seek( ssize_t offset, SeekDirection dir )
+    void BinaryDataStream::seek( ssize_t offset, SeekDirection dir )
     {
         size_t pos;
         
@@ -120,26 +120,26 @@ namespace UB
         this->impl->_pos = pos;
     }
     
-    size_t BinaryDataStream::Tell( void ) const
+    size_t BinaryDataStream::tell( void ) const
     {
         return this->impl->_pos;
     }
     
     BinaryDataStream & BinaryDataStream::operator +=( const BinaryDataStream & stream )
     {
-        this->Append( stream );
+        this->append( stream );
         
         return *( this );
     }
     
     BinaryDataStream & BinaryDataStream::operator +=( const std::vector< uint8_t > & data )
     {
-        this->Append( data );
+        this->append( data );
         
         return *( this );
     }
     
-    void BinaryDataStream::Append( const BinaryDataStream & stream )
+    void BinaryDataStream::append( const BinaryDataStream & stream )
     {
         this->impl->_data.insert
         (
@@ -151,7 +151,7 @@ namespace UB
         stream.impl->_pos = stream.impl->_data.size();
     }
     
-    void BinaryDataStream::Append( const std::vector< uint8_t > & data )
+    void BinaryDataStream::append( const std::vector< uint8_t > & data )
     {
         this->impl->_data.insert
         (

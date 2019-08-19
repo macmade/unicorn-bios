@@ -29,89 +29,89 @@
 
 namespace UB
 {
-    bool BinaryStream::HasBytesAvailable( void )
+    bool BinaryStream::hasBytesAvailable( void )
     {
-        return this->AvailableBytes() > 0;
+        return this->availableBytes() > 0;
     }
     
-    size_t BinaryStream::AvailableBytes( void )
+    size_t BinaryStream::availableBytes( void )
     {
-        size_t cur( this->Tell() );
+        size_t cur( this->tell() );
         size_t pos;
         
-        this->Seek( 0, SeekDirection::End );
+        this->seek( 0, SeekDirection::End );
         
-        pos = this->Tell();
+        pos = this->tell();
         
-        this->Seek( numeric_cast< ssize_t >( cur ), SeekDirection::Begin );
+        this->seek( numeric_cast< ssize_t >( cur ), SeekDirection::Begin );
         
         return pos - cur;
     }
     
-    void BinaryStream::Seek( ssize_t offset )
+    void BinaryStream::seek( ssize_t offset )
     {
-        this->Seek( offset, SeekDirection::Current );
+        this->seek( offset, SeekDirection::Current );
     }
     
-    std::vector< uint8_t > BinaryStream::Read( size_t size )
+    std::vector< uint8_t > BinaryStream::read( size_t size )
     {
         std::vector< uint8_t > data( size, 0 );
         
-        this->Read( &( data[ 0 ] ), size );
+        this->read( &( data[ 0 ] ), size );
         
         return data;
     }
     
-    std::vector< uint8_t > BinaryStream::ReadAll( void )
+    std::vector< uint8_t > BinaryStream::readAll( void )
     {
-        return this->Read( this->AvailableBytes() );
+        return this->read( this->availableBytes() );
     }
     
-    uint8_t BinaryStream::ReadUInt8( void )
+    uint8_t BinaryStream::readUInt8( void )
     {
         uint8_t n;
         
         n = 0;
         
-        this->Read( reinterpret_cast< uint8_t * >( &n ), 1 );
+        this->read( reinterpret_cast< uint8_t * >( &n ), 1 );
         
         return n;
     }
     
-    int8_t BinaryStream::ReadInt8( void )
+    int8_t BinaryStream::readInt8( void )
     {
         int8_t n;
         
         n = 0;
         
-        this->Read( reinterpret_cast< uint8_t * >( &n ), 1 );
+        this->read( reinterpret_cast< uint8_t * >( &n ), 1 );
         
         return n;
     }
     
-    uint16_t BinaryStream::ReadUInt16( void )
+    uint16_t BinaryStream::readUInt16( void )
     {
         uint16_t n;
         
         n = 0;
         
-        this->Read( reinterpret_cast< uint8_t * >( &n ), 2 );
+        this->read( reinterpret_cast< uint8_t * >( &n ), 2 );
         
         return n;
     }
     
-    int16_t BinaryStream::ReadInt16( void )
+    int16_t BinaryStream::readInt16( void )
     {
         int16_t n;
         
         n = 0;
         
-        this->Read( reinterpret_cast< uint8_t * >( &n ), 2 );
+        this->read( reinterpret_cast< uint8_t * >( &n ), 2 );
         
         return n;
     }
     
-    uint16_t BinaryStream::ReadBigEndianUInt16( void )
+    uint16_t BinaryStream::readBigEndianUInt16( void )
     {
         uint8_t  c[ 2 ];
         uint16_t n;
@@ -121,7 +121,7 @@ namespace UB
         c[ 0 ] = 0;
         c[ 1 ] = 0;
         
-        this->Read( reinterpret_cast< uint8_t * >( c ), 2 );
+        this->read( reinterpret_cast< uint8_t * >( c ), 2 );
         
         n1 = numeric_cast< uint16_t >( c[ 0 ] );
         n2 = numeric_cast< uint16_t >( c[ 1 ] );
@@ -132,7 +132,7 @@ namespace UB
         return n;
     }
     
-    uint16_t BinaryStream::ReadLittleEndianUInt16( void )
+    uint16_t BinaryStream::readLittleEndianUInt16( void )
     {
         uint8_t  c[ 2 ];
         uint16_t n;
@@ -142,7 +142,7 @@ namespace UB
         c[ 0 ] = 0;
         c[ 1 ] = 0;
         
-        this->Read( reinterpret_cast< uint8_t * >( c ), 2 );
+        this->read( reinterpret_cast< uint8_t * >( c ), 2 );
         
         n1 = numeric_cast< uint16_t >( c[ 1 ] );
         n2 = numeric_cast< uint16_t >( c[ 0 ] );
@@ -153,29 +153,29 @@ namespace UB
         return n;
     }
     
-    uint32_t BinaryStream::ReadUInt32( void )
+    uint32_t BinaryStream::readUInt32( void )
     {
         uint32_t n;
         
         n = 0;
         
-        this->Read( reinterpret_cast< uint8_t * >( &n ), 4 );
+        this->read( reinterpret_cast< uint8_t * >( &n ), 4 );
         
         return n;
     }
     
-    int32_t BinaryStream::ReadInt32( void )
+    int32_t BinaryStream::readInt32( void )
     {
         int32_t n;
         
         n = 0;
         
-        this->Read( reinterpret_cast< uint8_t * >( &n ), 4 );
+        this->read( reinterpret_cast< uint8_t * >( &n ), 4 );
         
         return n;
     }
     
-    uint32_t BinaryStream::ReadBigEndianUInt32( void )
+    uint32_t BinaryStream::readBigEndianUInt32( void )
     {
         uint8_t  c[ 4 ];
         uint32_t n;
@@ -189,7 +189,7 @@ namespace UB
         c[ 2 ] = 0;
         c[ 3 ] = 0;
         
-        this->Read( reinterpret_cast< uint8_t * >( c ), 4 );
+        this->read( reinterpret_cast< uint8_t * >( c ), 4 );
         
         n1 = numeric_cast< uint32_t >( c[ 0 ] );
         n2 = numeric_cast< uint32_t >( c[ 1 ] );
@@ -204,7 +204,7 @@ namespace UB
         return n;
     }
     
-    uint32_t BinaryStream::ReadLittleEndianUInt32( void )
+    uint32_t BinaryStream::readLittleEndianUInt32( void )
     {
         uint8_t  c[ 4 ];
         uint32_t n;
@@ -218,7 +218,7 @@ namespace UB
         c[ 2 ] = 0;
         c[ 3 ] = 0;
         
-        this->Read( reinterpret_cast< uint8_t * >( c ), 4 );
+        this->read( reinterpret_cast< uint8_t * >( c ), 4 );
         
         n1 = numeric_cast< uint32_t >( c[ 3 ] );
         n2 = numeric_cast< uint32_t >( c[ 2 ] );
@@ -233,29 +233,29 @@ namespace UB
         return n;
     }
     
-    uint64_t BinaryStream::ReadUInt64( void )
+    uint64_t BinaryStream::readUInt64( void )
     {
         uint64_t n;
         
         n = 0;
         
-        this->Read( reinterpret_cast< uint8_t * >( &n ), 8 );
+        this->read( reinterpret_cast< uint8_t * >( &n ), 8 );
         
         return n;
     }
     
-    int64_t BinaryStream::ReadInt64( void )
+    int64_t BinaryStream::readInt64( void )
     {
         int64_t n;
         
         n = 0;
         
-        this->Read( reinterpret_cast< uint8_t * >( &n ), 8 );
+        this->read( reinterpret_cast< uint8_t * >( &n ), 8 );
         
         return n;
     }
     
-    uint64_t BinaryStream::ReadBigEndianUInt64( void )
+    uint64_t BinaryStream::readBigEndianUInt64( void )
     {
         uint8_t  c[ 8 ];
         uint64_t n;
@@ -277,7 +277,7 @@ namespace UB
         c[ 6 ] = 0;
         c[ 7 ] = 0;
         
-        this->Read( reinterpret_cast< uint8_t * >( c ), 8 );
+        this->read( reinterpret_cast< uint8_t * >( c ), 8 );
         
         n1 = numeric_cast< uint64_t >( c[ 0 ] );
         n2 = numeric_cast< uint64_t >( c[ 1 ] );
@@ -300,7 +300,7 @@ namespace UB
         return n;
     }
     
-    uint64_t BinaryStream::ReadLittleEndianUInt64( void )
+    uint64_t BinaryStream::readLittleEndianUInt64( void )
     {
         uint8_t  c[ 8 ];
         uint64_t n;
@@ -322,7 +322,7 @@ namespace UB
         c[ 6 ] = 0;
         c[ 7 ] = 0;
         
-        this->Read( reinterpret_cast< uint8_t * >( c ), 8 );
+        this->read( reinterpret_cast< uint8_t * >( c ), 8 );
         
         n1 = numeric_cast< uint64_t >( c[ 7 ] );
         n2 = numeric_cast< uint64_t >( c[ 6 ] );
@@ -345,7 +345,7 @@ namespace UB
         return n;
     }
     
-    float BinaryStream::ReadBigEndianFixedPoint( unsigned int integerLength, unsigned int fractionalLength )
+    float BinaryStream::readBigEndianFixedPoint( unsigned int integerLength, unsigned int fractionalLength )
     {
         uint32_t     n;
         unsigned int integer;
@@ -354,11 +354,11 @@ namespace UB
         
         if( integerLength + fractionalLength == 16 )
         {
-            n = this->ReadBigEndianUInt16();
+            n = this->readBigEndianUInt16();
         }
         else
         {
-            n = this->ReadBigEndianUInt32();
+            n = this->readBigEndianUInt32();
         }
         
         integer        = n >> fractionalLength;
@@ -368,7 +368,7 @@ namespace UB
         return integer + fractional;
     }
     
-    float BinaryStream::ReadLittleEndianFixedPoint( unsigned int integerLength, unsigned int fractionalLength )
+    float BinaryStream::readLittleEndianFixedPoint( unsigned int integerLength, unsigned int fractionalLength )
     {
         uint32_t     n;
         unsigned int integer;
@@ -377,11 +377,11 @@ namespace UB
         
         if( integerLength + fractionalLength == 16 )
         {
-            n = this->ReadLittleEndianUInt16();
+            n = this->readLittleEndianUInt16();
         }
         else
         {
-            n = this->ReadLittleEndianUInt32();
+            n = this->readLittleEndianUInt32();
         }
         
         integer        = n >> fractionalLength;
@@ -391,7 +391,7 @@ namespace UB
         return integer + fractional;
     }
     
-    std::string BinaryStream::ReadNULLTerminatedString( void )
+    std::string BinaryStream::readNULLTerminatedString( void )
     {
         char        c;
         std::string s;
@@ -400,7 +400,7 @@ namespace UB
         {
             c = 0;
             
-            this->Read( reinterpret_cast< uint8_t * >( &c ), 1 );
+            this->read( reinterpret_cast< uint8_t * >( &c ), 1 );
             
             if( c == 0 )
             {
@@ -413,12 +413,12 @@ namespace UB
         return s;
     }
     
-    std::string BinaryStream::ReadPascalString( void )
+    std::string BinaryStream::readPascalString( void )
     {
         uint8_t     length;
         std::string ret;
         
-        length = this->ReadUInt8();
+        length = this->readUInt8();
         
         if( length == 0 )
         {
@@ -427,16 +427,16 @@ namespace UB
         
         ret = std::string( length, ' ' );
         
-        this->Read( reinterpret_cast< uint8_t * >( &( ret[ 0 ] ) ), length );
+        this->read( reinterpret_cast< uint8_t * >( &( ret[ 0 ] ) ), length );
         
         return ret;
     }
     
-    std::string BinaryStream::ReadString( size_t length )
+    std::string BinaryStream::readString( size_t length )
     {
         std::vector< char > cp( length + 1, 0 );
         
-        this->Read( reinterpret_cast< uint8_t * >( &( cp[ 0 ] ) ), length );
+        this->read( reinterpret_cast< uint8_t * >( &( cp[ 0 ] ) ), length );
         
         return &( cp[ 0 ] );
     }

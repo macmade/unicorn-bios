@@ -124,12 +124,12 @@ namespace UB
         {}
         
         DAP::IMPL::IMPL( BinaryStream & stream ):
-            _size(                stream.ReadUInt8() ),
-            _zero(                stream.ReadUInt8() ),
-            _numberOfSectors(     stream.ReadLittleEndianUInt16() ),
-            _destinationOffset(   stream.ReadLittleEndianUInt16() ),
-            _destinationSegment(  stream.ReadLittleEndianUInt16() ),
-            _logicalBlockAddress( stream.ReadLittleEndianUInt16() )
+            _size(                stream.readUInt8() ),
+            _zero(                stream.readUInt8() ),
+            _numberOfSectors(     stream.readLittleEndianUInt16() ),
+            _destinationOffset(   stream.readLittleEndianUInt16() ),
+            _destinationSegment(  stream.readLittleEndianUInt16() ),
+            _logicalBlockAddress( stream.readLittleEndianUInt16() )
         {}
         
         DAP::IMPL::IMPL( const IMPL & o ):

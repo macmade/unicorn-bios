@@ -281,38 +281,38 @@ namespace UB
             IMPL()
         {
             {
-                size_t pos( stream.Tell() );
+                size_t pos( stream.tell() );
                 
-                this->_data = stream.Read( 512 );
+                this->_data = stream.read( 512 );
                 
-                stream.Seek( numeric_cast< ssize_t >( pos ), BinaryStream::SeekDirection::Begin );
+                stream.seek( numeric_cast< ssize_t >( pos ), BinaryStream::SeekDirection::Begin );
             }
             
-            stream.Read( this->_jmp.data(),   this->_jmp.size() );
-            stream.Read( this->_oemID.data(), this->_oemID.size() );
+            stream.read( this->_jmp.data(),   this->_jmp.size() );
+            stream.read( this->_oemID.data(), this->_oemID.size() );
             
-            this->_bytesPerSector        = stream.ReadLittleEndianUInt16();
-            this->_sectorsPerCluster     = stream.ReadUInt8();
-            this->_reservedSectors       = stream.ReadLittleEndianUInt16();
-            this->_numberOfFATs          = stream.ReadUInt8();
-            this->_maxRootDirEntries     = stream.ReadLittleEndianUInt16();
-            this->_totalSectors          = stream.ReadLittleEndianUInt16();
-            this->_mediaDescriptor       = stream.ReadUInt8();
-            this->_sectorsPerFAT         = stream.ReadLittleEndianUInt16();
-            this->_sectorsPerTrack       = stream.ReadLittleEndianUInt16();
-            this->_headsPerCylinder      = stream.ReadLittleEndianUInt16();
-            this->_hiddenSectors         = stream.ReadLittleEndianUInt32();
-            this->_lbaSectors            = stream.ReadLittleEndianUInt32();
-            this->_driveNumber           = stream.ReadUInt8();
-            this->_reserved              = stream.ReadUInt8();
-            this->_extendedBootSignature = stream.ReadUInt8();
-            this->_volumeSerialNumber    = stream.ReadLittleEndianUInt32();
+            this->_bytesPerSector        = stream.readLittleEndianUInt16();
+            this->_sectorsPerCluster     = stream.readUInt8();
+            this->_reservedSectors       = stream.readLittleEndianUInt16();
+            this->_numberOfFATs          = stream.readUInt8();
+            this->_maxRootDirEntries     = stream.readLittleEndianUInt16();
+            this->_totalSectors          = stream.readLittleEndianUInt16();
+            this->_mediaDescriptor       = stream.readUInt8();
+            this->_sectorsPerFAT         = stream.readLittleEndianUInt16();
+            this->_sectorsPerTrack       = stream.readLittleEndianUInt16();
+            this->_headsPerCylinder      = stream.readLittleEndianUInt16();
+            this->_hiddenSectors         = stream.readLittleEndianUInt32();
+            this->_lbaSectors            = stream.readLittleEndianUInt32();
+            this->_driveNumber           = stream.readUInt8();
+            this->_reserved              = stream.readUInt8();
+            this->_extendedBootSignature = stream.readUInt8();
+            this->_volumeSerialNumber    = stream.readLittleEndianUInt32();
             
-            stream.Read( this->_volumeLabel.data(), this->_volumeLabel.size() );
-            stream.Read( this->_fileSystem.data(),  this->_fileSystem.size() );
-            stream.Read( this->_bootCode.data(),    this->_bootCode.size() );
+            stream.read( this->_volumeLabel.data(), this->_volumeLabel.size() );
+            stream.read( this->_fileSystem.data(),  this->_fileSystem.size() );
+            stream.read( this->_bootCode.data(),    this->_bootCode.size() );
             
-            this->_bootSignature = stream.ReadLittleEndianUInt16();
+            this->_bootSignature = stream.readLittleEndianUInt16();
         }
         
         MBR::IMPL::IMPL( const IMPL & o ):

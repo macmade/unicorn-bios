@@ -85,9 +85,9 @@ namespace UB
         
         std::vector< uint8_t > Image::read( uint64_t offset, uint64_t size )
         {
-            this->impl->_stream.Seek( numeric_cast< ssize_t >( offset ), BinaryStream::SeekDirection::Begin );
+            this->impl->_stream.seek( numeric_cast< ssize_t >( offset ), BinaryStream::SeekDirection::Begin );
             
-            return this->impl->_stream.Read( size );
+            return this->impl->_stream.read( size );
         }
         
         void swap( Image & o1, Image & o2 )
@@ -102,9 +102,9 @@ namespace UB
         {
             BinaryFileStream stream( path );
             
-            this->_stream = stream.ReadAll();
+            this->_stream = stream.readAll();
             
-            stream.Seek( 0, BinaryStream::SeekDirection::Begin );
+            stream.seek( 0, BinaryStream::SeekDirection::Begin );
             
             this->_mbr = MBR( stream );
         }

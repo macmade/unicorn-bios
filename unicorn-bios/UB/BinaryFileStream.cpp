@@ -50,7 +50,7 @@ namespace UB
     BinaryFileStream::~BinaryFileStream( void )
     {}
     
-    void BinaryFileStream::Read( uint8_t * buf, size_t size )
+    void BinaryFileStream::read( uint8_t * buf, size_t size )
     {
         if( this->impl->_stream.is_open() == false )
         {
@@ -67,7 +67,7 @@ namespace UB
         this->impl->_stream.read( reinterpret_cast< char * >( buf ), numeric_cast< std::streamsize >( size ) );
     }
     
-    void BinaryFileStream::Seek( ssize_t offset, SeekDirection dir )
+    void BinaryFileStream::seek( ssize_t offset, SeekDirection dir )
     {
         size_t pos;
         
@@ -108,7 +108,7 @@ namespace UB
         this->impl->_stream.seekg( numeric_cast< std::streamsize >( pos ), std::ios_base::beg );
     }
     
-    size_t BinaryFileStream::Tell( void ) const
+    size_t BinaryFileStream::tell( void ) const
     {
         if( this->impl->_stream.is_open() == false )
         {

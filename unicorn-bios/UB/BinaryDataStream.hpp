@@ -47,17 +47,17 @@ namespace UB
             
             BinaryDataStream & operator =( BinaryDataStream o );
             
-            using BinaryStream::Read;
+            using BinaryStream::read;
             
-            void   Read( uint8_t * buf, size_t size )        override;
-            void   Seek( ssize_t offset, SeekDirection dir ) override;
-            size_t Tell( void )                        const override;
+            void   read( uint8_t * buf, size_t size )        override;
+            void   seek( ssize_t offset, SeekDirection dir ) override;
+            size_t tell( void )                        const override;
             
             BinaryDataStream & operator +=( const BinaryDataStream & stream );
             BinaryDataStream & operator +=( const std::vector< uint8_t > & data );
             
-            void Append( const BinaryDataStream & stream );
-            void Append( const std::vector< uint8_t > & data );
+            void append( const BinaryDataStream & stream );
+            void append( const std::vector< uint8_t > & data );
             
             friend void swap( BinaryDataStream & o1, BinaryDataStream & o2 );
             

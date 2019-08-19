@@ -47,11 +47,11 @@ namespace UB
             BinaryFileStream & operator =( const BinaryFileStream & o ) = delete;
             BinaryFileStream & operator =( BinaryFileStream && o )      = delete;
             
-            using BinaryStream::Read;
+            using BinaryStream::read;
             
-            void   Read( uint8_t * buf, size_t size )        override;
-            void   Seek( ssize_t offset, SeekDirection dir ) override;
-            size_t Tell( void )                        const override;
+            void   read( uint8_t * buf, size_t size )        override;
+            void   seek( ssize_t offset, SeekDirection dir ) override;
+            size_t tell( void )                        const override;
             
         private:
             
