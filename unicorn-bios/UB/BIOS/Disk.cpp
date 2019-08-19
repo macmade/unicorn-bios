@@ -116,16 +116,6 @@ namespace UB
                 machine.ui().debug() << "Checking if INT13h extensions are supported" << std::endl;
                 
                 engine.bx( 0xAA55 );
-                
-                if( engine.bx() != 0x55AA )
-                {
-                    engine.cf( true );
-                    engine.ah( 1 );
-                    engine.cx( 0 );
-                    
-                    return true;
-                }
-                
                 engine.cf( false );
                 engine.ah( 0 );
                 engine.cx( 7 );
