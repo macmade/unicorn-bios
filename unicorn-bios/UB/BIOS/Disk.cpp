@@ -127,37 +127,29 @@ namespace UB
             
             bool extendedReadSectors( const Machine & machine, Engine & engine )
             {
-                uint8_t          driveNumber( engine.dl() );
-                uint64_t         dapAddress(  Engine::getAddress( engine.ds(), engine.si() ) );
-                FAT::Image       image(       machine.bootImage() );
-                FAT::MBR         mbr(         image.mbr() );
-                BinaryDataStream dapData(     engine.read( dapAddress, FAT::DAP::DataSize() ) );
-                FAT::DAP         dap(         dapData );
+                uint8_t          driveNumber     = engine.dl();
+                uint64_t         dapAddress      = Engine::getAddress( engine.ds(), engine.si() );
+                FAT::Image       image           = machine.bootImage();
+                FAT::MBR         mbr             = image.mbr();
+                BinaryDataStream dapData         = engine.read( dapAddress, FAT::DAP::DataSize() );
+                FAT::DAP         dap             = dapData;
+                uint64_t         destination     = Engine::getAddress( dap.destinationSegment(), dap.destinationOffset() );
+                uint64_t         numberOfSectors = numeric_cast< uint64_t >( dap.numberOfSectors() );
+                uint64_t         bytesPerSector  = ( mbr.isValid() ) ? mbr.bytesPerSector() : 512;
+                uint64_t         offset          = dap.logicalBlockAddress() * bytesPerSector;
+                uint64_t         size            = numberOfSectors * bytesPerSector;
                 
-                uint64_t destination     = Engine::getAddress( dap.destinationSegment(), dap.destinationOffset() );
-                uint64_t numberOfSectors = numeric_cast< uint64_t >( dap.numberOfSectors() );
-
-                uint64_t bytesPerSector = ( mbr.isValid() ) ? mbr.bytesPerSector() : 512;
-                uint64_t offset         = dap.logicalBlockAddress() * bytesPerSector;
-                uint64_t size           = numberOfSectors * bytesPerSector;
-
                 if( driveNumber != 0x00 )
                 {
                     machine.ui().debug() << "[ ERROR ]> Reading from drive " << String::toHex( driveNumber ) << " is not supported" << std::endl;
-
+                    
                     goto error;
                 }
-
+                
                 machine.ui().debug() << "Reading DAP at " << String::toHex( dapAddress ) << " from drive " << String::toHex( driveNumber )
                                      << std::endl
                                      << "    - DAP Address: " << String::toHex( dapAddress )  << " (" << String::toHex( engine.ds() ) << ":" << String::toHex( engine.si() ) << ")"
                                      << std::endl
-                                     /* << "        - Size:                " << dap->size                                 << std::endl */
-                                     /* << "        - Zero:                " << dap->zero                                 << std::endl */
-                                     /* << "        - Number of sectors:   " << dap->numberOfSectors                      << std::endl */
-                                     /* << "        - Destination segment: " << String::toHex( dap->destinationSegment )  << std::endl */
-                                     /* << "        - Destination offset:  " << String::toHex( dap->destinationOffset )   << std::endl */
-                                     /* << "        - LBA:                 " << String::toHex( dap->logicalBlockAddress ) << std::endl */
                                      << "    - LBA:         " << String::toHex( dap.logicalBlockAddress() )
                                      << std::endl
                                      << "    - Offset:      " << String::toHex( offset )
@@ -166,19 +158,19 @@ namespace UB
                                      << std::endl
                                      << "    - Destination: " << String::toHex( destination ) << " (" << String::toHex( dap.destinationSegment() ) << ":" << String::toHex( dap.destinationOffset() ) << ")"
                                      << std::endl;
-
+                
                 {
                     std::vector< uint8_t > bytes( image.read( offset, size ) );
-
+                    
                     if( bytes.size() == 0 )
                     {
                         machine.ui().debug() << "[ ERROR ]> No data received" << std::endl;
-
+                        
                         goto error;
                     }
-
+                    
                     engine.write( destination, bytes );
-
+                    
                     machine.ui().debug() << "[ SUCCESS ]> Wrote "
                                          << bytes.size()
                                          << " bytes at "
@@ -186,18 +178,18 @@ namespace UB
                                          << " -> "
                                          << String::toHex( destination + bytes.size() )
                                          << std::endl;
-
+                    
                     engine.cf( false );
                     engine.ah( 0 );
-
+                    
                     return true;
                 }
-
+                
                 error:
-
+                    
                     engine.cf( true );
                     engine.ah( 1 );
-
+                    
                     return true;
             }
         }
