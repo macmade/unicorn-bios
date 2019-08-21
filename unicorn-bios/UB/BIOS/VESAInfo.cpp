@@ -35,6 +35,9 @@ namespace UB
                 IMPL( void );
                 IMPL( const IMPL & o );
                 ~IMPL( void );
+                
+                std::array< uint8_t, 4 > _signature;
+                uint16_t                 _version;
         };
 
         VESAInfo::VESAInfo( void ):
@@ -63,7 +66,17 @@ namespace UB
         {
             return {};
         }
-
+        
+        std::array< uint8_t, 4 > VESAInfo::signature( void ) const
+        {
+            return this->impl->_signature;
+        }
+        
+        uint16_t VESAInfo::version( void ) const
+        {
+            return this->impl->_version;
+        }
+        
         void swap( VESAInfo & o1, VESAInfo & o2 )
         {
             using std::swap;
@@ -71,13 +84,15 @@ namespace UB
             swap( o1.impl, o2.impl );
         }
 
-        VESAInfo::IMPL::IMPL( void )
+        VESAInfo::IMPL::IMPL( void ):
+            _signature( { 'V', 'E', 'S', 'A' } ),
+            _version(   0x0200 )
         {}
 
-        VESAInfo::IMPL::IMPL( const IMPL & o )
-        {
-            ( void )o;
-        }
+        VESAInfo::IMPL::IMPL( const IMPL & o ):
+            _signature( o._signature ),
+            _version( o._version )
+        {}
 
         VESAInfo::IMPL::~IMPL( void )
         {}

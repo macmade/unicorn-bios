@@ -29,6 +29,7 @@
 #include <algorithm>
 #include <vector>
 #include <cstdint>
+#include <array>
 
 namespace UB
 {
@@ -46,6 +47,9 @@ namespace UB
                 VESAInfo & operator =( VESAInfo o );
                 
                 std::vector< uint8_t > data( void ) const;
+                
+                std::array< uint8_t, 4 > signature( void ) const;
+                uint16_t                 version( void )   const;
                 
                 friend void swap( VESAInfo & o1, VESAInfo & o2 );
                 
