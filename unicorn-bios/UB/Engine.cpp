@@ -53,8 +53,10 @@ namespace UB
             
             std::vector< uint8_t > _read( size_t address, size_t size );
             void                   _write( size_t address, const uint8_t * bytes, size_t size );
+            void                   _switchMode( Mode mode );
             
             size_t                       _memory;
+            Mode                         _mode;
             Registers                    _registers;
             uint64_t                     _lastInstructionAddress;
             std::vector< uint8_t >       _lastInstruction;
@@ -146,6 +148,16 @@ namespace UB
     size_t Engine::memory( void ) const
     {
         return this->impl->_memory;
+    }
+
+    Engine::Mode Engine::mode( void ) const
+    {
+        return this->impl->_mode;
+    }
+    
+    void Engine::mode( Mode mode )
+    {
+        this->impl->_switchMode( mode );
     }
     
     bool Engine::cf( void ) const
@@ -1142,23 +1154,11 @@ namespace UB
     
     Engine::IMPL::IMPL( size_t memory ):
         _memory( memory ),
+        _mode( Mode::Real ),
         _uc( nullptr ),
         _running( false )
     {
-        uc_err e;
-        
-        if( ( e = uc_open( UC_ARCH_X86, UC_MODE_16, &( this->_uc ) ) ) != UC_ERR_OK )
-        {
-            throw std::runtime_error( uc_strerror( e ) );
-        }
-        
-        if( memory > 0 )
-        {
-            if( ( e = uc_mem_map( this->_uc, 0, memory, UC_PROT_ALL ) ) != UC_ERR_OK )
-            {
-                throw std::runtime_error( uc_strerror( e ) );
-            }
-        }
+        this->_switchMode( Mode::Real );
     }
     
     Engine::IMPL::~IMPL( void )
@@ -1358,5 +1358,47 @@ namespace UB
         {
             throw std::runtime_error( uc_strerror( e ) );
         }
+    }
+    
+    void Engine::IMPL::_switchMode( Mode mode )
+    {
+        uc_mode     m;
+        uc_engine * uc;
+        uc_err      e;
+        
+        if( mode == Mode::Real )
+        {
+            m = UC_MODE_16;
+        }
+        else if( mode == Mode::Protected )
+        {
+            m = UC_MODE_32;
+        }
+        else if( mode == Mode::Long )
+        {
+            m = UC_MODE_64;
+        }
+        else
+        {
+            throw std::runtime_error( "Unsupported CPU mode" );
+        }
+        
+        if( ( e = uc_open( UC_ARCH_X86, m, &uc ) ) != UC_ERR_OK )
+        {
+            throw std::runtime_error( uc_strerror( e ) );
+        }
+        
+        if( this->_memory > 0 )
+        {
+            if( ( e = uc_mem_map( uc, 0, this->_memory, UC_PROT_ALL ) ) != UC_ERR_OK )
+            {
+                throw std::runtime_error( uc_strerror( e ) );
+            }
+        }
+        
+        if( this->_uc != nullptr )
+        {}
+        
+        this->_uc = uc;
     }
 }

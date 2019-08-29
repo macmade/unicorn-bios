@@ -38,6 +38,13 @@ namespace UB
     {
         public:
             
+            enum class Mode
+            {
+                Real,
+                Protected,
+                Long
+            };
+            
             static uint64_t getAddress( uint16_t segment, uint16_t offset );
             
             Engine( size_t memory );
@@ -49,6 +56,9 @@ namespace UB
             Engine & operator =( Engine && o )      = delete;
             
             size_t memory( void ) const;
+            
+            Mode mode( void ) const;
+            void mode( Mode mode );
             
             bool cf( void ) const;
             
