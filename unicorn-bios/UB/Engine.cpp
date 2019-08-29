@@ -159,165 +159,390 @@ namespace UB
     {
         return this->impl->_readRegister< uint8_t >( UC_X86_REG_AH );
     }
-    
+
     uint8_t Engine::al( void ) const
     {
         return this->impl->_readRegister< uint8_t >( UC_X86_REG_AL );
     }
-    
-    uint8_t Engine::bh( void ) const
-    {
-        return this->impl->_readRegister< uint8_t >( UC_X86_REG_BH );
-    }
-    
-    uint8_t Engine::bl( void ) const
-    {
-        return this->impl->_readRegister< uint8_t >( UC_X86_REG_BL );
-    }
-    
-    uint8_t Engine::ch( void ) const
-    {
-        return this->impl->_readRegister< uint8_t >( UC_X86_REG_CH );
-    }
-    
-    uint8_t Engine::cl( void ) const
-    {
-        return this->impl->_readRegister< uint8_t >( UC_X86_REG_CL );
-    }
-    
-    uint8_t Engine::dh( void ) const
-    {
-        return this->impl->_readRegister< uint8_t >( UC_X86_REG_DH );
-    }
-    
-    uint8_t Engine::dl( void ) const
-    {
-        return this->impl->_readRegister< uint8_t >( UC_X86_REG_DL );
-    }
-    
+
     uint16_t Engine::ax( void ) const
     {
         return this->impl->_readRegister< uint16_t >( UC_X86_REG_AX );
     }
-    
-    uint16_t Engine::bx( void ) const
-    {
-        return this->impl->_readRegister< uint16_t >( UC_X86_REG_BX );
-    }
-    
-    uint16_t Engine::cx( void ) const
-    {
-        return this->impl->_readRegister< uint16_t >( UC_X86_REG_CX );
-    }
-    
-    uint16_t Engine::dx( void ) const
-    {
-        return this->impl->_readRegister< uint16_t >( UC_X86_REG_DX );
-    }
-    
-    uint16_t Engine::si( void ) const
-    {
-        return this->impl->_readRegister< uint16_t >( UC_X86_REG_SI );
-    }
-    
-    uint16_t Engine::di( void ) const
-    {
-        return this->impl->_readRegister< uint16_t >( UC_X86_REG_DI );
-    }
-    
-    uint16_t Engine::sp( void ) const
-    {
-        return this->impl->_readRegister< uint16_t >( UC_X86_REG_SP );
-    }
-    
-    uint16_t Engine::bp( void ) const
-    {
-        return this->impl->_readRegister< uint16_t >( UC_X86_REG_BP );
-    }
-    
-    uint16_t Engine::cs( void ) const
-    {
-        return this->impl->_readRegister< uint16_t >( UC_X86_REG_CS );
-    }
-    
-    uint16_t Engine::ds( void ) const
-    {
-        return this->impl->_readRegister< uint16_t >( UC_X86_REG_DS );
-    }
-    
-    uint16_t Engine::ss( void ) const
-    {
-        return this->impl->_readRegister< uint16_t >( UC_X86_REG_SS );
-    }
-    
-    uint16_t Engine::es( void ) const
-    {
-        return this->impl->_readRegister< uint16_t >( UC_X86_REG_ES );
-    }
-    
-    uint16_t Engine::fs( void ) const
-    {
-        return this->impl->_readRegister< uint16_t >( UC_X86_REG_FS );
-    }
-    
-    uint16_t Engine::gs( void ) const
-    {
-        return this->impl->_readRegister< uint16_t >( UC_X86_REG_GS );
-    }
-    
-    uint16_t Engine::ip( void ) const
-    {
-        return this->impl->_readRegister< uint16_t >( UC_X86_REG_IP );
-    }
-    
+
     uint32_t Engine::eax( void ) const
     {
         return this->impl->_readRegister< uint32_t >( UC_X86_REG_EAX );
     }
-    
+
+    uint64_t Engine::rax( void ) const
+    {
+        return this->impl->_readRegister< uint64_t >( UC_X86_REG_RAX );
+    }
+
+    uint8_t Engine::bh( void ) const
+    {
+        return this->impl->_readRegister< uint8_t >( UC_X86_REG_BH );
+    }
+
+    uint8_t Engine::bl( void ) const
+    {
+        return this->impl->_readRegister< uint8_t >( UC_X86_REG_BL );
+    }
+
+    uint16_t Engine::bx( void ) const
+    {
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_BX );
+    }
+
     uint32_t Engine::ebx( void ) const
     {
         return this->impl->_readRegister< uint32_t >( UC_X86_REG_EBX );
     }
-    
+
+    uint64_t Engine::rbx( void ) const
+    {
+        return this->impl->_readRegister< uint64_t >( UC_X86_REG_RBX );
+    }
+
+    uint8_t Engine::ch( void ) const
+    {
+        return this->impl->_readRegister< uint8_t >( UC_X86_REG_CH );
+    }
+
+    uint8_t Engine::cl( void ) const
+    {
+        return this->impl->_readRegister< uint8_t >( UC_X86_REG_CL );
+    }
+
+    uint16_t Engine::cx( void ) const
+    {
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_CX );
+    }
+
     uint32_t Engine::ecx( void ) const
     {
         return this->impl->_readRegister< uint32_t >( UC_X86_REG_ECX );
     }
-    
+
+    uint64_t Engine::rcx( void ) const
+    {
+        return this->impl->_readRegister< uint64_t >( UC_X86_REG_RCX );
+    }
+
+    uint8_t Engine::dh( void ) const
+    {
+        return this->impl->_readRegister< uint8_t >( UC_X86_REG_DH );
+    }
+
+    uint8_t Engine::dl( void ) const
+    {
+        return this->impl->_readRegister< uint8_t >( UC_X86_REG_DL );
+    }
+
+    uint16_t Engine::dx( void ) const
+    {
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_DX );
+    }
+
     uint32_t Engine::edx( void ) const
     {
         return this->impl->_readRegister< uint32_t >( UC_X86_REG_EDX );
     }
-    
+
+    uint64_t Engine::rdx( void ) const
+    {
+        return this->impl->_readRegister< uint64_t >( UC_X86_REG_RDX );
+    }
+
+    uint8_t Engine::sil( void ) const
+    {
+        return this->impl->_readRegister< uint8_t >( UC_X86_REG_SIL );
+    }
+
+    uint16_t Engine::si( void ) const
+    {
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_SI );
+    }
+
     uint32_t Engine::esi( void ) const
     {
         return this->impl->_readRegister< uint32_t >( UC_X86_REG_ESI );
     }
-    
+
+    uint64_t Engine::rsi( void ) const
+    {
+        return this->impl->_readRegister< uint64_t >( UC_X86_REG_RSI );
+    }
+
+    uint8_t Engine::dil( void ) const
+    {
+        return this->impl->_readRegister< uint8_t >( UC_X86_REG_DIL );
+    }
+
+    uint16_t Engine::di( void ) const
+    {
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_DI );
+    }
+
     uint32_t Engine::edi( void ) const
     {
         return this->impl->_readRegister< uint32_t >( UC_X86_REG_EDI );
     }
-    
-    uint32_t Engine::esp( void ) const
+
+    uint64_t Engine::rdi( void ) const
     {
-        return this->impl->_readRegister< uint32_t >( UC_X86_REG_ESP );
+        return this->impl->_readRegister< uint64_t >( UC_X86_REG_RDI );
     }
-    
+
+    uint8_t Engine::bpl( void ) const
+    {
+        return this->impl->_readRegister< uint8_t >( UC_X86_REG_BPL );
+    }
+
+    uint16_t Engine::bp( void ) const
+    {
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_BP );
+    }
+
     uint32_t Engine::ebp( void ) const
     {
         return this->impl->_readRegister< uint32_t >( UC_X86_REG_EBP );
     }
-    
+
+    uint64_t Engine::rbp( void ) const
+    {
+        return this->impl->_readRegister< uint64_t >( UC_X86_REG_RBP );
+    }
+
+    uint8_t Engine::spl( void ) const
+    {
+        return this->impl->_readRegister< uint8_t >( UC_X86_REG_SPL );
+    }
+
+    uint16_t Engine::sp( void ) const
+    {
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_SP );
+    }
+
+    uint32_t Engine::esp( void ) const
+    {
+        return this->impl->_readRegister< uint32_t >( UC_X86_REG_ESP );
+    }
+
+    uint64_t Engine::rsp( void ) const
+    {
+        return this->impl->_readRegister< uint64_t >( UC_X86_REG_RSP );
+    }
+
+    uint16_t Engine::ip( void ) const
+    {
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_IP );
+    }
+
     uint32_t Engine::eip( void ) const
     {
         return this->impl->_readRegister< uint32_t >( UC_X86_REG_EIP );
     }
-    
+
+    uint64_t Engine::rip( void ) const
+    {
+        return this->impl->_readRegister< uint64_t >( UC_X86_REG_RIP );
+    }
+
+    uint16_t Engine::cs( void ) const
+    {
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_CS );
+    }
+
+    uint16_t Engine::ds( void ) const
+    {
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_DS );
+    }
+
+    uint16_t Engine::es( void ) const
+    {
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_ES );
+    }
+
+    uint16_t Engine::fs( void ) const
+    {
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_FS );
+    }
+
+    uint16_t Engine::gs( void ) const
+    {
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_GS );
+    }
+
+    uint16_t Engine::ss( void ) const
+    {
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_SS );
+    }
+
     uint32_t Engine::eflags( void ) const
     {
         return this->impl->_readRegister< uint32_t >( UC_X86_REG_EFLAGS );
+    }
+
+    uint8_t Engine::r8b( void ) const
+    {
+        return this->impl->_readRegister< uint8_t >( UC_X86_REG_R8B );
+    }
+
+    uint16_t Engine::r8w( void ) const
+    {
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_R8W );
+    }
+
+    uint32_t Engine::r8d( void ) const
+    {
+        return this->impl->_readRegister< uint32_t >( UC_X86_REG_R8D );
+    }
+
+    uint64_t Engine::r8( void ) const
+    {
+        return this->impl->_readRegister< uint64_t >( UC_X86_REG_R8 );
+    }
+
+    uint8_t Engine::r9b( void ) const
+    {
+        return this->impl->_readRegister< uint8_t >( UC_X86_REG_R9B );
+    }
+
+    uint16_t Engine::r9w( void ) const
+    {
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_R9W );
+    }
+
+    uint32_t Engine::r9d( void ) const
+    {
+        return this->impl->_readRegister< uint32_t >( UC_X86_REG_R9D );
+    }
+
+    uint64_t Engine::r9( void ) const
+    {
+        return this->impl->_readRegister< uint64_t >( UC_X86_REG_R9 );
+    }
+
+    uint8_t Engine::r10b( void ) const
+    {
+        return this->impl->_readRegister< uint8_t >( UC_X86_REG_R10B );
+    }
+
+    uint16_t Engine::r10w( void ) const
+    {
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_R10W );
+    }
+
+    uint32_t Engine::r10d( void ) const
+    {
+        return this->impl->_readRegister< uint32_t >( UC_X86_REG_R10D );
+    }
+
+    uint64_t Engine::r10( void ) const
+    {
+        return this->impl->_readRegister< uint64_t >( UC_X86_REG_R10 );
+    }
+
+    uint8_t Engine::r11b( void ) const
+    {
+        return this->impl->_readRegister< uint8_t >( UC_X86_REG_R11B );
+    }
+
+    uint16_t Engine::r11w( void ) const
+    {
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_R11W );
+    }
+
+    uint32_t Engine::r11d( void ) const
+    {
+        return this->impl->_readRegister< uint32_t >( UC_X86_REG_R11D );
+    }
+
+    uint64_t Engine::r11( void ) const
+    {
+        return this->impl->_readRegister< uint64_t >( UC_X86_REG_R11 );
+    }
+
+    uint8_t Engine::r12b( void ) const
+    {
+        return this->impl->_readRegister< uint8_t >( UC_X86_REG_R12B );
+    }
+
+    uint16_t Engine::r12w( void ) const
+    {
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_R12W );
+    }
+
+    uint32_t Engine::r12d( void ) const
+    {
+        return this->impl->_readRegister< uint32_t >( UC_X86_REG_R12D );
+    }
+
+    uint64_t Engine::r12( void ) const
+    {
+        return this->impl->_readRegister< uint64_t >( UC_X86_REG_R12 );
+    }
+
+    uint8_t Engine::r13b( void ) const
+    {
+        return this->impl->_readRegister< uint8_t >( UC_X86_REG_R13B );
+    }
+
+    uint16_t Engine::r13w( void ) const
+    {
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_R13W );
+    }
+
+    uint32_t Engine::r13d( void ) const
+    {
+        return this->impl->_readRegister< uint32_t >( UC_X86_REG_R13D );
+    }
+
+    uint64_t Engine::r13( void ) const
+    {
+        return this->impl->_readRegister< uint64_t >( UC_X86_REG_R13 );
+    }
+
+    uint8_t Engine::r14b( void ) const
+    {
+        return this->impl->_readRegister< uint8_t >( UC_X86_REG_R14B );
+    }
+
+    uint16_t Engine::r14w( void ) const
+    {
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_R14W );
+    }
+
+    uint32_t Engine::r14d( void ) const
+    {
+        return this->impl->_readRegister< uint32_t >( UC_X86_REG_R14D );
+    }
+
+    uint64_t Engine::r14( void ) const
+    {
+        return this->impl->_readRegister< uint64_t >( UC_X86_REG_R14 );
+    }
+
+    uint8_t Engine::r15b( void ) const
+    {
+        return this->impl->_readRegister< uint8_t >( UC_X86_REG_R15B );
+    }
+
+    uint16_t Engine::r15w( void ) const
+    {
+        return this->impl->_readRegister< uint16_t >( UC_X86_REG_R15W );
+    }
+
+    uint32_t Engine::r15d( void ) const
+    {
+        return this->impl->_readRegister< uint32_t >( UC_X86_REG_R15D );
+    }
+
+    uint64_t Engine::r15( void ) const
+    {
+        return this->impl->_readRegister< uint64_t >( UC_X86_REG_R15 );
     }
     
     void Engine::cf( bool value )
@@ -336,172 +561,397 @@ namespace UB
         
         this->eflags( flags );
     }
-    
+
     void Engine::ah( uint8_t value )
     {
         this->impl->_writeRegister( UC_X86_REG_AH, value );
     }
-    
+
     void Engine::al( uint8_t value )
     {
         this->impl->_writeRegister( UC_X86_REG_AL, value );
     }
-    
-    void Engine::bh( uint8_t value )
-    {
-        this->impl->_writeRegister( UC_X86_REG_BH, value );
-    }
-    
-    void Engine::bl( uint8_t value )
-    {
-        this->impl->_writeRegister( UC_X86_REG_BL, value );
-    }
-    
-    void Engine::ch( uint8_t value )
-    {
-        this->impl->_writeRegister( UC_X86_REG_CH, value );
-    }
-    
-    void Engine::cl( uint8_t value )
-    {
-        this->impl->_writeRegister( UC_X86_REG_CL, value );
-    }
-    
-    void Engine::dh( uint8_t value )
-    {
-        this->impl->_writeRegister( UC_X86_REG_DH, value );
-    }
-    
-    void Engine::dl( uint8_t value )
-    {
-        this->impl->_writeRegister( UC_X86_REG_DL, value );
-    }
-    
+
     void Engine::ax( uint16_t value )
     {
         this->impl->_writeRegister( UC_X86_REG_AX, value );
     }
-    
-    void Engine::bx( uint16_t value )
-    {
-        this->impl->_writeRegister( UC_X86_REG_BX, value );
-    }
-    
-    void Engine::cx( uint16_t value )
-    {
-        this->impl->_writeRegister( UC_X86_REG_CX, value );
-    }
-    
-    void Engine::dx( uint16_t value )
-    {
-        this->impl->_writeRegister( UC_X86_REG_DX, value );
-    }
-    
-    void Engine::si( uint16_t value )
-    {
-        this->impl->_writeRegister( UC_X86_REG_SI, value );
-    }
-    
-    void Engine::di( uint16_t value )
-    {
-        this->impl->_writeRegister( UC_X86_REG_DI, value );
-    }
-    
-    void Engine::sp( uint16_t value )
-    {
-        this->impl->_writeRegister( UC_X86_REG_SP, value );
-    }
-    
-    void Engine::bp( uint16_t value )
-    {
-        this->impl->_writeRegister( UC_X86_REG_BP, value );
-    }
-    
-    void Engine::cs( uint16_t value )
-    {
-        this->impl->_writeRegister( UC_X86_REG_CS, value );
-    }
-    
-    void Engine::ds( uint16_t value )
-    {
-        this->impl->_writeRegister( UC_X86_REG_DS, value );
-    }
-    
-    void Engine::ss( uint16_t value )
-    {
-        this->impl->_writeRegister( UC_X86_REG_SS, value );
-    }
-    
-    void Engine::es( uint16_t value )
-    {
-        this->impl->_writeRegister( UC_X86_REG_ES, value );
-    }
-    
-    void Engine::fs( uint16_t value )
-    {
-        this->impl->_writeRegister( UC_X86_REG_FS, value );
-    }
-    
-    void Engine::gs( uint16_t value )
-    {
-        this->impl->_writeRegister( UC_X86_REG_GS, value );
-    }
-    
-    void Engine::ip( uint16_t value )
-    {
-        this->impl->_writeRegister( UC_X86_REG_IP, value );
-    }
-    
+
     void Engine::eax( uint32_t value )
     {
         this->impl->_writeRegister( UC_X86_REG_EAX, value );
     }
-    
+
+    void Engine::rax( uint64_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_RAX, value );
+    }
+
+    void Engine::bh( uint8_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_BH, value );
+    }
+
+    void Engine::bl( uint8_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_BL, value );
+    }
+
+    void Engine::bx( uint16_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_BX, value );
+    }
+
     void Engine::ebx( uint32_t value )
     {
         this->impl->_writeRegister( UC_X86_REG_EBX, value );
     }
-    
+
+    void Engine::rbx( uint64_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_RBX, value );
+    }
+
+    void Engine::ch( uint8_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_CH, value );
+    }
+
+    void Engine::cl( uint8_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_CL, value );
+    }
+
+    void Engine::cx( uint16_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_CX, value );
+    }
+
     void Engine::ecx( uint32_t value )
     {
         this->impl->_writeRegister( UC_X86_REG_ECX, value );
     }
-    
+
+    void Engine::rcx( uint64_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_RCX, value );
+    }
+
+    void Engine::dh( uint8_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_DH, value );
+    }
+
+    void Engine::dl( uint8_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_DL, value );
+    }
+
+    void Engine::dx( uint16_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_DX, value );
+    }
+
     void Engine::edx( uint32_t value )
     {
         this->impl->_writeRegister( UC_X86_REG_EDX, value );
     }
-    
+
+    void Engine::rdx( uint64_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_RDX, value );
+    }
+
+    void Engine::sil( uint8_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_SIL, value );
+    }
+
+    void Engine::si( uint16_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_SI, value );
+    }
+
     void Engine::esi( uint32_t value )
     {
         this->impl->_writeRegister( UC_X86_REG_ESI, value );
     }
-    
+
+    void Engine::rsi( uint64_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_RSI, value );
+    }
+
+    void Engine::dil( uint8_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_DIL, value );
+    }
+
+    void Engine::di( uint16_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_DI, value );
+    }
+
     void Engine::edi( uint32_t value )
     {
         this->impl->_writeRegister( UC_X86_REG_EDI, value );
     }
-    
-    void Engine::esp( uint32_t value )
+
+    void Engine::rdi( uint64_t value )
     {
-        this->impl->_writeRegister( UC_X86_REG_ESP, value );
+        this->impl->_writeRegister( UC_X86_REG_RDI, value );
     }
-    
+
+    void Engine::bpl( uint8_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_BPL, value );
+    }
+
+    void Engine::bp( uint16_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_BP, value );
+    }
+
     void Engine::ebp( uint32_t value )
     {
         this->impl->_writeRegister( UC_X86_REG_EBP, value );
     }
-    
+
+    void Engine::rbp( uint64_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_RBP, value );
+    }
+
+    void Engine::spl( uint8_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_SPL, value );
+    }
+
+    void Engine::sp( uint16_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_SP, value );
+    }
+
+    void Engine::esp( uint32_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_ESP, value );
+    }
+
+    void Engine::rsp( uint64_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_RSP, value );
+    }
+
+    void Engine::ip( uint16_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_IP, value );
+    }
+
     void Engine::eip( uint32_t value )
     {
         this->impl->_writeRegister( UC_X86_REG_EIP, value );
     }
-    
+
+    void Engine::rip( uint64_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_RIP, value );
+    }
+
+    void Engine::cs( uint16_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_CS, value );
+    }
+
+    void Engine::ds( uint16_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_DS, value );
+    }
+
+    void Engine::es( uint16_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_ES, value );
+    }
+
+    void Engine::fs( uint16_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_FS, value );
+    }
+
+    void Engine::gs( uint16_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_GS, value );
+    }
+
+    void Engine::ss( uint16_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_SS, value );
+    }
+
     void Engine::eflags( uint32_t value )
     {
         this->impl->_writeRegister( UC_X86_REG_EFLAGS, value );
     }
-    
+
+    void Engine::r8b( uint8_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R8B, value );
+    }
+
+    void Engine::r8w( uint16_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R8W, value );
+    }
+
+    void Engine::r8d( uint32_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R8D, value );
+    }
+
+    void Engine::r8( uint64_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R8, value );
+    }
+
+    void Engine::r9b( uint8_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R9B, value );
+    }
+
+    void Engine::r9w( uint16_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R9W, value );
+    }
+
+    void Engine::r9d( uint32_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R9D, value );
+    }
+
+    void Engine::r9( uint64_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R9, value );
+    }
+
+    void Engine::r10b( uint8_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R10B, value );
+    }
+
+    void Engine::r10w( uint16_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R10W, value );
+    }
+
+    void Engine::r10d( uint32_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R10D, value );
+    }
+
+    void Engine::r10( uint64_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R10, value );
+    }
+
+    void Engine::r11b( uint8_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R11B, value );
+    }
+
+    void Engine::r11w( uint16_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R11W, value );
+    }
+
+    void Engine::r11d( uint32_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R11D, value );
+    }
+
+    void Engine::r11( uint64_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R11, value );
+    }
+
+    void Engine::r12b( uint8_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R12B, value );
+    }
+
+    void Engine::r12w( uint16_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R12W, value );
+    }
+
+    void Engine::r12d( uint32_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R12D, value );
+    }
+
+    void Engine::r12( uint64_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R12, value );
+    }
+
+    void Engine::r13b( uint8_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R13B, value );
+    }
+
+    void Engine::r13w( uint16_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R13W, value );
+    }
+
+    void Engine::r13d( uint32_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R13D, value );
+    }
+
+    void Engine::r13( uint64_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R13, value );
+    }
+
+    void Engine::r14b( uint8_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R14B, value );
+    }
+
+    void Engine::r14w( uint16_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R14W, value );
+    }
+
+    void Engine::r14d( uint32_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R14D, value );
+    }
+
+    void Engine::r14( uint64_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R14, value );
+    }
+
+    void Engine::r15b( uint8_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R15B, value );
+    }
+
+    void Engine::r15w( uint16_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R15W, value );
+    }
+
+    void Engine::r15d( uint32_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R15D, value );
+    }
+
+    void Engine::r15( uint64_t value )
+    {
+        this->impl->_writeRegister( UC_X86_REG_R15, value );
+    }
+
     Registers Engine::registers( void ) const
     {
         std::lock_guard< std::recursive_mutex > l( this->impl->_rmtx );
