@@ -1362,9 +1362,10 @@ namespace UB
     
     void Engine::IMPL::_switchMode( Mode mode )
     {
-        uc_mode     m;
-        uc_engine * uc;
-        uc_err      e;
+        std::lock_guard< std::recursive_mutex > l( this->_rmtx );
+        uc_mode                                 m;
+        uc_engine *                             uc;
+        uc_err                                  e;
         
         if( mode == Mode::Real )
         {
@@ -1397,7 +1398,35 @@ namespace UB
         }
         
         if( this->_uc != nullptr )
-        {}
+        {
+            if( this->_memory > 0 )
+            {
+                std::vector< uint8_t > memory( this->_read( 0, this->_memory ) );
+                
+                uc_mem_write( uc, 0, &( memory[ 0 ] ), this->_memory );
+            }
+            
+            {
+                uc_context * ctx;
+                
+                if( ( e = uc_context_alloc( this->_uc, &ctx ) ) != UC_ERR_OK )
+                {
+                    throw std::runtime_error( uc_strerror( e ) );
+                }
+                
+                if( ( e = uc_context_save( this->_uc, ctx ) ) != UC_ERR_OK )
+                {
+                    throw std::runtime_error( uc_strerror( e ) );
+                }
+                
+                if( ( e = uc_context_restore( uc, ctx ) ) != UC_ERR_OK )
+                {
+                    throw std::runtime_error( uc_strerror( e ) );
+                }
+            }
+            
+            uc_close( this->_uc );
+        }
         
         this->_uc = uc;
     }
